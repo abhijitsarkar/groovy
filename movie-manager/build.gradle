@@ -1,0 +1,19 @@
+subprojects {
+	apply plugin: "groovy"
+	apply plugin: "codenarc"
+	apply plugin: "maven"
+
+	codenarc.configFile = file("${project.rootDir}/src/main/config/codenarc/codenarc.groovy")
+
+	repositories { mavenCentral() }
+
+	dependencies {
+		compile ([group: "org.codehaus.groovy", name: "groovy-all", version: groovyVersion]
+		)
+		testCompile group: "junit", name: "junit", version: junitVersion
+	}
+
+	version = "1.0"
+
+	jar { manifest.attributes provider: "Abhijit Sarkar" }
+}
