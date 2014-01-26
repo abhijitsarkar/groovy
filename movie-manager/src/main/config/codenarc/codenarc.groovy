@@ -26,7 +26,7 @@ ruleset {
 		DuplicateMapKey
 		DuplicateSetValue
 		EmptyCatchBlock
-		//EmptyClass
+		EmptyClass
 		EmptyElseBlock
 		EmptyFinallyBlock
 		EmptyForStatement
@@ -75,7 +75,7 @@ ruleset {
 		SynchronizedOnThis
 		SynchronizedReadObjectMethod
 		SystemRunFinalizersOnExit
-//		ThisReferenceEscapesConstructor
+		ThisReferenceEscapesConstructor
 		ThreadGroup
 		ThreadLocalNotStaticFinal
 		ThreadYield
@@ -107,7 +107,7 @@ ruleset {
 		EmptyMethodInAbstractClass
 		FinalClassWithProtectedMember
 		ImplementationAsType
-//		LocaleSetDefault
+		LocaleSetDefault
 		PrivateFieldCouldBeFinal
 		PublicInstanceField
 		ReturnsNullInsteadOfEmptyArray
@@ -122,9 +122,9 @@ ruleset {
 		DuplicateStringLiteral
 		
 		// rulesets/enhanced.xml
-//		CloneWithoutCloneable
-//		JUnitAssertEqualsConstantActualValue
-//		UnsafeImplementationAsMap
+		CloneWithoutCloneable
+		JUnitAssertEqualsConstantActualValue
+		UnsafeImplementationAsMap
 		
 		// rulesets/exceptions.xml
 		CatchArrayIndexOutOfBoundsException
@@ -153,8 +153,8 @@ ruleset {
 		BracesForIfElse
 		BracesForMethod
 		BracesForTryCatchFinally
-		ClassJavadoc
-//		ClosureStatementOnOpeningLineOfMultipleLineClosure
+//		ClassJavadoc
+		ClosureStatementOnOpeningLineOfMultipleLineClosure
 		LineLength
 		SpaceAfterCatch
 		SpaceAfterClosingBrace
@@ -165,18 +165,18 @@ ruleset {
 		SpaceAfterSemicolon
 		SpaceAfterSwitch
 		SpaceAfterWhile
-//		SpaceAroundClosureArrow
-//		SpaceAroundMapEntryColon
+		SpaceAroundClosureArrow
+		SpaceAroundMapEntryColon
 		SpaceAroundOperator
 		SpaceBeforeClosingBrace
 		SpaceBeforeOpeningBrace
 		
 		// rulesets/generic.xml
-//		IllegalClassMember
+		IllegalClassMember
 		IllegalClassReference
 		IllegalPackageReference
 		IllegalRegex
-//		IllegalString
+		IllegalString
 		RequiredRegex
 		RequiredString
 		StatelessClass
@@ -221,7 +221,7 @@ ruleset {
 		ExplicitStackInstantiation
 		ExplicitTreeSetInstantiation
 		GStringAsMapKey
-//		GStringExpressionWithinString
+		GStringExpressionWithinString
 		GetterMethodCouldBeProperty
 		GroovyLangImmutable
 		UseCollectMany
@@ -248,7 +248,7 @@ ruleset {
 		JUnitAssertAlwaysSucceeds
 		JUnitFailWithoutMessage
 		JUnitLostTest
-//		JUnitPublicField
+		JUnitPublicField
 		JUnitPublicNonTestMethod
 		JUnitSetUpCallsSuper
 		JUnitStyleAssertions
@@ -279,7 +279,7 @@ ruleset {
 		// rulesets/naming.xml
 		AbstractClassName
 		ClassName
-//		ClassNameSameAsFilename
+		ClassNameSameAsFilename
 		ConfusingMethodName
 		FactoryMethodName
 		FieldName
@@ -303,7 +303,7 @@ ruleset {
 		UnsafeArrayDeclaration
 		
 		// rulesets/serialization.xml
-//		EnumCustomSerializationIgnored
+		EnumCustomSerializationIgnored
 		SerialPersistentFields
 		SerialVersionUID
 		SerializableClassMustDefineSerialVersionUID

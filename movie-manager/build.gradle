@@ -1,19 +1,64 @@
-subprojects {
-	apply plugin: "groovy"
-	apply plugin: "codenarc"
-	apply plugin: "maven"
-
-	codenarc.configFile = file("${project.rootDir}/src/main/config/codenarc/codenarc.groovy")
-
+buildscript {
 	repositories { mavenCentral() }
-
 	dependencies {
-		compile ([group: "org.codehaus.groovy", name: "groovy-all", version: groovyVersion]
-		)
-		testCompile group: "junit", name: "junit", version: junitVersion
+		classpath(
+				// https://github.com/stevesaliman/gradle-cobertura-plugin
+				[group: 'net.saliman', name: 'gradle-cobertura-plugin', version: coberturaPluginVersion]
+				)
+	}
+}
+
+allprojects {
+	group = 'name.abhijitsarkar'
+	version = '1.0-SNAPSHOT'
+
+	apply plugin: 'groovy'
+	apply plugin: 'maven'
+	apply plugin: 'codenarc'
+	apply plugin: 'cobertura'
+
+	codenarc {
+		configFile = file("${rootProject.projectDir}/src/main/config/codenarc/codenarc.groovy")
+		toolVersion = codenarcToolVersion
 	}
 
-	version = "1.0"
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	}
 
-	jar { manifest.attributes provider: "Abhijit Sarkar" }
+	dependencies {
+		compile(
+				[group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
+				[group: 'name.abhijitsarkar.util.logging', name: 'logging-util', version: logginUtilVersion]
+				)
+
+		runtime(
+				[group: 'org.gmetrics', name: 'GMetrics', version: gmetricsVersion]
+				)
+
+		testCompile(
+			[group: 'com.googlecode.jmockit', name: 'jmockit', version: jmockitVersion],
+			[group: 'junit', name: 'junit', version: junitVersion]
+		)
+	}
+
+	jar { manifest.attributes provider: 'Abhijit Sarkar' }
 }
+
+test.dependsOn subprojects.test
+
+cobertura {
+	coberturaVersion = project.coberturaVersion
+
+	coverageSourceDirs = project.allprojects.sourceSets.collect {
+		// srcDirs is a Set<File>
+		it.main.groovy.srcDirs + it.main.java.srcDirs
+	}.flatten { it }
+
+	coverageDirs = project.allprojects.sourceSets.main.output.classesDir
+
+	coverageMergeDatafiles = project.subprojects.buildDir.collect { file("${it}/cobertura/cobertura.ser") }
+}
+
+defaultTasks 'clean', 'test', 'assemble'

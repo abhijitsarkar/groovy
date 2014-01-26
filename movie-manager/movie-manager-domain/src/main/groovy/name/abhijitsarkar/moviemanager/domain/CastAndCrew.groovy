@@ -8,11 +8,18 @@ class CastAndCrew {
 	}
 
 	@Override
-	int hashCode() {
-		int prime = 31
-		int result = 1
+	String toString() {
+		"${this.class.simpleName}[name:${name}]"
+	}
 
-		prime * result + ((name == null) ? 0 : name.hashCode)
+	@Override
+	int hashCode() {
+		def result = 17
+		def c = 0
+		def magicNum = 37
+
+		c = name ? name.hashCode() : 0
+		result = magicNum * result + c
 	}
 
 	@Override
@@ -22,9 +29,5 @@ class CastAndCrew {
 		}
 
 		this.name == obj?.name
-	}
-
-	String toString() {
-		this.name
 	}
 }

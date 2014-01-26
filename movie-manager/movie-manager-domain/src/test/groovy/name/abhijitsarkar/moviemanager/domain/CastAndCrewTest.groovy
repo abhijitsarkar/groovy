@@ -1,29 +1,35 @@
 package name.abhijitsarkar.moviemanager.domain
 
-import org.junit.Assert
-import org.junit.BeforeClass
+import org.junit.Before
 import org.junit.Test
 
 class CastAndCrewTest {
-	static star1
-	static star2
+	def star1
+	def star2
 
-	@BeforeClass
-	static void setUp() {
-		star1 = new CastAndCrew()
-		star1.name = "Arnold Schwarzenegger"
+	@Before
+	void setUp() {
+		star1 = new CastAndCrew('Arnold Schwarzenegger')
 
-		star2 = new CastAndCrew()
-		star2.name = "Arnold Schwarzenegger"
+		star2 = new CastAndCrew('Arnold Schwarzenegger')
+	}
+
+	@Test
+	void testToString() {
+		assert 'CastAndCrew[name:Arnold Schwarzenegger]' == star1?.toString()
 	}
 
 	@Test
 	void testEquals() {
-		Assert.assertEquals("Expected Arnold Schwarzenegger to be equal to himself.",
-				star1, star2)
-		Assert.assertFalse("Expected Arnold Schwarzenegger to be NOT equal to number 1.",
-				star1.equals(1))
-		Assert.assertEquals("Expected Arnold Schwarzenegger's name to be Arnold Schwarzenegger.",
-				"Arnold Schwarzenegger", star1.toString())
+		assert star1 != null
+		assert star1 == star2
+		assert star1 != 1
+		assert star1 != new CastAndCrew(null)
+	}
+
+	@Test
+	void testHashCode() {
+		assert star1.hashCode() == star2.hashCode()
+		assert star1.hashCode() != new CastAndCrew(null).hashCode()
 	}
 }

@@ -5,31 +5,34 @@ import name.abhijitsarkar.moviemanager.mock.MovieMock
 import org.junit.Before
 import org.junit.Test
 
-class MovieTest {
+class MovieRipTest {
 	def m
+	def mr
 
 	@Before
 	void setUp() {
 		m = new MovieMock()
+
+		mr = new MovieRip(m)
 	}
 
 	@Test
 	void testNewMovie() {
-		assert m instanceof Movie
-		assert 'Terminator 2 Judgment Day' == m.title
+		assert mr instanceof MovieRip
+		assert 'Terminator 2 Judgment Day' == mr.title
 
-		assert m.genres.find { it.toString() == 'Sci-Fi' } : 'Expected one of the genres to be Sci-Fi.'
+		assert mr.genres.find { it.toString() == 'Sci-Fi' } : 'Expected one of the genres to be Sci-Fi.'
 
-		assert m.stars.find { it.name == 'Arnold Schwarzenegger' } :
+		assert mr.stars.find { it.name == 'Arnold Schwarzenegger' } :
 		'Expected one of the stars to be Arnold Schwarzenegger.'
 
-		assert m.releaseDate[Calendar.YEAR] == 1991
-		assert m.imdbRating == 8.5f
+		assert mr.releaseDate[Calendar.YEAR] == 1991
+		assert mr.imdbRating == 8.5f
 	}
 
 	@Test
 	void testToString() {
-		assert m.toString() == 'Movie[title:Terminator 2 Judgment Day, year:1991, genres:[Action, Sci-Fi, Thriller]]'
+		assert mr.toString() == 'MovieRip[title:Terminator 2 Judgment Day, year:1991, genres:[Action, Sci-Fi, Thriller]]'
 	}
 
 	@Test
@@ -47,17 +50,11 @@ class MovieTest {
 		// Change the month and date from 'm'
 		o.releaseDate = Date.parse('MM/dd/yyyy', '01/01/1991')
 
-		assert o == m
+		def om = new MovieRip(o)
 
-		o.releaseDate = Date.parse('MM/dd/yyyy', '07/03/1992')
+		assert mr == om
 
-		assert o != m
-
-		o.releaseDate = Date.parse('MM/dd/yyyy', '07/03/1991')
-
-		o.genres.pop()
-
-		assert o != m
+		assert mr != 1
 	}
 
 	@Test
@@ -75,16 +72,8 @@ class MovieTest {
 		// Change the month and date from 'm'
 		o.releaseDate = Date.parse('MM/dd/yyyy', '01/01/1991')
 
-		assert m.hashCode() == o.hashCode()
+		def om = new MovieRip(o)
 
-		o.releaseDate = Date.parse('MM/dd/yyyy', '07/03/1992')
-
-		assert m.hashCode() != o.hashCode()
-
-		o.releaseDate = Date.parse('MM/dd/yyyy', '07/03/1991')
-
-		o.genres.pop()
-
-		assert m.hashCode() != o.hashCode()
+		assert mr.hashCode() == om.hashCode()
 	}
 }
