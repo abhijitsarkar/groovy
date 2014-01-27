@@ -1,5 +1,7 @@
 package name.abhijitsarkar.moviemanager.service
 
+import groovy.transform.PackageScope
+
 import java.util.regex.Pattern
 
 import javax.annotation.ManagedBean
@@ -33,7 +35,7 @@ class MovieRipService {
 	private static logger = Logger.getInstance(MovieRipService.class)
 
 	private genreList
-	
+
 	// For CDI to work, the injection point must be strongly typed
 	@Inject
 	MovieRipService(@GenreList List<String> genreList) {
@@ -55,9 +57,12 @@ class MovieRipService {
 		def movieRips = new TreeSet<MovieRip>()
 
 		addToMovieRips(f, movieRips)
+
+		movieRips
 	}
 
-	def addToMovieRips(rootDir, movieRips) {
+	@PackageScope
+	def addToMovieRips(rootDir, movieRips, currentGenre = null) {
 		if (!rootDir.exists() || !rootDir.isDirectory()) {
 			throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not a directory.")
 		}
@@ -65,30 +70,29 @@ class MovieRipService {
 			throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not readable.")
 		}
 
-		def movieRip
-		def parent
-		def isUnique
-		def currentGenre
+		rootDir.eachFile { File f ->
+			delegate = this
 
-		rootDir.eachFileRecurse { File f ->
 			if (f.isDirectory()) {
 				if (isGenre(f.name)) {
 					currentGenre = f.name
 				}
-				addTomovieRips(f, movieRips)
+				addToMovieRips(f, movieRips, currentGenre)
 			} else if (isMovieRip(f.name)) {
-				movieRip = parseMovieRip(f.name)
+				def movieRip = parseMovieRip(f.name)
 
-				movieRip.genre = currentGenre as List
-				movieRip.fileSize = f.length
+				movieRip.genres = currentGenre as List
+				movieRip.fileSize = f.length()
 
-				parent = this.getParent(f, currentGenre, null, rootDir)
+				def parent = getParent(f, currentGenre, rootDir)
 
-				if (!parent?.equalsIgnoreCase(currentGenre.toString())) {
+				if (!currentGenre.equalsIgnoreCase(parent)) {
 					movieRip.parent = parent
 				}
 
-				isUnique = movieRips.add(movieRip)
+				logger.info("Found movie: ${movieRip}")
+
+				boolean isUnique = movieRips.add(movieRip)
 
 				if (!isUnique) {
 					logger.warn("Found duplicate movie: ${movieRip}")
@@ -97,6 +101,7 @@ class MovieRipService {
 		}
 	}
 
+	@PackageScope
 	def parseMovieRip(fileName) {
 		def movieTitle
 		def fullStop = '.'
@@ -109,14 +114,18 @@ class MovieRipService {
 		def matcher = pattern.matcher(fileName)
 		if (matcher.find() && matcher.groupCount() >= 1) {
 			// 1st group is the title, always present
+			logger.debug("matcher.group(1): ${matcher.group(1)}")
+
 			movieTitle = matcher.group(1).trim()
 
 			// If present, the 2nd group is the release year
-			year = matcher.group(2) ?: Integer.parseInt(matcher.group(2))
+			logger.debug("matcher.group(2): ${matcher.group(2)}")
+			year = matcher.group(2) ? Integer.parseInt(matcher.group(2)) : year
 
 			// If present, the 3rd group might be one of 2 things:
 			// 1) The file extension
 			// 2) A "qualifier" to the name like "part 1" and the file extension
+			logger.debug("matcher.group(3): ${matcher.group(3)}")
 			lastPart = matcher.group(3) ?: null
 
 			if (lastPart && (lastPart != movieRipFileExtension)) {
@@ -140,6 +149,7 @@ class MovieRipService {
 		mr
 	}
 
+	@PackageScope
 	def isMovieRip(fileName) {
 		try {
 			MovieRipFileFormat.valueOf(MovieRipFileFormat.class,
@@ -150,10 +160,12 @@ class MovieRipService {
 		true
 	}
 
+	@PackageScope
 	def isGenre(fileName) {
 		genreList.contains(fileName)
 	}
 
+	@PackageScope
 	def getFileExtension(fileName) {
 		/* Unicode representation of char . */
 		def fullStop = '.'
@@ -166,20 +178,21 @@ class MovieRipService {
 		fileName.substring(++fullStopIndex, fileName.length())
 	}
 
-	def getParent(file, currentGenre, immediateParent, rootDirectory) {
+	@PackageScope
+	def getParent(file, currentGenre, rootDirectory, immediateParent = null) {
 		def parentFile = file.parentFile
 
 		if (!parentFile?.isDirectory() || parentFile?.compareTo(rootDirectory) <= 0) {
 			return immediateParent
 		}
 
-		if (parentFile.name.equalsIgnoreCase(currentGenre.toString())) {
+		if (parentFile.name.equalsIgnoreCase(currentGenre)) {
 			if (file.isDirectory()) {
 				return file.name
 			}
 		}
 
-		getParent(parentFile, currentGenre, parentFile.name, rootDirectory)
+		getParent(parentFile, currentGenre, rootDirectory, parentFile.name)
 	}
 
 	private enum MovieRipFileFormat {

@@ -2,7 +2,7 @@ package name.abhijitsarkar.moviemanager.domain
 
 import java.util.regex.Pattern
 
-class MovieRip extends Movie {
+class MovieRip extends Movie implements Comparable {
 	long fileSize
 	String fileExtension
 	String parent
@@ -33,5 +33,10 @@ class MovieRip extends Movie {
 		def hashCode = super.hashCode()
 
 		hashCode
+	}
+
+	@Override
+	int compareTo(Object o) {
+		super.compareTo(o);
 	}
 }

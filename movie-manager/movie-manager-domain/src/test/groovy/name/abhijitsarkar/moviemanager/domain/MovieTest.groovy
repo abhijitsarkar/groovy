@@ -33,6 +33,34 @@ class MovieTest {
 	}
 
 	@Test
+	void testCompareTo() {
+		def o = new Movie()
+
+		o.title = 'Terminator 2 Judgment Day'
+		// Change the order from  'm'
+		o.genres = [
+			'Sci-Fi',
+			'Action',
+			'Thriller'
+		]
+
+		// Change the month and date from 'm'
+		o.releaseDate = Date.parse('MM/dd/yyyy', '01/01/1991')
+
+		assert o == m
+
+		o.releaseDate = Date.parse('MM/dd/yyyy', '07/03/1992')
+
+		assert o > m
+
+		o.releaseDate = Date.parse('MM/dd/yyyy', '07/03/1991')
+
+		o.genres.pop()
+
+		assert o < m
+	}
+
+	@Test
 	void testEquals() {
 		def o = new Movie()
 

@@ -1,2 +1,2 @@
 
-include "movie-manager-domain", "movie-manager-ui"
+include "movie-manager-domain", "movie-manager-web"

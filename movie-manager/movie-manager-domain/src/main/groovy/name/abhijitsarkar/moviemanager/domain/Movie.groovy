@@ -1,6 +1,6 @@
 package name.abhijitsarkar.moviemanager.domain
 
-class Movie {
+class Movie implements Comparable {
 	protected String title
 	protected List<String> genres
 	protected Date releaseDate
@@ -33,10 +33,7 @@ class Movie {
 			return false
 		}
 
-		def result = (this.title == obj.title)
-		result &= ((this.releaseDate[Calendar.YEAR] ?: 0) == obj.releaseDate[Calendar.YEAR])
-		result &= (this.genres?.size() == obj.genres?.size())
-		result &= (this.genres?.containsAll(obj.genres as String[]))
+		compareTo(obj) == 0
 	}
 
 	@Override
@@ -54,5 +51,36 @@ class Movie {
 		// Use the Spread operator to sum all hash codes
 		c = genres ? genres*.hashCode().sum() : 0
 		result = magicNum * result + c
+	}
+
+	@Override
+	int compareTo(Object o) {
+		final int EQUAL = 0;
+		
+		if (!this.class.isAssignableFrom(o?.class)) {
+			throw new IllegalArgumentException("Invalid type parameter: ${o?.class.name}")
+		}
+
+		if (title == o.title) {
+			def releaseDateDiff = (releaseDate[Calendar.YEAR] ?: 0) - (o.releaseDate[Calendar.YEAR] ?: 0)
+
+			if (releaseDateDiff == 0) {
+				def genreSizeDiff = genres?.size() - o.genres?.size()
+
+				if (genreSizeDiff == 0) {
+					if (genres?.containsAll(o.genres as String[])) {
+						return 0
+					} else {
+						return 1
+					}
+				} else {
+					genreSizeDiff
+				}
+			} else {
+				releaseDateDiff
+			}
+		} else {
+			title?.hashCode() - o.title?.hashCode()
+		}
 	}
 }

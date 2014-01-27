@@ -9,7 +9,7 @@ buildscript {
 }
 
 allprojects {
-	group = 'name.abhijitsarkar'
+	group = 'name.abhijitsarkar.moviemanager'
 	version = '1.0-SNAPSHOT'
 
 	apply plugin: 'groovy'
@@ -42,7 +42,11 @@ allprojects {
 			[group: 'junit', name: 'junit', version: junitVersion]
 		)
 	}
-
+	
+	test {
+		exclude '**/integrationtest/**'
+	}
+	
 	jar { manifest.attributes provider: 'Abhijit Sarkar' }
 }
 

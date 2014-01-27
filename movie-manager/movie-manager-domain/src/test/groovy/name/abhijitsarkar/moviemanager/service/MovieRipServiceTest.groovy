@@ -1,5 +1,6 @@
 package name.abhijitsarkar.moviemanager.service
 
+import mockit.Cascading
 import mockit.Mocked
 import mockit.NonStrictExpectations
 
@@ -83,11 +84,51 @@ class MovieRipServiceTest {
 		assert mr.fileExtension == '.avi'
 	}
 
-//	void testGetParent(@Mocked File f) {
+	@Test
+	void testGetParent(@Mocked final File f) {
+		// Test when file is the root directory and has no parent
+		new NonStrictExpectations() { {
+						f.parentFile; result = (File) any
+						// Record the result of 2 consecutive isDirectory() calls
+						f.isDirectory(); result = [false, false]
+						f.compareTo((File) any); result = -1
+					}
+				}
+
+		assert 'immediateParent' == service.getParent(f, 'currentGenre', null, 'immediateParent')
+
+		assert 'immediateParent' == service.getParent(f, 'currentGenre', null, 'immediateParent')
+	}
+
+	// Test when parent file is a genre directory
+	//	@Test
+	//	void testGetParentWhenParentIsGenre() {
+	//		new MockUp<Comparable<File>>() {
+	//			@Mock int compareTo(File someFile) { 1 }
+	//		}
+	//
+	//		File parent = new MockUp<File>() {
+	//			@Mock boolean isDirectory() { true }
+	//			@Mock String getName() {'parent'}
+	//		}
+	//		File f = new MockUp<File>() {
+	//			@Mock File getParentFile() { parent }
+	//			@Mock boolean isDirectory() { true }
+	//			@Mock String getName() {'movieRip'}
+	//		}
+	//
+	//		assert 'movieRip' == service.getParent(f, 'currentGenre', 'immediateParent', null)
+	//	}
+
+//	@Test
+//	void testGetParentWhenParentIsGenre(@Cascading final File f) {
 //		new NonStrictExpectations() { {
-//						// An expectation for an instance method:
-//						f.parentFile; result = "mocked";
+//						f.isDirectory(); result = [true, true]
+//						f.compareTo((File) any); result = 1
+//						f.name; result = ['currentGenre', 'movieRip']
 //					}
 //				}
+//
+//		assert 'movieRip' == service.getParent(f, 'currentGenre', null, 'immediateParent')
 //	}
 }
