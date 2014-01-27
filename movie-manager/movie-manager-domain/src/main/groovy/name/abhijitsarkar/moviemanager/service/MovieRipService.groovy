@@ -70,14 +70,11 @@ class MovieRipService {
 			throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not readable.")
 		}
 
-		rootDir.eachFile { File f ->
+		rootDir.eachFileRecurse { File f ->
 			delegate = this
 
-			if (f.isDirectory()) {
-				if (isGenre(f.name)) {
-					currentGenre = f.name
-				}
-				addToMovieRips(f, movieRips, currentGenre)
+			if (f.isDirectory() && isGenre(f.name)) {
+				currentGenre = f.name
 			} else if (isMovieRip(f.name)) {
 				def movieRip = parseMovieRip(f.name)
 
@@ -86,7 +83,7 @@ class MovieRipService {
 
 				def parent = getParent(f, currentGenre, rootDir)
 
-				if (!currentGenre.equalsIgnoreCase(parent)) {
+				if (!currentGenre?.equalsIgnoreCase(parent)) {
 					movieRip.parent = parent
 				}
 

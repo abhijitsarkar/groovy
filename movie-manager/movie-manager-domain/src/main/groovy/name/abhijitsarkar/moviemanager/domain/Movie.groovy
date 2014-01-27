@@ -65,7 +65,7 @@ class Movie implements Comparable {
 			def releaseDateDiff = (releaseDate[Calendar.YEAR] ?: 0) - (o.releaseDate[Calendar.YEAR] ?: 0)
 
 			if (releaseDateDiff == 0) {
-				def genreSizeDiff = genres?.size() - o.genres?.size()
+				def genreSizeDiff = (genres?.size() ?: 0) - (o.genres?.size() ?: 0)
 
 				if (genreSizeDiff == 0) {
 					if (genres?.containsAll(o.genres as String[])) {
