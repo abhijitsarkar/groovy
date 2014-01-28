@@ -19,18 +19,23 @@ apply plugin: 'eclipse'
 configurations { provided }
 
 sourceSets {
-	main.compileClasspath += configurations.provided
-	test.compileClasspath += configurations.provided
-	test.runtimeClasspath += configurations.provided
+    main.compileClasspath += configurations.provided
+    test.compileClasspath += configurations.provided
+    test.runtimeClasspath += configurations.provided
 }
 
 repositories {
-	maven { url 'http://repository.apache.org/snapshots' }
+    maven { url 'http://repository.apache.org/snapshots' }
 }
 
 dependencies {
-	provided group: 'javax', name: 'javaee-api', version: javaeeVersion
-	testCompile group: 'org.apache.openejb', name: 'openejb-core', version: openejbVersion
+    provided group: 'javax', name: 'javaee-api', version: javaeeVersion
+    testCompile group: 'org.apache.openejb', name: 'openejb-core', version: openejbVersion
+    compile(
+        [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
+        [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
+        [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion]
+    )
 }
 
 eclipse.classpath.plusConfigurations += configurations.provided

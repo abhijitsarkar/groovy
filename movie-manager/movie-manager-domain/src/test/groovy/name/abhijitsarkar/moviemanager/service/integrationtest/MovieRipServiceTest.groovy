@@ -32,7 +32,7 @@ class MovieRipServiceTest {
 
 	@Before
 	void setUp() {
-		service = new MovieRipService(genreList())
+		service = new MovieRipService(genreList(), includes())
 	}
 
 	def genreList() {
@@ -50,6 +50,16 @@ class MovieRipServiceTest {
 			'X-Rated'
 		]
 	}
+
+    def includes() {
+        [
+            'avi',
+            'mkv',
+            'mp4',
+            'divx',
+            'mov'
+        ]
+    }
 
 	@Test
 	void testGetMovieRips() {

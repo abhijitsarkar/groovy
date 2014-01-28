@@ -37,5 +37,5 @@ import javax.enterprise.inject.Stereotype;
 // This stereotype define an alternative
 @Alternative
 public @interface MovieService {
-	Category value();
+	MovieDatabase value();
 }

@@ -21,198 +21,190 @@
 package name.abhijitsarkar.moviemanager.service
 
 import groovy.transform.PackageScope
-
-import java.util.regex.Pattern
+import name.abhijitsarkar.moviemanager.annotation.IncludeFiles
+import name.abhijitsarkar.moviemanager.annotation.MovieGenres
+import name.abhijitsarkar.moviemanager.domain.Movie
+import name.abhijitsarkar.moviemanager.domain.MovieRip
+import org.apache.log4j.Logger
 
 import javax.annotation.ManagedBean
 import javax.annotation.PostConstruct
 import javax.inject.Inject
-
-import name.abhijitsarkar.moviemanager.annotation.GenreList
-import name.abhijitsarkar.moviemanager.domain.Movie
-import name.abhijitsarkar.moviemanager.domain.MovieRip
-
-import org.apache.log4j.Logger
+import java.util.regex.Pattern
 
 @ManagedBean
 class MovieRipService {
-	/*
-	 * The following regex matches file names with release year in parentheses,
-	 * something like Titanic (1997).mkv Each part of the regex is explained
-	 * further:
-	 * 
-	 * ([-',!\\[\\]\\.\\w\\s]++) -> Matches one or more occurrences of any
-	 * alphabet, number or the following special characters in the movie name:
-	 * dash (-), apostrophe ('), comma (,), exclamation sign (!), square braces
-	 * ([]), full stop (.)
-	 * 
-	 * (?:\\((\\d{4})\\)) -> Matches 4 digit release year within parentheses.
-	 * 
-	 * (.++) -> Matches one or more occurrences of any character.
-	 */
-	private static final MOVIE_NAME_WITH_RELEASE_YEAR_REGEX = "([-',!\\[\\]\\.\\w\\s]++)(?:\\((\\d{4})\\))?+(.++)"
-	private static final pattern = Pattern.compile(MOVIE_NAME_WITH_RELEASE_YEAR_REGEX)
-	private static logger = Logger.getInstance(MovieRipService.class)
+    /*
+     * The following regex matches file names with release year in parentheses,
+     * something like Titanic (1997).mkv Each part of the regex is explained
+     * further:
+     *
+     * ([-',!\\[\\]\\.\\w\\s]++) -> Matches one or more occurrences of any
+     * alphabet, number or the following special characters in the movie name:
+     * dash (-), apostrophe ('), comma (,), exclamation sign (!), square braces
+     * ([]), full stop (.)
+     *
+     * (?:\\((\\d{4})\\)) -> Matches 4 digit release year within parentheses.
+     *
+     * (.++) -> Matches one or more occurrences of any character.
+     */
+    private static final MOVIE_NAME_WITH_RELEASE_YEAR_REGEX = "([-',!\\[\\]\\.\\w\\s]++)(?:\\((\\d{4})\\))?+(.++)"
+    private static final pattern = Pattern.compile(MOVIE_NAME_WITH_RELEASE_YEAR_REGEX)
+    private static logger = Logger.getInstance(MovieRipService.class)
 
-	private genreList
+    private genres
 
-	// For CDI to work, the injection point must be strongly typed
-	@Inject
-	MovieRipService(@GenreList List<String> genreList) {
-		this.genreList = genreList
-	}
+    private includes
 
-	@PostConstruct
-	void postConstruct() {
-		assert genreList : 'Genre list must not be null.'
-	}
+    // For CDI to work, the injection point must be strongly typed
+    @Inject
+    MovieRipService(@MovieGenres List<String> genres, @IncludeFiles List<String> includes) {
+        this.genres = genres
+        this.includes = includes
+    }
 
-	def getMovieRips(movieDirectory) throws IOException {
-		def f = new File(movieDirectory)
+    @PostConstruct
+    void postConstruct() {
+        assert genres: 'Genre list must not be null.'
+        assert includes: 'File includes must not be null.'
+    }
 
-		if (!f.isAbsolute()) {
-			logger.warn("Path ${movieDirectory} is not absolute: it's resolved to ${movieDirectory.absolutePath}")
-		}
+    def getMovieRips(movieDirectory) throws IOException {
+        def f = new File(movieDirectory)
 
-		def movieRips = new TreeSet<MovieRip>()
+        if (!f.isAbsolute()) {
+            logger.warn("Path ${movieDirectory} is not absolute: it's resolved to ${movieDirectory.absolutePath}")
+        }
 
-		addToMovieRips(f, movieRips)
+        def movieRips = new TreeSet<MovieRip>()
 
-		movieRips
-	}
+        addToMovieRips(f, movieRips)
 
-	@PackageScope
-	def addToMovieRips(rootDir, movieRips, currentGenre = null) {
-		if (!rootDir.exists() || !rootDir.isDirectory()) {
-			throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not a directory.")
-		}
-		if (!rootDir.canRead()) {
-			throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not readable.")
-		}
+        movieRips
+    }
 
-		rootDir.eachFileRecurse { File f ->
-			delegate = this
+    @PackageScope
+    def addToMovieRips(rootDir, movieRips, currentGenre = null) {
+        if (!rootDir.exists() || !rootDir.isDirectory()) {
+            throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not a directory.")
+        }
+        if (!rootDir.canRead()) {
+            throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not readable.")
+        }
 
-			if (f.isDirectory() && isGenre(f.name)) {
-				currentGenre = f.name
-			} else if (isMovieRip(f.name)) {
-				def movieRip = parseMovieRip(f.name)
+        rootDir.eachFileRecurse { File f ->
+            delegate = this
 
-				movieRip.genres = currentGenre as List
-				movieRip.fileSize = f.length()
+            if (f.isDirectory() && isGenre(f.name)) {
+                currentGenre = f.name
+            } else if (isMovieRip(f.name)) {
+                def movieRip = parseMovieRip(f.name)
 
-				def parent = getParent(f, currentGenre, rootDir)
+                movieRip.genres = currentGenre as List
+                movieRip.fileSize = f.length()
 
-				if (!currentGenre?.equalsIgnoreCase(parent)) {
-					movieRip.parent = parent
-				}
+                def parent = getParent(f, currentGenre, rootDir)
 
-				logger.info("Found movie: ${movieRip}")
+                if (!currentGenre?.equalsIgnoreCase(parent)) {
+                    movieRip.parent = parent
+                }
 
-				boolean isUnique = movieRips.add(movieRip)
+                logger.info("Found movie: ${movieRip}")
 
-				if (!isUnique) {
-					logger.warn("Found duplicate movie: ${movieRip}")
-				}
-			}
-		}
-	}
+                boolean isUnique = movieRips.add(movieRip)
 
-	@PackageScope
-	def parseMovieRip(fileName) {
-		def movieTitle
-		def fullStop = '.'
-		def movieRipFileExtension = getFileExtension(fileName)
-		def lastPart
+                if (!isUnique) {
+                    logger.warn("Found duplicate movie: ${movieRip}")
+                }
+            }
+        }
+    }
 
-		def year = 0
-		def imdbRating = -1.0f
+    @PackageScope
+    def parseMovieRip(fileName) {
+        def movieTitle
+        def fullStop = '.'
+        def movieRipFileExtension = getFileExtension(fileName)
+        def lastPart
 
-		def matcher = pattern.matcher(fileName)
-		if (matcher.find() && matcher.groupCount() >= 1) {
-			// 1st group is the title, always present
-			logger.debug("matcher.group(1): ${matcher.group(1)}")
+        def year = 0
+        def imdbRating = -1.0f
 
-			movieTitle = matcher.group(1).trim()
+        def matcher = pattern.matcher(fileName)
+        if (matcher.find() && matcher.groupCount() >= 1) {
+            // 1st group is the title, always present
+            logger.debug("matcher.group(1): ${matcher.group(1)}")
 
-			// If present, the 2nd group is the release year
-			logger.debug("matcher.group(2): ${matcher.group(2)}")
-			year = matcher.group(2) ? Integer.parseInt(matcher.group(2)) : year
+            movieTitle = matcher.group(1).trim()
 
-			// If present, the 3rd group might be one of 2 things:
-			// 1) The file extension
-			// 2) A "qualifier" to the name like "part 1" and the file extension
-			logger.debug("matcher.group(3): ${matcher.group(3)}")
-			lastPart = matcher.group(3) ?: null
+            // If present, the 2nd group is the release year
+            logger.debug("matcher.group(2): ${matcher.group(2)}")
+            year = matcher.group(2) ? Integer.parseInt(matcher.group(2)) : year
 
-			if (lastPart && (lastPart != movieRipFileExtension)) {
-				// Extract the qualifier
-				movieTitle += lastPart.substring(0, lastPart.length()
-						- (movieRipFileExtension.length() + 1))
-			}
-		} else {
-			logger.debug("Found unconventional filename: ${fileName}")
-			// Couldn't parse file name, extract as-is without file extension
-			movieTitle = fileName.substring(0, fileName.length()
-					- (movieRipFileExtension.length() + 1))
-		}
+            // If present, the 3rd group might be one of 2 things:
+            // 1) The file extension
+            // 2) A "qualifier" to the name like "part 1" and the file extension
+            logger.debug("matcher.group(3): ${matcher.group(3)}")
+            lastPart = matcher.group(3) ?: null
 
-		def m = new Movie(title: movieTitle, imdbRating: imdbRating,
-		releaseDate: Date.parse('MM/dd/yyyy', "01/01/${year}"))
+            if (lastPart && (lastPart != movieRipFileExtension)) {
+                // Extract the qualifier
+                movieTitle += lastPart.substring(0, lastPart.length()
+                        - (movieRipFileExtension.length() + 1))
+            }
+        } else {
+            logger.debug("Found unconventional filename: ${fileName}")
+            // Couldn't parse file name, extract as-is without file extension
+            movieTitle = fileName.substring(0, fileName.length()
+                    - (movieRipFileExtension.length() + 1))
+        }
 
-		def mr = new MovieRip(m)
-		mr.fileExtension = "${fullStop}${movieRipFileExtension}"
+        def m = new Movie(title: movieTitle, imdbRating: imdbRating,
+                releaseDate: Date.parse('MM/dd/yyyy', "01/01/${year}"))
 
-		mr
-	}
+        def mr = new MovieRip(m)
+        mr.fileExtension = "${fullStop}${movieRipFileExtension}"
 
-	@PackageScope
-	def isMovieRip(fileName) {
-		try {
-			MovieRipFileFormat.valueOf(MovieRipFileFormat.class,
-					getFileExtension(fileName).toUpperCase())
-		} catch (IllegalArgumentException iae) {
-			return false
-		}
-		true
-	}
+        mr
+    }
 
-	@PackageScope
-	def isGenre(fileName) {
-		genreList.contains(fileName)
-	}
+    @PackageScope
+    def isMovieRip(fileName) {
+        includes.contains(getFileExtension(fileName).toLowerCase())
+    }
 
-	@PackageScope
-	def getFileExtension(fileName) {
-		/* Unicode representation of char . */
-		def fullStop = '.'
-		def fullStopIndex = fileName.lastIndexOf(fullStop)
+    @PackageScope
+    def isGenre(fileName) {
+        genres.contains(fileName)
+    }
 
-		if (fullStopIndex < 0) {
-			return ''
-		}
+    @PackageScope
+    def getFileExtension(fileName) {
+        /* Unicode representation of char . */
+        def fullStop = '.'
+        def fullStopIndex = fileName.lastIndexOf(fullStop)
 
-		fileName.substring(++fullStopIndex, fileName.length())
-	}
+        if (fullStopIndex < 0) {
+            return ''
+        }
 
-	@PackageScope
-	def getParent(file, currentGenre, rootDirectory, immediateParent = null) {
-		def parentFile = file.parentFile
+        fileName.substring(++fullStopIndex, fileName.length())
+    }
 
-		if (!parentFile?.isDirectory() || parentFile?.compareTo(rootDirectory) <= 0) {
-			return immediateParent
-		}
+    @PackageScope
+    def getParent(file, currentGenre, rootDirectory, immediateParent = null) {
+        def parentFile = file.parentFile
 
-		if (parentFile.name.equalsIgnoreCase(currentGenre)) {
-			if (file.isDirectory()) {
-				return file.name
-			}
-		}
+        if (!parentFile?.isDirectory() || parentFile?.compareTo(rootDirectory) <= 0) {
+            return immediateParent
+        }
 
-		getParent(parentFile, currentGenre, rootDirectory, parentFile.name)
-	}
+        if (parentFile.name.equalsIgnoreCase(currentGenre)) {
+            if (file.isDirectory()) {
+                return file.name
+            }
+        }
 
-	private enum MovieRipFileFormat {
-		AVI,  MKV,  MP4,  DIVX, MOV
-	}
+        getParent(parentFile, currentGenre, rootDirectory, parentFile.name)
+    }
 }
