@@ -15,70 +15,75 @@
  */
 
 buildscript {
-	repositories { mavenCentral() }
-	dependencies {
-		classpath(
-				// https://github.com/stevesaliman/gradle-cobertura-plugin
-				[group: 'net.saliman', name: 'gradle-cobertura-plugin', version: coberturaPluginVersion]
-				)
-	}
+    repositories { mavenCentral() }
+    dependencies {
+        classpath(
+                // https://github.com/stevesaliman/gradle-cobertura-plugin
+                [group: 'net.saliman', name: 'gradle-cobertura-plugin', version: coberturaPluginVersion]
+        )
+    }
 }
 
 allprojects {
-	group = 'name.abhijitsarkar.moviemanager'
-	version = '1.0-SNAPSHOT'
+    group = 'name.abhijitsarkar.moviemanager'
+    version = '1.0-SNAPSHOT'
 
-	apply plugin: 'groovy'
-	apply plugin: 'maven'
-	apply plugin: 'codenarc'
-	apply plugin: 'cobertura'
+    apply plugin: 'groovy'
+    apply plugin: 'maven'
+    apply plugin: 'codenarc'
+    apply plugin: 'cobertura'
 
-	codenarc {
-		configFile = file("${rootProject.projectDir}/src/main/config/codenarc/codenarc.groovy")
-		toolVersion = codenarcToolVersion
-	}
+    codenarc {
+        configFile = file("${rootProject.projectDir}/src/main/config/codenarc/codenarc.groovy")
+        toolVersion = codenarcToolVersion
+    }
 
-	repositories {
-		mavenLocal()
-		mavenCentral()
-	}
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
 
-	dependencies {
-		compile(
-				[group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
-				[group: 'name.abhijitsarkar.util.logging', name: 'logging-util', version: logginUtilVersion]
-				)
+    dependencies {
+        compile(
+                [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
+                [group: 'name.abhijitsarkar.util.logging', name: 'logging-util', version: logginUtilVersion]
+        )
 
-		runtime(
-				[group: 'org.gmetrics', name: 'GMetrics', version: gmetricsVersion]
-				)
+        runtime(
+                [group: 'org.gmetrics', name: 'GMetrics', version: gmetricsVersion]
+        )
 
-		testCompile(
-			[group: 'com.googlecode.jmockit', name: 'jmockit', version: jmockitVersion],
-			[group: 'junit', name: 'junit', version: junitVersion]
-		)
-	}
-	
-	test {
-		exclude '**/integrationtest/**'
-	}
-	
-	jar { manifest.attributes provider: 'Abhijit Sarkar' }
+        testCompile(
+                [group: 'com.googlecode.jmockit', name: 'jmockit', version: jmockitVersion],
+                [group: 'junit', name: 'junit', version: junitVersion]
+        )
+    }
+
+    test {
+        exclude '**/integrationtest/**'
+    }
+
+    jar { manifest.attributes provider: 'Abhijit Sarkar' }
 }
 
-test.dependsOn subprojects.test
+test {
+    // Makes the standard streams (err and out) visible at console when running tests
+    testLogging.showStandardStreams = true
+
+    dependsOn subprojects.test
+}
 
 cobertura {
-	coberturaVersion = project.coberturaVersion
+    coberturaVersion = project.coberturaVersion
 
-	coverageSourceDirs = project.allprojects.sourceSets.collect {
-		// srcDirs is a Set<File>
-		it.main.groovy.srcDirs + it.main.java.srcDirs
-	}.flatten { it }
+    coverageSourceDirs = project.allprojects.sourceSets.collect {
+        // srcDirs is a Set<File>
+        it.main.groovy.srcDirs + it.main.java.srcDirs
+    }.flatten { it }
 
-	coverageDirs = project.allprojects.sourceSets.main.output.classesDir
+    coverageDirs = project.allprojects.sourceSets.main.output.classesDir
 
-	coverageMergeDatafiles = project.subprojects.buildDir.collect { file("${it}/cobertura/cobertura.ser") }
+    coverageMergeDatafiles = project.subprojects.buildDir.collect { file("${it}/cobertura/cobertura.ser") }
 }
 
 defaultTasks 'clean', 'test', 'assemble'

@@ -20,8 +20,6 @@
 
 package name.abhijitsarkar.moviemanager.service
 
-import mockit.Cascading
-import mockit.Injectable
 import mockit.Mocked
 import mockit.NonStrictExpectations
 import org.junit.Before
@@ -37,27 +35,27 @@ class MovieRipServiceTest {
 
     def genreList() {
         [
-            'Action and Adventure',
-            'Animation',
-            'Comedy',
-            'Documentary',
-            'Drama',
-            'Horror',
-            'R-Rated Mainstream Movies',
-            'Romance',
-            'Sci-Fi',
-            'Thriller',
-            'X-Rated'
+                'Action and Adventure',
+                'Animation',
+                'Comedy',
+                'Documentary',
+                'Drama',
+                'Horror',
+                'R-Rated Mainstream Movies',
+                'Romance',
+                'Sci-Fi',
+                'Thriller',
+                'X-Rated'
         ]
     }
 
     def includes() {
         [
-            'avi',
-            'mkv',
-            'mp4',
-            'divx',
-            'mov'
+                'avi',
+                'mkv',
+                'mp4',
+                'divx',
+                'mov'
         ]
     }
 
@@ -130,35 +128,16 @@ class MovieRipServiceTest {
         assert 'immediateParent' == service.getParent(f, 'currentGenre', null, 'immediateParent')
     }
 
-    // Test when parent file is a genre directory
-    //	@Test
-    //	void testGetParentWhenParentIsGenre() {
-    //		new MockUp<Comparable<File>>() {
-    //			@Mock int compareTo(File someFile) { 1 }
-    //		}
-    //
-    //		File parent = new MockUp<File>() {
-    //			@Mock boolean isDirectory() { true }
-    //			@Mock String getName() {'parent'}
-    //		}
-    //		File f = new MockUp<File>() {
-    //			@Mock File getParentFile() { parent }
-    //			@Mock boolean isDirectory() { true }
-    //			@Mock String getName() {'movieRip'}
-    //		}
-    //
-    //		assert 'movieRip' == service.getParent(f, 'currentGenre', 'immediateParent', null)
-    //	}
-
-//	@Test
-//	void testGetParentWhenParentIsGenre(@Cascading final File f) {
-//		new NonStrictExpectations() { {
-//						f.isDirectory(); result = [true, true]
-//						f.compareTo((File) any); result = 1
-//						f.name; result = ['currentGenre', 'movieRip']
-//					}
-//				}
+//    @Test
+//    void testGetParentWhenParentIsGenre(@Cascading File f) {
+//        new NonStrictExpectations() {
+//            {
+//                f.isDirectory(); result = Boolean.TRUE
+//                f.compareTo((File) withNull()); result = 1
+//                f.name; result = ['currentGenre', 'movieRip']
+//            }
+//        }
 //
-//		assert 'movieRip' == service.getParent(f, 'currentGenre', null, 'immediateParent')
-//	}
+//        assert 'movieRip' == service.getParent(f, 'currentGenre', null, 'immediateParent')
+//    }
 }
