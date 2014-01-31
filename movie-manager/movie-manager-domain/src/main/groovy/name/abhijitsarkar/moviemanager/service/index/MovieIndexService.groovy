@@ -14,7 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service
+package name.abhijitsarkar.moviemanager.service.index
 
 import groovy.transform.PackageScope
 import name.abhijitsarkar.moviemanager.annotation.MovieRips
@@ -37,7 +37,7 @@ import javax.inject.Inject
 @ManagedBean
 class MovieIndexService {
     private static logger = Logger.getInstance(MovieIndexService.class)
-    private static LIST_ELEMENT_SEPARATOR = ' '
+    private static LIST_ELEMENT_SEPARATOR = '|'
 
     @Inject
     MovieIndexUtil indexUtil
@@ -60,7 +60,7 @@ class MovieIndexService {
             addTextField('genres', movieRip.genres.join(LIST_ELEMENT_SEPARATOR), Field.Store.YES, doc)
             addDateField('releaseDate', movieRip.releaseDate, Field.Store.YES, doc)
             addStringField('director', movieRip.director, Field.Store.YES, doc)
-            addTextField('stars', movieRip.stars.join(LIST_ELEMENT_SEPARATOR), Field.Store.YES, doc)
+            addTextField('stars', movieRip.stars.collect { it.name }.join(LIST_ELEMENT_SEPARATOR), Field.Store.YES, doc)
             addFloatField('imdbRating', movieRip.imdbRating, Field.Store.YES, doc)
             addStringField('imdbURL', movieRip.imdbURL, Field.Store.YES, doc)
             addLongField('fileSize', movieRip.fileSize, Field.Store.NO, doc)

@@ -14,12 +14,21 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+package name.abhijitsarkar.moviemanager.service.index.analysis
+
+import org.apache.lucene.analysis.BaseTokenStreamTestCase
+import org.apache.lucene.util.Version
+import org.junit.Test
+
 /**
  * @author Abhijit Sarkar
  */
+class NameAnalyzerTest {
+    private final nameAnalyzer = new NameAnalyzer(Version.LUCENE_46)
 
-package name.abhijitsarkar.moviemanager.service
-
-interface MovieDatabaseService {
-    def getMovieByTitleAndYear(title, year)
+    @Test
+    void testPipeTokenizer() {
+        // Character filters are not invoked by this method so commas don't get replaced in test
+        BaseTokenStreamTestCase.assertAnalyzesTo(nameAnalyzer, 'a|B|9,c', ['a', 'b', '9,c'] as String[])
+    }
 }

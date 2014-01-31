@@ -18,11 +18,9 @@
  * @author Abhijit Sarkar
  */
 
-package name.abhijitsarkar.moviemanager.service.integrationtest
+package name.abhijitsarkar.moviemanager.service.index.integrationtest
 
-import mockit.Mocked
-import mockit.NonStrictExpectations
-import name.abhijitsarkar.moviemanager.service.MovieRipService
+import name.abhijitsarkar.moviemanager.service.filesystem.MovieRipService
 
 import org.junit.Before
 import org.junit.Test

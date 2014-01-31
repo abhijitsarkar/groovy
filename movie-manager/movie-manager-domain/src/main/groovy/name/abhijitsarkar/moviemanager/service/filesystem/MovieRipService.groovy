@@ -18,7 +18,7 @@
  * @author Abhijit Sarkar
  */
 
-package name.abhijitsarkar.moviemanager.service
+package name.abhijitsarkar.moviemanager.service.filesystem
 
 import groovy.transform.PackageScope
 import name.abhijitsarkar.moviemanager.annotation.IncludeFiles

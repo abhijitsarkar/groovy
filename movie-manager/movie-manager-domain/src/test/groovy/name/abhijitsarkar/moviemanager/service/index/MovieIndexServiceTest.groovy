@@ -14,24 +14,25 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service
-
+package name.abhijitsarkar.moviemanager.service.index
 import mockit.Mocked
 import mockit.NonStrictExpectations
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.mock.MovieMock
 import org.apache.lucene.document.Document
 import org.apache.lucene.index.IndexWriter
+import org.junit.Ignore
 import org.junit.Test
-
 /**
  * @author Abhijit Sarkar
  */
+@Ignore("Need to figure out how to test MovieIndexService")
 class MovieIndexServiceTest {
     private movieIndexService
 
     MovieIndexServiceTest() {
         movieIndexService = new MovieIndexService()
+        println "\"" + new MovieRip(new MovieMock()).stars.collect { "\'$it.name\'" }.join(' ') + "\""
         movieIndexService.movieRips = [new MovieRip(new MovieMock())] as Set
     }
 

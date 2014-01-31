@@ -30,7 +30,10 @@ repositories {
 
 dependencies {
     provided group: 'javax', name: 'javaee-api', version: javaeeVersion
-    testCompile group: 'org.apache.openejb', name: 'openejb-core', version: openejbVersion
+    testCompile(
+            [group: 'org.apache.openejb', name: 'openejb-core', version: openejbVersion],
+            [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion]
+    )
     compile(
         [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
         [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],

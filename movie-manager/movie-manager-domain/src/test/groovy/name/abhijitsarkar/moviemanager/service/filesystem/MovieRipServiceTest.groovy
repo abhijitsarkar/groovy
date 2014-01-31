@@ -18,10 +18,11 @@
  * @author Abhijit Sarkar
  */
 
-package name.abhijitsarkar.moviemanager.service
+package name.abhijitsarkar.moviemanager.service.filesystem
 
 import mockit.Mocked
 import mockit.NonStrictExpectations
+import name.abhijitsarkar.moviemanager.service.filesystem.MovieRipService
 import org.junit.Before
 import org.junit.Test
 

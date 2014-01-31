@@ -14,12 +14,12 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service
+package name.abhijitsarkar.moviemanager.service.index
 
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
+import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
 import org.apache.log4j.Logger
-import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.store.FSDirectory
@@ -57,7 +57,7 @@ class MovieIndexUtil {
     }
 
     def createAnalyzer() {
-        new StandardAnalyzer(version)
+        new NameAnalyzer(version)
     }
 
     def closeIndexWriter(writer) {

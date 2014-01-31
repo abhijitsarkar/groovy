@@ -14,10 +14,11 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service
+package name.abhijitsarkar.moviemanager.service.index
 
 import mockit.Mocked
 import mockit.NonStrictExpectations
+import name.abhijitsarkar.moviemanager.service.index.MovieIndexUtil
 import org.apache.lucene.analysis.standard.StandardAnalyzer
 import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
