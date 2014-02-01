@@ -27,6 +27,7 @@ import org.apache.lucene.document.FloatField
 import org.apache.lucene.document.LongField
 import org.apache.lucene.document.StringField
 import org.apache.lucene.document.TextField
+import org.apache.lucene.index.IndexWriter
 
 import javax.annotation.ManagedBean
 import javax.inject.Inject
@@ -36,19 +37,16 @@ import javax.inject.Inject
  */
 @ManagedBean
 class MovieIndexService {
-    private static logger = Logger.getInstance(MovieIndexService.class)
-    private static LIST_ELEMENT_SEPARATOR = '|'
+    private static final logger = Logger.getInstance(MovieIndexService.class)
 
     @Inject
-    MovieIndexUtil indexUtil
+    IndexWriter indexWriter
 
     @MovieRips
     @Inject
     Set<MovieRip> movieRips
 
     def index() {
-        def writer = indexUtil.openIndexWriter()
-
         movieRips.each { movieRip ->
             delegate = this
 
@@ -57,19 +55,22 @@ class MovieIndexService {
             def doc = new Document()
 
             addStringField('title', movieRip.title, Field.Store.YES, doc)
-            addTextField('genres', movieRip.genres.join(LIST_ELEMENT_SEPARATOR), Field.Store.YES, doc)
+            movieRip.genres.each { genre ->
+                addTextField('genres', genre, Field.Store.YES, doc)
+            }
             addDateField('releaseDate', movieRip.releaseDate, Field.Store.YES, doc)
             addStringField('director', movieRip.director, Field.Store.YES, doc)
-            addTextField('stars', movieRip.stars.collect { it.name }.join(LIST_ELEMENT_SEPARATOR), Field.Store.YES, doc)
+            movieRip.stars.each { star ->
+                addTextField('stars', star.name, Field.Store.YES, doc)
+            }
+//            addTextField('stars', movieRip.stars.collect { it.name }.join(LIST_ELEMENT_SEPARATOR), Field.Store.YES, doc)
             addFloatField('imdbRating', movieRip.imdbRating, Field.Store.YES, doc)
             addStringField('imdbURL', movieRip.imdbURL, Field.Store.YES, doc)
             addLongField('fileSize', movieRip.fileSize, Field.Store.NO, doc)
             addStringField('fileExtension', movieRip.fileExtension, Field.Store.NO, doc)
 
-            writer.addDocument(doc)
+            indexWriter.addDocument(doc)
         }
-
-        indexUtil.closeIndexWriter(writer)
     }
 
     @PackageScope
