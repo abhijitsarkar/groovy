@@ -22,7 +22,7 @@ import org.apache.lucene.analysis.core.LetterTokenizer
  * @author Abhijit Sarkar
  */
 class PipeTokenizer extends LetterTokenizer {
-    private static final TOKEN_SEPARATOR = '|'
+    private static final String TOKEN_SEPARATOR = '|'
 
     PipeTokenizer(matchVersion, reader) {
         super(matchVersion, reader)

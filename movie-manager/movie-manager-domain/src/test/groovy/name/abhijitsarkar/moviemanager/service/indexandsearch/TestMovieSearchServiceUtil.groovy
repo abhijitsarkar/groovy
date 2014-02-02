@@ -17,12 +17,15 @@
 package name.abhijitsarkar.moviemanager.service.indexandsearch
 
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
+import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
+import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchServiceUtil
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.IndexReader
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.store.Directory
+import org.apache.lucene.util.Version
 
 import javax.annotation.ManagedBean
 import javax.enterprise.inject.Alternative
@@ -43,17 +46,21 @@ class TestMovieSearchServiceUtil extends MovieSearchServiceUtil {
     @IndexDirectory
     private Directory indexDir
 
+    @Inject
+    @SearchEngineVersion
+    private Version version
+
     @Produces
     @name.abhijitsarkar.moviemanager.annotation.IndexSearcher
-    IndexSearcher createSearcher() {
-        IndexReader reader = DirectoryReader.open(indexDir);
-        new IndexSearcher(reader);
+    IndexSearcher newIndexSearcher() {
+        IndexReader reader = DirectoryReader.open(indexDir)
+        new IndexSearcher(reader)
     }
 
     @Produces
     @name.abhijitsarkar.moviemanager.annotation.QueryParser
-    StandardQueryParser createQueryParser() {
-        new StandardQueryParser(getAnalyzer())
+    StandardQueryParser newQueryParser() {
+        new StandardQueryParser(new NameAnalyzer(version))
     }
 
     void closeIndexReader(

@@ -18,9 +18,14 @@ package name.abhijitsarkar.moviemanager.service.search
 
 import name.abhijitsarkar.moviemanager.domain.CastAndCrew
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import org.apache.log4j.Logger
+import org.apache.lucene.document.Document
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
 import org.apache.lucene.search.IndexSearcher
+import org.apache.lucene.search.Query
+import org.apache.lucene.search.ScoreDoc
+import org.apache.lucene.search.TopDocs
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import javax.annotation.ManagedBean
 import javax.inject.Inject
@@ -30,9 +35,9 @@ import javax.inject.Inject
  */
 @ManagedBean
 class MovieSearchService {
-    private static final logger = Logger.getInstance(MovieSearchService.class)
-    static final DEFAULT_SEARCH_FIELD = 'title'
-    static final DEFAULT_NUM_RESULTS_TO_FETCH = 100
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchService)
+    static final String DEFAULT_SEARCH_FIELD = 'title'
+    static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100
 
     @Inject
     @name.abhijitsarkar.moviemanager.annotation.IndexSearcher
@@ -42,30 +47,33 @@ class MovieSearchService {
     @name.abhijitsarkar.moviemanager.annotation.QueryParser
     StandardQueryParser queryParser
 
-    def search(queryString, numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
-        def query = queryParser.parse(queryString, DEFAULT_SEARCH_FIELD)
-        def topDocs = indexSearcher.search(query, numResultsToFetch)
-        def scoreDocs = topDocs.scoreDocs
+    Set<MovieRip> search(String queryString, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
+        Query query = queryParser.parse(queryString, DEFAULT_SEARCH_FIELD)
+        TopDocs topDocs = indexSearcher.search(query, numResultsToFetch)
+        ScoreDoc[] scoreDocs = topDocs.scoreDocs
 
         movieRips(scoreDocs)
     }
 
-    private movieRips(scoreDocs) {
-        def movieRips = []
-        final hits = scoreDocs.length()
+    private Set<MovieRip> movieRips(ScoreDoc[] scoreDocs) {
+        Set<MovieRip> movieRips = [] as Set
+        final int hits = scoreDocs.length()
 
         for (i in 0..hits) {
-            def movieRip = new MovieRip()
-            def doc = indexSearcher.doc(hits[i].doc)
+            Document doc = indexSearcher.doc(hits[i].doc)
 
-            movieRip.title = doc.get('title')
-            movieRip.genres = doc.getValues('genres').toList()
-            movieRip.releaseDate = Date.parse('MM/dd/yyyy', doc.get('releaseDate'))
-            movieRip.director = new CastAndCrew(doc.get('director'))
-            movieRip.stars = doc.getValues('stars').toList().collect {
-                new CastAndCrew(it)
+            MovieRip movieRip = new MovieRip().with {
+                title = doc.get('title')
+                genres = doc.getValues('genres').toList()
+                releaseDate = Date.parse('MM/dd/yyyy', doc.get('releaseDate'))
+                director = new CastAndCrew(doc.get('director'))
+                stars = doc.getValues('stars').toList().collect { aStar ->
+                    new CastAndCrew(aStar)
+                }
+                imdbRating = doc.get('imdbRating')
+
+                it
             }
-            movieRip.imdbRating = doc.get('imdbRating')
 
             movieRips << movieRip
         }

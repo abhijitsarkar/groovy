@@ -18,6 +18,7 @@ package name.abhijitsarkar.moviemanager.service.rip
 
 import name.abhijitsarkar.moviemanager.annotation.IncludeFiles
 import name.abhijitsarkar.moviemanager.annotation.MovieGenres
+import name.abhijitsarkar.moviemanager.domain.MovieRipFileExtension
 
 import javax.annotation.ManagedBean
 import javax.enterprise.inject.Produces
@@ -48,12 +49,9 @@ class TestMovieRipServiceUtil {
     @Produces
     @IncludeFiles
     List<String> includes() {
-        [
-                'avi',
-                'mkv',
-                'mp4',
-                'divx',
-                'mov'
-        ]
+        MovieRipFileExtension.values().collect {
+            // GOTCHA ALERT: GString is not equal to String; "a" != 'a'
+            ".${it.name().toLowerCase()}".toString()
+        }
     }
 }

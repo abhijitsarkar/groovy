@@ -24,8 +24,8 @@ import org.junit.Before
 import org.junit.Test
 
 class CastAndCrewTest {
-	def star1
-	def star2
+    CastAndCrew star1
+    CastAndCrew star2
 
 	@Before
 	void setUp() {

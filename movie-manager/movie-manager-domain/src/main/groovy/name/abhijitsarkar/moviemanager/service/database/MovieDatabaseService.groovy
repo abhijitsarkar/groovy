@@ -20,6 +20,8 @@
 
 package name.abhijitsarkar.moviemanager.service.database
 
+import name.abhijitsarkar.moviemanager.domain.Movie
+
 interface MovieDatabaseService {
-    def getMovieByTitleAndYear(title, year)
+    Set<Movie> getMovieByTitleAndYear(title, year)
 }

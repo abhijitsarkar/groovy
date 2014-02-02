@@ -21,7 +21,7 @@
 package name.abhijitsarkar.moviemanager.domain
 
 class CastAndCrew {
-    def name
+    String name
 
     CastAndCrew(name) {
         this.name = name
@@ -34,9 +34,9 @@ class CastAndCrew {
 
     @Override
     int hashCode() {
-        def result = 17
-        def c = 0
-        def magicNum = 37
+        int result = 17
+        int c = 0
+        int magicNum = 37
 
         c = name ? name.hashCode() : 0
         result = magicNum * result + c

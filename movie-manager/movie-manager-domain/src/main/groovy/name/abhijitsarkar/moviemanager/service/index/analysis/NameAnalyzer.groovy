@@ -17,8 +17,10 @@
 package name.abhijitsarkar.moviemanager.service.index.analysis
 
 import org.apache.lucene.analysis.Analyzer
+import org.apache.lucene.analysis.TokenStream
 import org.apache.lucene.analysis.core.LowerCaseFilter
 import org.apache.lucene.analysis.pattern.PatternReplaceCharFilter
+import org.apache.lucene.util.Version
 
 import java.util.regex.Pattern
 
@@ -26,9 +28,9 @@ import java.util.regex.Pattern
  * @author Abhijit Sarkar
  */
 class NameAnalyzer extends Analyzer {
-    protected final matchVersion;
-    protected final pattern
-    protected final replacement
+    private final Version matchVersion
+    private final pattern
+    private final replacement
 
     private static final DEFAULT_PATTERN = Pattern.compile('[^a-zA-Z0-9]?+')
     private static final DEFAULT_REPLACEMENT = ' '
@@ -45,14 +47,14 @@ class NameAnalyzer extends Analyzer {
 
     @Override
     protected Analyzer.TokenStreamComponents createComponents(String fieldName, Reader reader) {
-        def src = new PipeTokenizer(matchVersion, reader)
-        def tok = new LowerCaseFilter(matchVersion, src)
+        TokenStream src = new PipeTokenizer(matchVersion, reader)
+        TokenStream tok = new LowerCaseFilter(matchVersion, src)
 
         new Analyzer.TokenStreamComponents(src, tok)
     }
 
     @Override
-    protected initReader(fieldName, reader) {
+    protected Reader initReader(fieldName, reader) {
         new PatternReplaceCharFilter(pattern, replacement, reader)
     }
 }

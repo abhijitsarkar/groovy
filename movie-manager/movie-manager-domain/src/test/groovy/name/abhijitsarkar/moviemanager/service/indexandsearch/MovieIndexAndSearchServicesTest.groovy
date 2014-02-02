@@ -17,6 +17,7 @@
 package name.abhijitsarkar.moviemanager.service.indexandsearch
 
 import name.abhijitsarkar.moviemanager.domain.Movie
+import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
 import name.abhijitsarkar.moviemanager.util.AbstractCDITest
@@ -39,7 +40,7 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
     private MovieSearchService movieSearchService
 
     @PostConstruct
-    void postConstruct() {
+    private void postConstruct() {
         assert movieIndexService?.indexWriter
         assert movieIndexService?.movieRips
 
@@ -51,7 +52,7 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
     void testSearch() {
         movieIndexService.index()
 
-        def movieRips = movieSearchService.search('title: Terminator 2 Judgment Day')
+        Set<MovieRip> movieRips = movieSearchService.search('title: Terminator 2 Judgment Day')
 
         assert movieRips.size() == 1
         assert (movieRips[0] as Movie) == new MovieMock()

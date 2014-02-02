@@ -40,34 +40,37 @@ import javax.enterprise.inject.Specializes
 @Alternative
 @Specializes
 class TestMovieIndexServiceUtil extends MovieIndexServiceUtil {
-    private Directory indexDir
+    private final Directory indexDir
+    private final Version version
+
+    TestMovieIndexServiceUtil() {
+        indexDir = new RAMDirectory()
+        version = Version.LUCENE_46
+    }
 
     @Produces
     @name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-    Version version() {
-        Version.LUCENE_46
+    Version searchEngineVersion() {
+        version
     }
 
     @Produces
     @name.abhijitsarkar.moviemanager.annotation.IndexDirectory
     Directory indexDirectory() {
-        indexDir = new RAMDirectory()
-
         indexDir
     }
 
     @Produces
     @name.abhijitsarkar.moviemanager.annotation.IndexWriter
     IndexWriter openIndexWriter() {
-        final IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_46,
-                new NameAnalyzer(Version.LUCENE_46))
+        final IndexWriterConfig iwc = new IndexWriterConfig(version, new NameAnalyzer(version))
         new IndexWriter(indexDir, iwc)
     }
 
     @Produces
     @MovieRips
     Set<MovieRip> movieRips() {
-        def movieRips = new HashSet<MovieRip>()
+        Set<MovieRip> movieRips = [] as SortedSet
         movieRips << new MovieRip(new MovieMock())
     }
 

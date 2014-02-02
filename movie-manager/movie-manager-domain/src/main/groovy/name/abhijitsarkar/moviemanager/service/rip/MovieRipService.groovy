@@ -20,16 +20,17 @@
 
 package name.abhijitsarkar.moviemanager.service.rip
 
-import groovy.transform.PackageScope
 import name.abhijitsarkar.moviemanager.annotation.IncludeFiles
 import name.abhijitsarkar.moviemanager.annotation.MovieGenres
 import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import org.apache.log4j.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import javax.annotation.ManagedBean
 import javax.annotation.PostConstruct
 import javax.inject.Inject
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 @ManagedBean
@@ -49,12 +50,12 @@ class MovieRipService {
      * (.++) -> Matches one or more occurrences of any character.
      */
     private static final MOVIE_NAME_WITH_RELEASE_YEAR_REGEX = "([-',!\\[\\]\\.\\w\\s]++)(?:\\((\\d{4})\\))?+(.++)"
-    private static final pattern = Pattern.compile(MOVIE_NAME_WITH_RELEASE_YEAR_REGEX)
-    private static logger = Logger.getInstance(MovieRipService.class)
+    private static final PATTERN = Pattern.compile(MOVIE_NAME_WITH_RELEASE_YEAR_REGEX)
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieRipService)
 
-    private genres
+    private final List<String> genres
 
-    private includes
+    private final List<String> includes
 
     // For CDI to work, the injection point must be strongly typed
     @Inject
@@ -69,22 +70,13 @@ class MovieRipService {
         assert includes: 'File includes must not be null.'
     }
 
-    def getMovieRips(movieDirectory) throws IOException {
-        def f = new File(movieDirectory)
+    Set<MovieRip> getMovieRips(String movieDirectory) {
+        File rootDir = new File(movieDirectory)
 
-        if (!f.isAbsolute()) {
-            logger.warn("Path ${movieDirectory} is not absolute: it's resolved to ${movieDirectory.absolutePath}")
+        if (!rootDir.isAbsolute()) {
+            LOGGER.warn("Path ${movieDirectory} is not absolute: it's resolved to ${rootDir.absolutePath}")
         }
 
-        def movieRips = new TreeSet<MovieRip>()
-
-        addToMovieRips(f, movieRips)
-
-        movieRips
-    }
-
-    @PackageScope
-    def addToMovieRips(rootDir, movieRips, currentGenre = null) {
         if (!rootDir.exists() || !rootDir.isDirectory()) {
             throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not a directory.")
         }
@@ -92,108 +84,109 @@ class MovieRipService {
             throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not readable.")
         }
 
+        String currentGenre
+        Set<MovieRip> movieRips = [] as SortedSet
+
         rootDir.eachFileRecurse { File f ->
             delegate = this
 
             if (f.isDirectory() && isGenre(f.name)) {
                 currentGenre = f.name
             } else if (isMovieRip(f.name)) {
-                def movieRip = parseMovieRip(f.name)
+                MovieRip movieRip = parseMovieRip(f.name)
 
                 movieRip.genres = currentGenre as List
                 movieRip.fileSize = f.length()
 
-                def parent = getParent(f, currentGenre, rootDir)
+                String parent = getParent(f, currentGenre, rootDir)
 
                 if (!currentGenre?.equalsIgnoreCase(parent)) {
                     movieRip.parent = parent
                 }
 
-                logger.info("Found movie: ${movieRip}")
+                LOGGER.info("Found movie: ${movieRip}")
 
                 boolean isUnique = movieRips.add(movieRip)
 
                 if (!isUnique) {
-                    logger.warn("Found duplicate movie: ${movieRip}")
+                    LOGGER.warn("Found duplicate movie: ${movieRip}")
                 }
             }
         }
     }
 
-    @PackageScope
-    def parseMovieRip(fileName) {
-        def movieTitle
-        def fullStop = '.'
-        def movieRipFileExtension = getFileExtension(fileName)
-        def lastPart
+    MovieRip parseMovieRip(String fileName) {
+        String movieTitle
+        final String movieRipFileExtension = getFileExtension(fileName)
+        LOGGER.debug("movieRipFileExtension: ${movieRipFileExtension}")
+        String lastPart
 
-        def year = 0
-        def imdbRating = -1.0f
+        int year = 0
+        float imdbRating = -1.0f
 
-        def matcher = pattern.matcher(fileName)
+        Matcher matcher = PATTERN.matcher(fileName)
         if (matcher.find() && matcher.groupCount() >= 1) {
             // 1st group is the title, always present
-            logger.debug("matcher.group(1): ${matcher.group(1)}")
+            final String group1 = matcher.group(1)
+            LOGGER.debug("matcher.group(1): ${group1}")
 
-            movieTitle = matcher.group(1).trim()
+            movieTitle = group1.trim()
 
             // If present, the 2nd group is the release year
-            logger.debug("matcher.group(2): ${matcher.group(2)}")
-            year = matcher.group(2) ? Integer.parseInt(matcher.group(2)) : year
+            final String group2 = matcher.group(2)
+            LOGGER.debug("matcher.group(2): ${group2}")
+            year = group2 ? Integer.parseInt(group2) : year
 
             // If present, the 3rd group might be one of 2 things:
             // 1) The file extension
             // 2) A "qualifier" to the name like "part 1" and the file extension
-            logger.debug("matcher.group(3): ${matcher.group(3)}")
-            lastPart = matcher.group(3) ?: null
+            final String group3 = matcher.group(3)
+            LOGGER.debug("matcher.group(3): ${group3}")
+            lastPart = group3 ?: null
 
             if (lastPart && (lastPart != movieRipFileExtension)) {
                 // Extract the qualifier
-                movieTitle += lastPart.substring(0, lastPart.length()
-                        - (movieRipFileExtension.length() + 1))
+                String qualifier = lastPart[0..-(movieRipFileExtension.length() + 1)]
+                LOGGER.debug("qualifier: ${qualifier}")
+                movieTitle += qualifier
             }
         } else {
-            logger.debug("Found unconventional filename: ${fileName}")
+            LOGGER.debug("Found unconventional filename: ${fileName}")
             // Couldn't parse file name, extract as-is without file extension
-            movieTitle = fileName.substring(0, fileName.length()
-                    - (movieRipFileExtension.length() + 1))
+            movieTitle = fileName[0..-(movieRipFileExtension.length() + 1)]
         }
 
-        def m = new Movie(title: movieTitle, imdbRating: imdbRating,
+        final Movie m = new Movie(title: movieTitle, imdbRating: imdbRating,
                 releaseDate: Date.parse('MM/dd/yyyy', "01/01/${year}"))
 
-        def mr = new MovieRip(m)
-        mr.fileExtension = "${fullStop}${movieRipFileExtension}"
+        final MovieRip mr = new MovieRip(m)
+        mr.fileExtension = "${movieRipFileExtension}"
 
         mr
     }
 
-    @PackageScope
-    def isMovieRip(fileName) {
+    boolean isMovieRip(String fileName) {
         includes.contains(getFileExtension(fileName).toLowerCase())
     }
 
-    @PackageScope
-    def isGenre(fileName) {
+    boolean isGenre(String fileName) {
         genres.contains(fileName)
     }
 
-    @PackageScope
-    def getFileExtension(fileName) {
+    String getFileExtension(fileName) {
         /* Unicode representation of char . */
-        def fullStop = '.'
-        def fullStopIndex = fileName.lastIndexOf(fullStop)
+        final String fullStop = '.'
+        final int fullStopIndex = fileName.lastIndexOf(fullStop)
 
         if (fullStopIndex < 0) {
             return ''
         }
 
-        fileName.substring(++fullStopIndex, fileName.length())
+        fileName[fullStopIndex..-1]
     }
 
-    @PackageScope
-    def getParent(file, currentGenre, rootDirectory, immediateParent = null) {
-        def parentFile = file.parentFile
+    final String getParent(File file, String currentGenre, File rootDirectory, String immediateParent = null) {
+        File parentFile = file.parentFile
 
         if (!parentFile?.isDirectory() || parentFile?.compareTo(rootDirectory) <= 0) {
             return immediateParent

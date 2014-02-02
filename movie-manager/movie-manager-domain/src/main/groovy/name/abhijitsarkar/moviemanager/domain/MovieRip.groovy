@@ -23,40 +23,45 @@ package name.abhijitsarkar.moviemanager.domain
 import java.util.regex.Pattern
 
 class MovieRip extends Movie implements Comparable {
-	long fileSize
-	String fileExtension
-	String parent
+    long fileSize
+    String fileExtension
+    String parent
 
-	MovieRip(movie) {
-		super(movie)
-	}
+    MovieRip(movie) {
+        super(movie)
+    }
 
-	@Override
-	String toString() {
-		def pattern = Pattern.compile('Movie*')
-		super.toString().replaceAll(pattern, 'MovieRip')
-	}
+    @Override
+    String toString() {
+        Pattern pattern = Pattern.compile('Movie*')
+        super.toString().replaceAll(pattern, 'MovieRip')
+    }
 
-	@Override
-	boolean equals(Object obj) {
-		if (this.class != obj?.class) {
-			return false
-		}
+    @Override
+    boolean equals(Object obj) {
+        if (this.class != obj?.class) {
+            return false
+        }
 
-		super.equals((Movie)obj)
-	}
+        super.equals((Movie) obj)
+    }
 
-	@Override
-	int hashCode() {
-		// Codenarc is making me write extra code! On one hand, it thinks hashCode should've more code than just a
-		// super call, on the other hand if I remove the method, Codenarc complains of it's absence.
-		def hashCode = super.hashCode()
+    @Override
+    int hashCode() {
+        // Codenarc is making me write extra code! On one hand, it thinks hashCode should've more code than just a
+        // super call, on the other hand if I remove the method, Codenarc complains of it's absence.
+        int hashCode = super.hashCode()
 
-		hashCode
-	}
+        hashCode
+    }
 
-	@Override
-	int compareTo(Object o) {
-		super.compareTo(o);
-	}
+    @Override
+    int compareTo(Object o) {
+        // Codenarc is making me write extra code! On one hand, it thinks compareTo should've more code than just a
+        // super call, on the other hand if I remove the method, Codenarc complains of it's absence.
+
+        int result = super.compareTo(o)
+
+        result
+    }
 }

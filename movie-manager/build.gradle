@@ -36,6 +36,7 @@ allprojects {
     codenarc {
         configFile = file("${rootProject.projectDir}/src/main/config/codenarc/codenarc.groovy")
         toolVersion = codenarcToolVersion
+        ignoreFailures = true
     }
 
     repositories {
@@ -46,7 +47,8 @@ allprojects {
     dependencies {
         compile(
                 [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
-                [group: 'name.abhijitsarkar.util.logging', name: 'logging-util', version: logginUtilVersion]
+                [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
+                [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
         )
 
         runtime(

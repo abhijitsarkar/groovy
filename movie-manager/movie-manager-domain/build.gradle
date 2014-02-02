@@ -20,6 +20,7 @@ configurations { provided }
 
 sourceSets {
     main.compileClasspath += configurations.provided
+    main.runtimeClasspath += configurations.provided
     test.compileClasspath += configurations.provided
     test.runtimeClasspath += configurations.provided
 }
@@ -29,16 +30,24 @@ repositories {
 }
 
 dependencies {
-    provided group: 'javax', name: 'javaee-api', version: javaeeVersion
+    provided group: 'org.apache.openejb', name: 'javaee-api', version: javaeeVersion
     testCompile(
             [group: 'org.apache.openejb', name: 'openejb-core', version: openejbVersion],
             [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion]
     )
     compile(
-        [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
-        [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
-        [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion]
+            [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
+            [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
+            [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion]
     )
 }
 
+sourceSets {
+    main {
+        output.resourcesDir = project.file('build/classes/main')
+    }
+    test {
+        output.resourcesDir = project.file('build/classes/test')
+    }
+}
 eclipse.classpath.plusConfigurations += configurations.provided

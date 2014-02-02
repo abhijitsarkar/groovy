@@ -21,6 +21,8 @@
 package name.abhijitsarkar.moviemanager.service.rip
 import mockit.Mocked
 import mockit.NonStrictExpectations
+import name.abhijitsarkar.moviemanager.annotation.MovieGenres
+import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.util.AbstractCDITest
 import org.junit.Test
 
@@ -32,16 +34,20 @@ class MovieRipServiceTest extends AbstractCDITest {
     @Inject
     private MovieRipService service
 
+    @Inject
+    @MovieGenres
+    List<String> genres
+
     @Test
     void testGetFileExtension() {
-        assert 'txt' == service.getFileExtension('file.txt')
-        assert 'txt' == service.getFileExtension('.txt')
+        assert '.txt' == service.getFileExtension('file.txt')
+        assert '.txt' == service.getFileExtension('.txt')
         assert '' == service.getFileExtension('file')
     }
 
     @Test
     void testIsGenre() {
-        this.genreList().each {
+        genres.each {
             assert service.isGenre(it)
         }
 
@@ -65,7 +71,7 @@ class MovieRipServiceTest extends AbstractCDITest {
 
     @Test
     void testParseMovieRip() {
-        def mr = service.parseMovieRip('Casino Royal (2006).mkv')
+        MovieRip mr = service.parseMovieRip('Casino Royal (2006).mkv')
 
         assert mr.title == 'Casino Royal'
         assert mr.releaseDate[Calendar.YEAR] == 2006
@@ -92,7 +98,7 @@ class MovieRipServiceTest extends AbstractCDITest {
                 f.parentFile; result = (File) any
                 // Record the result of 2 consecutive isDirectory() calls
                 f.isDirectory(); result = [false, false]
-                f.compareTo((File) any); result = -1
+                f <=> ((File) any); result = -1
             }
         }
 

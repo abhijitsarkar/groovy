@@ -15,27 +15,30 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.index
+
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
-import org.apache.log4j.Logger
 import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import javax.annotation.ManagedBean
 import javax.enterprise.inject.Disposes
 import javax.enterprise.inject.Produces
 import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */
 @ManagedBean
 //@ApplicationScoped
 class MovieIndexServiceUtil {
-    private static logger = Logger.getInstance(MovieIndexServiceUtil.class)
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexServiceUtil)
 
     @Inject
     @IndexDirectory
@@ -48,10 +51,10 @@ class MovieIndexServiceUtil {
     @Produces
     @name.abhijitsarkar.moviemanager.annotation.IndexWriter
     IndexWriter openIndexWriter() {
-        logger.info("Indexing to directory ${indexDirectory}, files with extension ${includeFileExtensions}")
+        LOGGER.info("Indexing to directory ${indexDirectory}, files with extension ${includeFileExtensions}")
 
-        def dir = FSDirectory.open(new File(indexDirectory))
-        def iwc = new IndexWriterConfig(version, getAnalyzer())
+        Directory dir = FSDirectory.open(new File(indexDirectory))
+        IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
 
         new IndexWriter(dir, iwc)

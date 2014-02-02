@@ -27,29 +27,29 @@ import javax.ejb.embeddable.EJBContainer
  * @author Abhijit Sarkar
  */
 class AbstractCDITest {
-    protected static EJBContainer container;
+    protected static EJBContainer container
 
     // GOTCHA ALERT: The following methods are guaranteed to be called before the corresponding ones in the subclasses
     // but ONLY IF the subclass methods have unique names. For example, if a subclass
     // declares a @Before method with the name bind, JUnit WILL NOT CALL the superclass method
 
     @BeforeClass
-    public static void createContainer() {
+    static void newContainer() {
         container = EJBContainer.createEJBContainer()
     }
 
     @Before
-    public void bind() {
-        container.getContext().bind('inject', this)
+    void bind() {
+        container.context.bind('inject', this)
     }
 
     @After
-    public void unbind() {
-        container.getContext().unbind('inject')
+    void unbind() {
+        container.context.unbind('inject')
     }
 
     @AfterClass
-    public static void destroyContainer() {
+    static void destroyContainer() {
         container.close()
     }
 }
