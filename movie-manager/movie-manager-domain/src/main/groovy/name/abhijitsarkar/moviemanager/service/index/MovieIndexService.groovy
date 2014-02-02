@@ -39,6 +39,7 @@ import javax.inject.Inject
 class MovieIndexService {
     private static final logger = Logger.getInstance(MovieIndexService.class)
 
+    @name.abhijitsarkar.moviemanager.annotation.IndexWriter
     @Inject
     IndexWriter indexWriter
 
@@ -56,11 +57,13 @@ class MovieIndexService {
 
             addStringField('title', movieRip.title, Field.Store.YES, doc)
             movieRip.genres.each { genre ->
+                logger.debug("Indexing movie genre ${genre}...")
                 addTextField('genres', genre, Field.Store.YES, doc)
             }
             addDateField('releaseDate', movieRip.releaseDate, Field.Store.YES, doc)
             addStringField('director', movieRip.director, Field.Store.YES, doc)
             movieRip.stars.each { star ->
+                logger.debug("Indexing movie star ${star.name}...")
                 addTextField('stars', star.name, Field.Store.YES, doc)
             }
 //            addTextField('stars', movieRip.stars.collect { it.name }.join(LIST_ELEMENT_SEPARATOR), Field.Store.YES, doc)

@@ -14,61 +14,51 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service.search
+package name.abhijitsarkar.moviemanager.service.index
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
 import org.apache.log4j.Logger
-import org.apache.lucene.index.DirectoryReader
-import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
-import org.apache.lucene.search.IndexSearcher
+import org.apache.lucene.index.IndexWriter
+import org.apache.lucene.index.IndexWriterConfig
+import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
+import org.apache.lucene.util.Version
 
 import javax.annotation.ManagedBean
-import javax.annotation.PostConstruct
-import javax.annotation.PreDestroy
-import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.inject.Disposes
 import javax.enterprise.inject.Produces
 import javax.inject.Inject
 /**
  * @author Abhijit Sarkar
  */
 @ManagedBean
-@ApplicationScoped
-class MovieSearchUtil {
-    private static logger = Logger.getInstance(MovieSearchUtil.class)
+//@ApplicationScoped
+class MovieIndexServiceUtil {
+    private static logger = Logger.getInstance(MovieIndexServiceUtil.class)
 
     @Inject
     @IndexDirectory
-    private indexDirectory
+    private Directory indexDirectory
 
     @Inject
     @SearchEngineVersion
-    private version
+    private Version version
 
-    private indexReader
-
-    @PostConstruct
-    void postConstruct() {
-        logger.info("Searching in the directory ${indexDirectory}")
+    @Produces
+    @name.abhijitsarkar.moviemanager.annotation.IndexWriter
+    IndexWriter openIndexWriter() {
+        logger.info("Indexing to directory ${indexDirectory}, files with extension ${includeFileExtensions}")
 
         def dir = FSDirectory.open(new File(indexDirectory))
-        indexReader = DirectoryReader.open(dir)
+        def iwc = new IndexWriterConfig(version, getAnalyzer())
+        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
+
+        new IndexWriter(dir, iwc)
     }
 
-    @PreDestroy
-    void preDestroy() {
-        indexReader.close()
-    }
-
-    @Produces
-    IndexSearcher createSearcher() {
-        new IndexSearcher(indexReader)
-    }
-
-    @Produces
-    StandardQueryParser createQueryParser() {
-        new StandardQueryParser(getAnalyzer())
+    void closeIndexWriter(@Disposes @name.abhijitsarkar.moviemanager.annotation.IndexWriter IndexWriter indexWriter) {
+        indexWriter.close()
     }
 
     private getAnalyzer() {

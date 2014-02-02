@@ -22,24 +22,29 @@ import org.apache.log4j.Logger
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
 import org.apache.lucene.search.IndexSearcher
 
+import javax.annotation.ManagedBean
 import javax.inject.Inject
 
 /**
  * @author Abhijit Sarkar
  */
+@ManagedBean
 class MovieSearchService {
     private static final logger = Logger.getInstance(MovieSearchService.class)
-    private static final DEFAULT_SEARCH_FIELD = 'title'
+    static final DEFAULT_SEARCH_FIELD = 'title'
+    static final DEFAULT_NUM_RESULTS_TO_FETCH = 100
 
     @Inject
+    @name.abhijitsarkar.moviemanager.annotation.IndexSearcher
     IndexSearcher indexSearcher
 
     @Inject
+    @name.abhijitsarkar.moviemanager.annotation.QueryParser
     StandardQueryParser queryParser
 
-    def search(queryString) {
+    def search(queryString, numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
         def query = queryParser.parse(queryString, DEFAULT_SEARCH_FIELD)
-        def topDocs = indexSearcher.search(query, 10)
+        def topDocs = indexSearcher.search(query, numResultsToFetch)
         def scoreDocs = topDocs.scoreDocs
 
         movieRips(scoreDocs)
@@ -61,6 +66,8 @@ class MovieSearchService {
                 new CastAndCrew(it)
             }
             movieRip.imdbRating = doc.get('imdbRating')
+
+            movieRips << movieRip
         }
 
         movieRips

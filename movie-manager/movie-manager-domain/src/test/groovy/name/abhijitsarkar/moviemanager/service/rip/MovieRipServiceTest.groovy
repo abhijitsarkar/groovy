@@ -18,47 +18,19 @@
  * @author Abhijit Sarkar
  */
 
-package name.abhijitsarkar.moviemanager.service.filesystem
-
+package name.abhijitsarkar.moviemanager.service.rip
 import mockit.Mocked
 import mockit.NonStrictExpectations
-import name.abhijitsarkar.moviemanager.service.filesystem.MovieRipService
-import org.junit.Before
+import name.abhijitsarkar.moviemanager.util.AbstractCDITest
 import org.junit.Test
 
-class MovieRipServiceTest {
-    def service
+import javax.annotation.ManagedBean
+import javax.inject.Inject
 
-    @Before
-    void setUp() {
-        service = new MovieRipService(genreList(), includes())
-    }
-
-    def genreList() {
-        [
-                'Action and Adventure',
-                'Animation',
-                'Comedy',
-                'Documentary',
-                'Drama',
-                'Horror',
-                'R-Rated Mainstream Movies',
-                'Romance',
-                'Sci-Fi',
-                'Thriller',
-                'X-Rated'
-        ]
-    }
-
-    def includes() {
-        [
-                'avi',
-                'mkv',
-                'mp4',
-                'divx',
-                'mov'
-        ]
-    }
+@ManagedBean
+class MovieRipServiceTest extends AbstractCDITest {
+    @Inject
+    private MovieRipService service
 
     @Test
     void testGetFileExtension() {
