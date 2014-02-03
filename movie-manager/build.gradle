@@ -68,10 +68,10 @@ allprojects {
 
     test {
         // Exclude integration tests and tests part of JUnit suites
-        useJUnit {
-            excludeCategories 'name.abhijitsarkar.moviemanager.util.CDISuiteTest'
-        }
-        includes = ['**/CDITestSuite*', '**/Test*'] as Set
+//        useJUnit {
+//            excludeCategories 'name.abhijitsarkar.moviemanager.util.CDISuiteTest'
+//        }
+//        includes = ['**/CDITestSuite*', '**/Test*'] as Set
     }
 
     jar { manifest.attributes provider: 'Abhijit Sarkar' }
