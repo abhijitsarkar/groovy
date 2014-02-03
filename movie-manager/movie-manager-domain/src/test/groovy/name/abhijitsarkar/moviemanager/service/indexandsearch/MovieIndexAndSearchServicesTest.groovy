@@ -20,19 +20,18 @@ import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
-import name.abhijitsarkar.moviemanager.util.AbstractCDITest
+import name.abhijitsarkar.moviemanager.util.CDISuiteTest
 import name.abhijitsarkar.moviemanager.util.MovieMock
 import org.junit.Test
 
-import javax.annotation.ManagedBean
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 
 /**
  * @author Abhijit Sarkar
  */
-@ManagedBean
-class MovieIndexAndSearchServicesTest extends AbstractCDITest {
+@org.junit.experimental.categories.Category(CDISuiteTest)
+class MovieIndexAndSearchServicesTest {
     @Inject
     private MovieIndexService movieIndexService
 
@@ -41,11 +40,14 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
 
     @PostConstruct
     private void postConstruct() {
-        assert movieIndexService?.indexWriter
-        assert movieIndexService?.movieRips
+        assert movieIndexService
+        assert movieSearchService
 
-        assert movieSearchService?.indexSearcher
-        assert movieSearchService?.queryParser
+        assert movieIndexService.indexWriter
+        assert movieIndexService.movieRips
+
+        assert movieSearchService.indexSearcher
+        assert movieSearchService.queryParser
     }
 
     @Test

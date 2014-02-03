@@ -14,20 +14,18 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-/**
- * @author Abhijit Sarkar
- */
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
+import ch.qos.logback.core.ConsoleAppender
 
-package name.abhijitsarkar.moviemanager.annotation;
+import static ch.qos.logback.classic.Level.DEBUG
 
-import javax.inject.Qualifier;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
-@Retention(RetentionPolicy.RUNTIME)
-@Qualifier
-public @interface MovieGenres {
+appender('STDOUT', ConsoleAppender) {
+    encoder(PatternLayoutEncoder) {
+        pattern = "[%date{ISO8601}] [%thread] [%-5level] %logger{3}    %m%n"
+    }
 }
+
+//logger('org.apache.openejb', DEBUG, ['STDOUT'])
+logger('org.apache.deltaspike', DEBUG, ['STDOUT'])
+logger('org.jboss.logging', DEBUG, ['STDOUT'])
+root(DEBUG, ['STDOUT'])

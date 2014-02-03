@@ -16,40 +16,41 @@
 
 package name.abhijitsarkar.moviemanager.util
 
-import org.junit.After
+import name.abhijitsarkar.moviemanager.service.indexandsearch.MovieIndexAndSearchServicesTest
+import name.abhijitsarkar.moviemanager.service.rip.MovieRipServiceTest
+import org.apache.deltaspike.cdise.api.CdiContainer
+import org.apache.deltaspike.cdise.api.CdiContainerLoader
 import org.junit.AfterClass
-import org.junit.Before
 import org.junit.BeforeClass
-
-import javax.ejb.embeddable.EJBContainer
+import org.junit.experimental.categories.Categories
+import org.junit.runner.RunWith
+import org.junit.runners.Suite
 
 /**
  * @author Abhijit Sarkar
  */
-class AbstractCDITest {
-    protected static EJBContainer container
-
-    // GOTCHA ALERT: The following methods are guaranteed to be called before the corresponding ones in the subclasses
-    // but ONLY IF the subclass methods have unique names. For example, if a subclass
-    // declares a @Before method with the name bind, JUnit WILL NOT CALL the superclass method
+@RunWith(Categories)
+@Categories.IncludeCategory(CDISuiteTest)
+@Suite.SuiteClasses([
+MovieIndexAndSearchServicesTest,
+MovieRipServiceTest
+])
+class CDITestSuite {
+    static CdiContainer container
 
     @BeforeClass
     static void newContainer() {
-        container = EJBContainer.createEJBContainer()
-    }
+        container = CdiContainerLoader.getCdiContainer();
 
-    @Before
-    void bind() {
-        container.context.bind('inject', this)
-    }
+// now we gonna boot the CDI container. This will trigger the classpath scan, etc
+        container.boot();
 
-    @After
-    void unbind() {
-        container.context.unbind('inject')
+// and finally we like to start all built-in contexts
+        container.getContextControl().startContexts();
     }
 
     @AfterClass
     static void destroyContainer() {
-        container.close()
+        container.shutdown()
     }
 }

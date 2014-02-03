@@ -20,13 +20,11 @@ import name.abhijitsarkar.moviemanager.annotation.IncludeFiles
 import name.abhijitsarkar.moviemanager.annotation.MovieGenres
 import name.abhijitsarkar.moviemanager.domain.MovieRipFileExtension
 
-import javax.annotation.ManagedBean
 import javax.enterprise.inject.Produces
 
 /**
  * @author Abhijit Sarkar
  */
-@ManagedBean
 class TestMovieRipServiceUtil {
     @Produces
     @MovieGenres

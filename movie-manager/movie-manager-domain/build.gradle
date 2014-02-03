@@ -30,9 +30,16 @@ repositories {
 }
 
 dependencies {
-    provided group: 'org.apache.openejb', name: 'javaee-api', version: javaeeVersion
+    provided(
+            [group: 'javax', name: 'javaee-web-api', version: javaeeVersion]
+    )
     testCompile(
-            [group: 'org.apache.openejb', name: 'openejb-core', version: openejbVersion],
+            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-api', version: deltaspikeVersion],
+            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion],
+//            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion],
+//            [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion]
+            [group: 'org.apache.openwebbeans.test', name: 'cditest', version: openWebBeansVersion],
+            [group: 'org.apache.openwebbeans.test', name: 'cditest-owb', version: openWebBeansVersion],
             [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion]
     )
     compile(

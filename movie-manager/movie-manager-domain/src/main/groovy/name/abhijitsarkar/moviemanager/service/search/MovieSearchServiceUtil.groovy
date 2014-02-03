@@ -15,7 +15,6 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
-
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
@@ -25,20 +24,16 @@ import org.apache.lucene.index.IndexReader
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.store.Directory
-import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import javax.annotation.ManagedBean
 import javax.enterprise.inject.Disposes
 import javax.enterprise.inject.Produces
 import javax.inject.Inject
-
 /**
  * @author Abhijit Sarkar
  */
-@ManagedBean
 //@ApplicationScoped
 class MovieSearchServiceUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchServiceUtil)
@@ -60,8 +55,8 @@ class MovieSearchServiceUtil {
     private IndexReader indexReader() {
         LOGGER.info("Searching in the directory ${indexDirectory}")
 
-        Directory dir = FSDirectory.open(new File(indexDirectory))
-        DirectoryReader.open(dir)
+//        Directory dir = FSDirectory.open(new File(indexDirectory))
+        DirectoryReader.open(indexDirectory)
     }
 
     void closeIndexReader(

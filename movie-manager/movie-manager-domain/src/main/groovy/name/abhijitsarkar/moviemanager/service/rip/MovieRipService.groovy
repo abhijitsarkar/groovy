@@ -27,13 +27,11 @@ import name.abhijitsarkar.moviemanager.domain.MovieRip
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import javax.annotation.ManagedBean
 import javax.annotation.PostConstruct
 import javax.inject.Inject
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-@ManagedBean
 class MovieRipService {
     /*
      * The following regex matches file names with release year in parentheses,
@@ -53,16 +51,13 @@ class MovieRipService {
     private static final PATTERN = Pattern.compile(MOVIE_NAME_WITH_RELEASE_YEAR_REGEX)
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieRipService)
 
-    private final List<String> genres
-
-    private final List<String> includes
-
-    // For CDI to work, the injection point must be strongly typed
     @Inject
-    MovieRipService(@MovieGenres List<String> genres, @IncludeFiles List<String> includes) {
-        this.genres = genres
-        this.includes = includes
-    }
+    @MovieGenres
+    private List<String> genres
+
+    @Inject
+    @IncludeFiles
+    private List<String> includes
 
     @PostConstruct
     void postConstruct() {

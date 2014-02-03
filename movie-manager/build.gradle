@@ -39,6 +39,11 @@ allprojects {
         ignoreFailures = true
     }
 
+    [codenarcMain, codenarcTest, instrument, copyCoberturaDatafile, generateCoberturaReport,
+            performCoverageCheck].each {
+        it.onlyIf { !project.hasProperty('skipCoverage') }
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -48,7 +53,7 @@ allprojects {
         compile(
                 [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
                 [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
-                [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
+                [group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion]
         )
 
         runtime(
@@ -62,7 +67,11 @@ allprojects {
     }
 
     test {
-        exclude '**/integrationtest/**'
+        // Exclude integration tests and tests part of JUnit suites
+        useJUnit {
+            excludeCategories 'name.abhijitsarkar.moviemanager.util.CDISuiteTest'
+        }
+        includes = ['**/CDITestSuite*', '**/Test*'] as Set
     }
 
     jar { manifest.attributes provider: 'Abhijit Sarkar' }
@@ -87,5 +96,3 @@ cobertura {
 
     coverageMergeDatafiles = project.subprojects.buildDir.collect { file("${it}/cobertura/cobertura.ser") }
 }
-
-defaultTasks 'clean', 'test', 'assemble'

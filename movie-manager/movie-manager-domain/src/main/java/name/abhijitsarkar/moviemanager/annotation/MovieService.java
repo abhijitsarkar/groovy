@@ -20,14 +20,13 @@
 
 package name.abhijitsarkar.moviemanager.annotation;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
+import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Stereotype;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Stereotype;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 // Define a stereotype for class level
 @Stereotype

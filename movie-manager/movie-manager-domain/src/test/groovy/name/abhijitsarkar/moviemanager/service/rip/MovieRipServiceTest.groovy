@@ -19,18 +19,18 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.rip
+
 import mockit.Mocked
 import mockit.NonStrictExpectations
 import name.abhijitsarkar.moviemanager.annotation.MovieGenres
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.util.AbstractCDITest
+import name.abhijitsarkar.moviemanager.util.CDISuiteTest
 import org.junit.Test
 
-import javax.annotation.ManagedBean
 import javax.inject.Inject
 
-@ManagedBean
-class MovieRipServiceTest extends AbstractCDITest {
+@org.junit.experimental.categories.Category(CDISuiteTest)
+class MovieRipServiceTest {
     @Inject
     private MovieRipService service
 

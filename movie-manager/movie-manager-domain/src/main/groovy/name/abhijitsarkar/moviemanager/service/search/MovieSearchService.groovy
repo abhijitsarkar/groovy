@@ -27,13 +27,11 @@ import org.apache.lucene.search.TopDocs
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import javax.annotation.ManagedBean
 import javax.inject.Inject
 
 /**
  * @author Abhijit Sarkar
  */
-@ManagedBean
 class MovieSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchService)
     static final String DEFAULT_SEARCH_FIELD = 'title'

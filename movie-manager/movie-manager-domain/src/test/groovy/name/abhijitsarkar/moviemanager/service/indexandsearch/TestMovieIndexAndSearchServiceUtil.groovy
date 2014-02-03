@@ -16,55 +16,32 @@
 
 package name.abhijitsarkar.moviemanager.service.indexandsearch
 
+import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.MovieRips
+import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.service.index.MovieIndexServiceUtil
-import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
 import name.abhijitsarkar.moviemanager.util.MovieMock
-import org.apache.lucene.index.IndexWriter
-import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.RAMDirectory
 import org.apache.lucene.util.Version
 
-import javax.annotation.ManagedBean
-import javax.enterprise.inject.Alternative
-import javax.enterprise.inject.Disposes
 import javax.enterprise.inject.Produces
-import javax.enterprise.inject.Specializes
 
 /**
  * @author Abhijit Sarkar
  */
-@ManagedBean
-@Alternative
-@Specializes
-class TestMovieIndexServiceUtil extends MovieIndexServiceUtil {
-    private final Directory indexDir
-    private final Version version
-
-    TestMovieIndexServiceUtil() {
-        indexDir = new RAMDirectory()
-        version = Version.LUCENE_46
-    }
+class TestMovieIndexAndSearchServiceUtil {
 
     @Produces
-    @name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-    Version searchEngineVersion() {
-        version
-    }
-
-    @Produces
-    @name.abhijitsarkar.moviemanager.annotation.IndexDirectory
+    @IndexDirectory
     Directory indexDirectory() {
-        indexDir
+        new RAMDirectory()
     }
 
     @Produces
-    @name.abhijitsarkar.moviemanager.annotation.IndexWriter
-    IndexWriter openIndexWriter() {
-        final IndexWriterConfig iwc = new IndexWriterConfig(version, new NameAnalyzer(version))
-        new IndexWriter(indexDir, iwc)
+    @SearchEngineVersion
+    Version searchEngineVersion() {
+        Version.LUCENE_46
     }
 
     @Produces
@@ -72,10 +49,5 @@ class TestMovieIndexServiceUtil extends MovieIndexServiceUtil {
     Set<MovieRip> movieRips() {
         Set<MovieRip> movieRips = [] as SortedSet
         movieRips << new MovieRip(new MovieMock())
-    }
-
-    void closeIndexWriter(
-            @Disposes @name.abhijitsarkar.moviemanager.annotation.IndexWriter IndexWriter indexWriter) {
-        indexWriter.close()
     }
 }
