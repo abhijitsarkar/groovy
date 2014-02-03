@@ -15,6 +15,7 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
+
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory
 import javax.enterprise.inject.Disposes
 import javax.enterprise.inject.Produces
 import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */

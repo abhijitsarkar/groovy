@@ -20,7 +20,7 @@ import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
-import name.abhijitsarkar.moviemanager.util.CDISuiteTest
+import name.abhijitsarkar.moviemanager.util.AbstractCDITest
 import name.abhijitsarkar.moviemanager.util.MovieMock
 import org.junit.Test
 
@@ -30,8 +30,8 @@ import javax.inject.Inject
 /**
  * @author Abhijit Sarkar
  */
-@org.junit.experimental.categories.Category(CDISuiteTest)
-class MovieIndexAndSearchServicesTest {
+//@org.junit.experimental.categories.Category(CDISuiteTest)
+class MovieIndexAndSearchServicesTest extends AbstractCDITest {
     @Inject
     private MovieIndexService movieIndexService
 

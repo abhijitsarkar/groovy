@@ -15,6 +15,7 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.index
+
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory
 import javax.enterprise.inject.Disposes
 import javax.enterprise.inject.Produces
 import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */
@@ -46,7 +48,7 @@ class MovieIndexServiceUtil {
     @Produces
     @name.abhijitsarkar.moviemanager.annotation.IndexWriter
     IndexWriter openIndexWriter() {
-        LOGGER.info("Indexing to directory ${indexDirectory}, files with extension ${includeFileExtensions}")
+        LOGGER.info("Indexing to directory ${indexDirectory}")
 
 //        Directory dir = FSDirectory.open(new File(indexDirectory))
         IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)

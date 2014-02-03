@@ -14,19 +14,14 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.annotation;
+package name.abhijitsarkar.moviemanager.util
 
-import javax.inject.Qualifier;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner
+import org.junit.runner.RunWith
 
 /**
  * @author Abhijit Sarkar
  */
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Qualifier
-public @interface IndexSearcher {
+@RunWith(CdiTestRunner.class)
+abstract class AbstractCDITest {
 }

@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 /**
  * @author Abhijit Sarkar
  */
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier
 public @interface MovieRips {

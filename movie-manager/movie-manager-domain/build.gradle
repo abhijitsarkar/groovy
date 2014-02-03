@@ -14,47 +14,60 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-apply plugin: 'eclipse'
-
-configurations { provided }
-
-sourceSets {
-    main.compileClasspath += configurations.provided
-    main.runtimeClasspath += configurations.provided
-    test.compileClasspath += configurations.provided
-    test.runtimeClasspath += configurations.provided
+configurations {
+    provided
+    weld {
+        extendsFrom(testRuntime)
+    }
+    owb {
+        extendsFrom(testRuntime)
+    }
 }
-
 repositories {
     maven { url 'http://repository.apache.org/snapshots' }
 }
 
 dependencies {
-    provided(
-            [group: 'javax', name: 'javaee-web-api', version: javaeeVersion]
-    )
-    testCompile(
-            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-api', version: deltaspikeVersion],
-            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion],
-//            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion],
-//            [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion]
-            [group: 'org.apache.openwebbeans.test', name: 'cditest', version: openWebBeansVersion],
-            [group: 'org.apache.openwebbeans.test', name: 'cditest-owb', version: openWebBeansVersion],
-            [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion]
-    )
     compile(
             [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
             [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
             [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion]
     )
+
+    provided(
+            [group: 'javax', name: 'javaee-web-api', version: javaeeVersion]
+    )
+    testCompile(
+            [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion],
+            [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion]
+    )
+    testRuntime(
+            [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion]
+    )
+    weld(
+            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion],
+            [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion]
+    )
+
+    owb(
+            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion],
+            [group: 'org.apache.openwebbeans.test', name: 'cditest', version: openWebBeansVersion],
+            [group: 'org.apache.openwebbeans.test', name: 'cditest-owb', version: openWebBeansVersion]
+    )
 }
 
 sourceSets {
-    main {
-        output.resourcesDir = project.file('build/classes/main')
+    all {
+        compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
+
+        output.resourcesDir = project.file("build/classes/${name}")
     }
     test {
-        output.resourcesDir = project.file('build/classes/test')
+        if (project.hasProperty('weld')) {
+            runtimeClasspath += configurations.weld
+        } else {
+            runtimeClasspath += configurations.owb
+        }
     }
 }
-eclipse.classpath.plusConfigurations += configurations.provided

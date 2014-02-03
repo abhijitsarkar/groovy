@@ -24,19 +24,19 @@ import mockit.Mocked
 import mockit.NonStrictExpectations
 import name.abhijitsarkar.moviemanager.annotation.MovieGenres
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.util.CDISuiteTest
+import name.abhijitsarkar.moviemanager.util.AbstractCDITest
 import org.junit.Test
 
 import javax.inject.Inject
 
-@org.junit.experimental.categories.Category(CDISuiteTest)
-class MovieRipServiceTest {
+//@org.junit.experimental.categories.Category(CDISuiteTest)
+class MovieRipServiceTest extends AbstractCDITest {
     @Inject
     private MovieRipService service
 
     @Inject
     @MovieGenres
-    List<String> genres
+    private List<String> genres
 
     @Test
     void testGetFileExtension() {
