@@ -22,6 +22,7 @@ import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
 import name.abhijitsarkar.moviemanager.util.AbstractCDITest
 import name.abhijitsarkar.moviemanager.util.MovieMock
+import org.junit.Before
 import org.junit.Test
 
 import javax.annotation.PostConstruct
@@ -39,24 +40,36 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
     private MovieSearchService movieSearchService
 
     @PostConstruct
-    private void postConstruct() {
+    void postConstruct() {
         assert movieIndexService
         assert movieSearchService
+    }
 
-        assert movieIndexService.indexWriter
-        assert movieIndexService.movieRips
-
-        assert movieSearchService.indexSearcher
-        assert movieSearchService.queryParser
+    @Before
+    void index() {
+        movieIndexService.index()
     }
 
     @Test
     void testSearch() {
-        movieIndexService.index()
-
-        Set<MovieRip> movieRips = movieSearchService.search('title: Terminator 2 Judgment Day')
+        // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
+        // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
+        // like PostConstruct
+        Set<MovieRip> movieRips = movieSearchService.search('releaseDate:1991')
 
         assert movieRips.size() == 1
         assert (movieRips[0] as Movie) == new MovieMock()
     }
+
+//    @SuppressWarnings("unchecked")
+//    private <T> T lookupBeanByType(final Class<T> clazz) {
+//        final Iterator<Bean<?>> iter = beanManager.getBeans(clazz).iterator()
+//        if (!iter.hasNext()) {
+//            throw new IllegalStateException("CDI BeanManager cannot find an instance of type ${clazz.name}")
+//        }
+//        final Bean<T> bean = (Bean<T>) iter.next()
+//        final CreationalContext<T> ctx = beanManager.createCreationalContext(bean)
+//
+//        (T) beanManager.getReference(bean, clazz, ctx)
+//    }
 }

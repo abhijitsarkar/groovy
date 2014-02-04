@@ -27,38 +27,50 @@ import org.apache.lucene.search.TopDocs
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
 /**
  * @author Abhijit Sarkar
  */
+@ApplicationScoped
 class MovieSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchService)
     static final String DEFAULT_SEARCH_FIELD = 'title'
     static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100
 
-    @Inject
-    @name.abhijitsarkar.moviemanager.annotation.IndexSearcher
-    IndexSearcher indexSearcher
+    private IndexSearcher indexSearcher
 
     @Inject
-    @name.abhijitsarkar.moviemanager.annotation.QueryParser
-    StandardQueryParser queryParser
+    MovieSearchServiceUtil movieSearchServiceUtil
 
     Set<MovieRip> search(String queryString, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
+        indexSearcher = movieSearchServiceUtil.indexSearcher
+
+        StandardQueryParser queryParser = movieSearchServiceUtil.queryParser
+
         Query query = queryParser.parse(queryString, DEFAULT_SEARCH_FIELD)
         TopDocs topDocs = indexSearcher.search(query, numResultsToFetch)
-        ScoreDoc[] scoreDocs = topDocs.scoreDocs
 
-        movieRips(scoreDocs)
+        movieRips(queryString, topDocs)
     }
 
-    private Set<MovieRip> movieRips(ScoreDoc[] scoreDocs) {
+    private Set<MovieRip> movieRips(String queryString, TopDocs results) {
+        final int totalHits = results.totalHits
+
+        LOGGER.info("${totalHits} result(s) found for query: ${queryString}.")
+
+        ScoreDoc[] scoreDocs = results.scoreDocs
+        final int hits = scoreDocs.length - 1
+
         Set<MovieRip> movieRips = [] as Set
-        final int hits = scoreDocs.length()
+
+        if (hits <= 0) {
+            return movieRips
+        }
 
         for (i in 0..hits) {
-            Document doc = indexSearcher.doc(hits[i].doc)
+            final Document doc = indexSearcher.doc(scoreDocs[i].doc)
 
             MovieRip movieRip = new MovieRip().with {
                 title = doc.get('title')

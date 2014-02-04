@@ -26,6 +26,7 @@ import org.apache.lucene.util.Version
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import javax.enterprise.context.RequestScoped
 import javax.enterprise.inject.Disposes
 import javax.enterprise.inject.Produces
 import javax.inject.Inject
@@ -33,7 +34,7 @@ import javax.inject.Inject
 /**
  * @author Abhijit Sarkar
  */
-//@ApplicationScoped
+@RequestScoped
 class MovieIndexServiceUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexServiceUtil)
 
@@ -48,9 +49,8 @@ class MovieIndexServiceUtil {
     @Produces
     @name.abhijitsarkar.moviemanager.annotation.IndexWriter
     IndexWriter openIndexWriter() {
-        LOGGER.info("Indexing to directory ${indexDirectory}")
+        LOGGER.info("Opening index writer for directory ${indexDirectory}.")
 
-//        Directory dir = FSDirectory.open(new File(indexDirectory))
         IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
 
@@ -58,6 +58,8 @@ class MovieIndexServiceUtil {
     }
 
     void closeIndexWriter(@Disposes @name.abhijitsarkar.moviemanager.annotation.IndexWriter IndexWriter indexWriter) {
+        LOGGER.info("Closing index writer for directory ${indexDirectory}.")
+
         indexWriter.close()
     }
 

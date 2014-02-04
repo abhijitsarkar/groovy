@@ -27,14 +27,18 @@ import org.apache.lucene.document.LongField
 import org.apache.lucene.document.StringField
 import org.apache.lucene.document.TextField
 import org.apache.lucene.index.IndexWriter
+import org.apache.lucene.store.Directory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import javax.enterprise.context.RequestScoped
+import javax.enterprise.event.Event
 import javax.inject.Inject
 
 /**
  * @author Abhijit Sarkar
  */
+@RequestScoped
 class MovieIndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexService)
 
@@ -46,32 +50,42 @@ class MovieIndexService {
     @Inject
     Set<MovieRip> movieRips
 
+    @Inject
+    Event<Directory> indexingEvent
+
     void index() {
         movieRips.each { movieRip ->
             delegate = this
 
-            LOGGER.debug("Indexing movie rip ${movieRip}...")
+            LOGGER.debug("Indexing movie rip ${movieRip}.")
 
             Document doc = new Document()
 
-            addStringField('title', movieRip.title, Field.Store.YES, doc)
+            addStringField('title', movieRip.title, true, doc)
             movieRip.genres.each { genre ->
-                LOGGER.debug("Indexing movie genre ${genre}...")
-                addTextField('genres', genre, Field.Store.YES, doc)
+                LOGGER.debug("Indexing movie genre ${genre}.")
+                addTextField('genres', genre, true, doc)
             }
-            addDateField('releaseDate', movieRip.releaseDate, Field.Store.YES, doc)
-            addStringField('director', movieRip.director, Field.Store.YES, doc)
+            addDateField('releaseDate', movieRip.releaseDate, true, doc)
+            addStringField('director', movieRip.director.name, true, doc)
             movieRip.stars.each { star ->
-                LOGGER.debug("Indexing movie star ${star.name}...")
-                addTextField('stars', star.name, Field.Store.YES, doc)
+                LOGGER.debug("Indexing movie star ${star.name}.")
+                addTextField('stars', star.name, true, doc)
             }
-            addFloatField('imdbRating', movieRip.imdbRating, Field.Store.YES, doc)
-            addStringField('imdbURL', movieRip.imdbURL, Field.Store.YES, doc)
-            addLongField('fileSize', movieRip.fileSize, Field.Store.NO, doc)
-            addStringField('fileExtension', movieRip.fileExtension, Field.Store.NO, doc)
+            addFloatField('imdbRating', movieRip.imdbRating, true, doc)
+            addStringField('imdbURL', movieRip.imdbURL, true, doc)
+            addLongField('fileSize', movieRip.fileSize, false, doc)
+            addStringField('fileExtension', movieRip.fileExtension, false, doc)
 
             indexWriter.addDocument(doc)
         }
+
+        Directory indexDirectory = indexWriter.directory
+
+        indexWriter.commit()
+
+        LOGGER.debug("Firing index event.")
+        indexingEvent.fire(indexDirectory)
     }
 
     @PackageScope
@@ -81,25 +95,33 @@ class MovieIndexService {
 
     @PackageScope
     void addStringField(String fieldName, String fieldValue, boolean isStoredField, Document doc) {
-        Field field = new StringField(fieldName, fieldValue, isStoredField ? Field.Store.YES : Field.Store.NO)
+        Field field = new StringField(fieldName, trimToEmpty(fieldValue), fieldStorage(isStoredField))
         doc.add(field)
     }
 
     @PackageScope
-    void addTextField(String fieldName, Date fieldValue, boolean isStoredField, Document doc) {
-        Field field = new TextField(fieldName, fieldValue, isStoredField ? Field.Store.YES : Field.Store.NO)
+    void addTextField(String fieldName, String fieldValue, boolean isStoredField, Document doc) {
+        Field field = new TextField(fieldName, trimToEmpty(fieldValue), fieldStorage(isStoredField))
         doc.add(field)
     }
 
     @PackageScope
     void addFloatField(String fieldName, float fieldValue, boolean isStoredField, Document doc) {
-        Field field = new FloatField(fieldName, fieldValue, isStoredField ? Field.Store.YES : Field.Store.NO)
+        Field field = new FloatField(fieldName, fieldValue, fieldStorage(isStoredField))
         doc.add(field)
     }
 
     @PackageScope
     void addLongField(String fieldName, long fieldValue, boolean isStoredField, Document doc) {
-        Field field = new LongField(fieldName, fieldValue, isStoredField ? Field.Store.YES : Field.Store.NO)
+        Field field = new LongField(fieldName, fieldValue, fieldStorage(isStoredField))
         doc.add(field)
+    }
+
+    private static Field.Store fieldStorage(boolean isStoredField) {
+        isStoredField ? Field.Store.YES : Field.Store.NO
+    }
+
+    private static String trimToEmpty(String str) {
+        str?.toString() ? str.trim() : ""
     }
 }

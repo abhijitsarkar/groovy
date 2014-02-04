@@ -16,7 +16,6 @@
 
 package name.abhijitsarkar.moviemanager.service.search
 
-import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
 import org.apache.lucene.analysis.Analyzer
@@ -29,50 +28,66 @@ import org.apache.lucene.util.Version
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import javax.enterprise.inject.Disposes
-import javax.enterprise.inject.Produces
+import javax.annotation.PreDestroy
+import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.event.Observes
 import javax.inject.Inject
 
 /**
  * @author Abhijit Sarkar
  */
-//@ApplicationScoped
+@ApplicationScoped
 class MovieSearchServiceUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchServiceUtil)
-
-    @Inject
-    @IndexDirectory
-    private Directory indexDirectory
 
     @Inject
     @SearchEngineVersion
     private Version version
 
-    @Produces
-    @name.abhijitsarkar.moviemanager.annotation.IndexSearcher
-    IndexSearcher newIndexSearcher() {
-        new IndexSearcher(indexReader())
+    private IndexReader indexReader
+    private IndexSearcher indexSearcher
+    private StandardQueryParser queryParser
+
+    void init(@Observes Directory indexDirectory) {
+        LOGGER.debug('Received index event.')
+
+        LOGGER.info("Opening index reader for directory ${indexDirectory}")
+
+        indexReader = DirectoryReader.open(indexDirectory)
+
+        newIndexSearcher()
+
+        newQueryParser()
     }
 
-    private IndexReader indexReader() {
-        LOGGER.info("Searching in the directory ${indexDirectory}")
+    private IndexSearcher newIndexSearcher() {
+        LOGGER.debug('Creating new index searcher.')
 
-//        Directory dir = FSDirectory.open(new File(indexDirectory))
-        DirectoryReader.open(indexDirectory)
+        indexSearcher = new IndexSearcher(indexReader)
     }
 
-    void closeIndexReader(
-            @Disposes @name.abhijitsarkar.moviemanager.annotation.IndexSearcher IndexSearcher indexSearcher) {
-        indexSearcher.indexReader.close()
-    }
+    private StandardQueryParser newQueryParser() {
+        LOGGER.debug('Creating new query parser.')
 
-    @Produces
-    @name.abhijitsarkar.moviemanager.annotation.QueryParser
-    StandardQueryParser newQueryParser() {
-        new StandardQueryParser(analyzer)
+        queryParser = new StandardQueryParser(analyzer)
     }
 
     private Analyzer getAnalyzer() {
         new NameAnalyzer(version)
+    }
+
+    IndexSearcher getIndexSearcher() {
+        indexSearcher
+    }
+
+    StandardQueryParser getQueryParser() {
+        queryParser
+    }
+
+    @PreDestroy
+    void preDestroy() {
+        LOGGER.info('Closing index reader.')
+
+        indexReader?.close()
     }
 }
