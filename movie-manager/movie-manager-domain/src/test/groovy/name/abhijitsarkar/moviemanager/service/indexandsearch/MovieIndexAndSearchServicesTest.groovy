@@ -57,7 +57,7 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
         // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
         // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
         // like PostConstruct
-        Set<MovieRip> movieRips = movieSearchService.search('title:terminator*')
+        Set<MovieRip> movieRips = movieSearchService.search('title:terminator')
 
         assert movieRips.size() == 1
         assertIsMovieMock(movieRips.toList()[0])
@@ -79,7 +79,7 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
         // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
         // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
         // like PostConstruct
-        Set<MovieRip> movieRips = movieSearchService.search('stars:arnold schwarzenegger')
+        Set<MovieRip> movieRips = movieSearchService.search('stars:arnold')
 
         assert movieRips.size() == 1
         assertIsMovieMock(movieRips.toList()[0])
@@ -102,11 +102,11 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
         assert mr.genres == mock.genres
     }
 
-//    @SuppressWarnings("unchecked")
+//    @SuppressWarnings('unchecked')
 //    private <T> T lookupBeanByType(final Class<T> clazz) {
 //        final Iterator<Bean<?>> iter = beanManager.getBeans(clazz).iterator()
 //        if (!iter.hasNext()) {
-//            throw new IllegalStateException("CDI BeanManager cannot find an instance of type ${clazz.name}")
+//            throw new IllegalStateException('CDI BeanManager cannot find an instance of type ${clazz.name}')
 //        }
 //        final Bean<T> bean = (Bean<T>) iter.next()
 //        final CreationalContext<T> ctx = beanManager.createCreationalContext(bean)

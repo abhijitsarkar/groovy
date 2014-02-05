@@ -91,7 +91,8 @@ class MovieIndexService {
     @PackageScope
     void addDateField(String fieldName, Date fieldValue, boolean isStoredField, Document doc) {
         String releaseYear = DateTools.dateToString(fieldValue, DateTools.Resolution.YEAR)
-        addLongField(fieldName, Long.parseLong(releaseYear), isStoredField, doc)
+//        addLongField(fieldName, releaseYear, isStoredField, doc)
+        doc.add(new Field(fieldName, releaseYear, Field.Store.YES, Field.Index.NOT_ANALYZED))
     }
 
     @PackageScope
