@@ -61,13 +61,13 @@ class MovieIndexService {
 
             Document doc = new Document()
 
-            addStringField('title', movieRip.title, true, doc)
+            addTextField('title', movieRip.title, true, doc)
             movieRip.genres.each { genre ->
                 LOGGER.debug("Indexing movie genre ${genre}.")
                 addTextField('genres', genre, true, doc)
             }
             addDateField('releaseDate', movieRip.releaseDate, true, doc)
-            addStringField('director', movieRip.director.name, true, doc)
+            addTextField('director', movieRip.director.name, true, doc)
             movieRip.stars.each { star ->
                 LOGGER.debug("Indexing movie star ${star.name}.")
                 addTextField('stars', star.name, true, doc)
@@ -90,7 +90,8 @@ class MovieIndexService {
 
     @PackageScope
     void addDateField(String fieldName, Date fieldValue, boolean isStoredField, Document doc) {
-        addStringField(fieldName, DateTools.dateToString(fieldValue, DateTools.Resolution.YEAR), isStoredField, doc)
+        String releaseYear = DateTools.dateToString(fieldValue, DateTools.Resolution.YEAR)
+        addLongField(fieldName, Long.parseLong(releaseYear), isStoredField, doc)
     }
 
     @PackageScope

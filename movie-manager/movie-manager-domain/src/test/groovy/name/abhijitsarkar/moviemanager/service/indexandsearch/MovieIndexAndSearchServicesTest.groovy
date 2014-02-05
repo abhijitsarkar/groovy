@@ -39,6 +39,8 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
     @Inject
     private MovieSearchService movieSearchService
 
+    private final Movie mock = new MovieMock()
+
     @PostConstruct
     void postConstruct() {
         assert movieIndexService
@@ -51,14 +53,53 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
     }
 
     @Test
-    void testSearch() {
+    void testSearchByTitle() {
+        // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
+        // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
+        // like PostConstruct
+        Set<MovieRip> movieRips = movieSearchService.search('title:terminator*')
+
+        assert movieRips.size() == 1
+        assertIsMovieMock(movieRips.toList()[0])
+    }
+
+    @Test
+    void testSearchByReleaseDate() {
         // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
         // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
         // like PostConstruct
         Set<MovieRip> movieRips = movieSearchService.search('releaseDate:1991')
 
         assert movieRips.size() == 1
-        assert (movieRips[0] as Movie) == new MovieMock()
+        assertIsMovieMock(movieRips.toList()[0])
+    }
+
+    @Test
+    void testSearchByStars() {
+        // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
+        // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
+        // like PostConstruct
+        Set<MovieRip> movieRips = movieSearchService.search('stars:arnold schwarzenegger')
+
+        assert movieRips.size() == 1
+        assertIsMovieMock(movieRips.toList()[0])
+    }
+
+    @Test
+    void testSearchByDirector() {
+        // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
+        // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
+        // like PostConstruct
+        Set<MovieRip> movieRips = movieSearchService.search('director:cameron')
+
+        assert movieRips.size() == 1
+        assertIsMovieMock(movieRips.toList()[0])
+    }
+
+    private void assertIsMovieMock(MovieRip mr) {
+        assert mr.title == mock.title
+        assert mr.releaseDate[Calendar.YEAR] == mock.releaseDate[Calendar.YEAR]
+        assert mr.genres == mock.genres
     }
 
 //    @SuppressWarnings("unchecked")

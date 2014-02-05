@@ -15,10 +15,9 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
-
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
 import org.apache.lucene.analysis.Analyzer
+import org.apache.lucene.analysis.core.SimpleAnalyzer
 import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.IndexReader
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
@@ -32,7 +31,6 @@ import javax.annotation.PreDestroy
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.event.Observes
 import javax.inject.Inject
-
 /**
  * @author Abhijit Sarkar
  */
@@ -73,7 +71,8 @@ class MovieSearchServiceUtil {
     }
 
     private Analyzer getAnalyzer() {
-        new NameAnalyzer(version)
+//        new NameAnalyzer(version)
+        new SimpleAnalyzer(version)
     }
 
     IndexSearcher getIndexSearcher() {

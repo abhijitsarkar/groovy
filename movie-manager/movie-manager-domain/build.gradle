@@ -38,17 +38,16 @@ dependencies {
             [group: 'javax', name: 'javaee-web-api', version: javaeeVersion]
     )
     testCompile(
-            [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-api', version: deltaspikeVersion],
+            [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion],
             [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion]
     )
-    testRuntime(
-            [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion]
-    )
+//    testRuntime(
+//            [group: 'org.apache.deltaspike.core', name: 'deltaspike-core-impl', version: deltaspikeVersion]
+//    )
     weld(
             [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion],
             [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion]
     )
-
     owb(
             [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion],
             [group: 'org.apache.openwebbeans.test', name: 'cditest', version: openWebBeansVersion],
@@ -64,10 +63,10 @@ sourceSets {
         output.resourcesDir = project.file("build/classes/${name}")
     }
     test {
-        if (project.hasProperty('weld')) {
-            runtimeClasspath += configurations.weld
-        } else {
+        if (project.hasProperty('owb')) {
             runtimeClasspath += configurations.owb
+        } else {
+            runtimeClasspath += configurations.weld
         }
     }
 }

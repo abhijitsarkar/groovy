@@ -17,6 +17,7 @@
 package name.abhijitsarkar.moviemanager.service.search
 
 import name.abhijitsarkar.moviemanager.domain.CastAndCrew
+import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import org.apache.lucene.document.Document
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
@@ -65,27 +66,27 @@ class MovieSearchService {
 
         Set<MovieRip> movieRips = [] as Set
 
-        if (hits <= 0) {
+        if (hits < 0) {
             return movieRips
         }
 
         for (i in 0..hits) {
             final Document doc = indexSearcher.doc(scoreDocs[i].doc)
 
-            MovieRip movieRip = new MovieRip().with {
+            Movie movie = new Movie().with {
                 title = doc.get('title')
                 genres = doc.getValues('genres').toList()
-                releaseDate = Date.parse('MM/dd/yyyy', doc.get('releaseDate'))
+                releaseDate = Date.parse('yyyy', doc.get('releaseDate'))
                 director = new CastAndCrew(doc.get('director'))
                 stars = doc.getValues('stars').toList().collect { aStar ->
                     new CastAndCrew(aStar)
                 }
-                imdbRating = doc.get('imdbRating')
+                imdbRating = Float.parseFloat(doc.get('imdbRating'))
 
                 it
             }
 
-            movieRips << movieRip
+            movieRips << new MovieRip(movie)
         }
 
         movieRips

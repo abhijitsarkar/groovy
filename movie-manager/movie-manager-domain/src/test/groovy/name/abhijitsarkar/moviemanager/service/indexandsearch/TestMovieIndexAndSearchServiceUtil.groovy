@@ -15,6 +15,7 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.indexandsearch
+
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.MovieRips
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
@@ -26,6 +27,7 @@ import org.apache.lucene.util.Version
 
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.inject.Produces
+
 /**
  * @author Abhijit Sarkar
  */
@@ -37,8 +39,7 @@ class TestMovieIndexAndSearchServiceUtil {
     Directory indexDirectory() {
 //        new RAMDirectory()
         File indexDirectory = new File('./build/lucene')
-        println "indexDirectory ${indexDirectory.absolutePath}"
-
+//
         FSDirectory.open(indexDirectory)
     }
 

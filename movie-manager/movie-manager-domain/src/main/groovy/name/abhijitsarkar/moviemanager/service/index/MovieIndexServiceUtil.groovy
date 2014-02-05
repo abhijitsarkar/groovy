@@ -15,10 +15,10 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.index
-
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-import name.abhijitsarkar.moviemanager.service.index.analysis.NameAnalyzer
+import org.apache.lucene.analysis.Analyzer
+import org.apache.lucene.analysis.core.SimpleAnalyzer
 import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.store.Directory
@@ -30,7 +30,6 @@ import javax.enterprise.context.RequestScoped
 import javax.enterprise.inject.Disposes
 import javax.enterprise.inject.Produces
 import javax.inject.Inject
-
 /**
  * @author Abhijit Sarkar
  */
@@ -63,7 +62,8 @@ class MovieIndexServiceUtil {
         indexWriter.close()
     }
 
-    private getAnalyzer() {
-        new NameAnalyzer(version)
+    private Analyzer getAnalyzer() {
+//        new NameAnalyzer(version)
+        new SimpleAnalyzer(version)
     }
 }
