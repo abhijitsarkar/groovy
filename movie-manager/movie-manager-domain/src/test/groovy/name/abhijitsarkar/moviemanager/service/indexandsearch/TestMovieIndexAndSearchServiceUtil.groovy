@@ -15,19 +15,16 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.indexandsearch
-
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.MovieRips
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.util.MovieMock
 import org.apache.lucene.store.Directory
-import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
 
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.inject.Produces
-
 /**
  * @author Abhijit Sarkar
  */
@@ -39,8 +36,7 @@ class TestMovieIndexAndSearchServiceUtil {
     Directory indexDirectory() {
 //        new RAMDirectory()
         File indexDirectory = new File('./build/lucene')
-//
-        FSDirectory.open(indexDirectory)
+        org.apache.lucene.store.FSDirectory.open(indexDirectory)
     }
 
     @Produces

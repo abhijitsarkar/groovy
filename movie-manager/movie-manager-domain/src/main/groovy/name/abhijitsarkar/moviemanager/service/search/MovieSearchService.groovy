@@ -19,9 +19,8 @@ package name.abhijitsarkar.moviemanager.service.search
 import name.abhijitsarkar.moviemanager.domain.CastAndCrew
 import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
+import name.abhijitsarkar.moviemanager.service.index.IndexField
 import org.apache.lucene.document.Document
-import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
-import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.search.Query
 import org.apache.lucene.search.ScoreDoc
 import org.apache.lucene.search.TopDocs
@@ -37,21 +36,16 @@ import javax.inject.Inject
 @ApplicationScoped
 class MovieSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchService)
-    static final String DEFAULT_SEARCH_FIELD = 'title'
-    static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100
-
-    private IndexSearcher indexSearcher
+    private static final String DEFAULT_SEARCH_FIELD = IndexField.TITLE.name()
+    private static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100
 
     @Inject
     MovieSearchServiceUtil movieSearchServiceUtil
 
     Set<MovieRip> search(String queryString, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
-        indexSearcher = movieSearchServiceUtil.indexSearcher
 
-        StandardQueryParser queryParser = movieSearchServiceUtil.queryParser
-
-        Query query = queryParser.parse(queryString, DEFAULT_SEARCH_FIELD)
-        TopDocs topDocs = indexSearcher.search(query, numResultsToFetch)
+        Query query = movieSearchServiceUtil.queryParser.parse(queryString, DEFAULT_SEARCH_FIELD)
+        TopDocs topDocs = movieSearchServiceUtil.indexSearcher.search(query, numResultsToFetch)
 
         movieRips(queryString, topDocs)
     }
@@ -59,7 +53,7 @@ class MovieSearchService {
     private Set<MovieRip> movieRips(String queryString, TopDocs results) {
         final int totalHits = results.totalHits
 
-        LOGGER.info("${totalHits} result(s) found for query: ${queryString}.")
+        LOGGER.info("${totalHits} result(s) found for query: '${queryString}'.")
 
         ScoreDoc[] scoreDocs = results.scoreDocs
         final int hits = scoreDocs.length - 1
@@ -71,17 +65,17 @@ class MovieSearchService {
         }
 
         for (i in 0..hits) {
-            final Document doc = indexSearcher.doc(scoreDocs[i].doc)
+            final Document doc = movieSearchServiceUtil.indexSearcher.doc(scoreDocs[i].doc)
 
             Movie movie = new Movie().with {
-                title = doc.get('title')
-                genres = doc.getValues('genres').toList()
-                releaseDate = Date.parse('yyyy', doc.get('releaseDate'))
-                director = new CastAndCrew(doc.get('director'))
+                title = doc.get(IndexField.TITLE.name())
+                genres = doc.getValues(IndexField.GENRES.name()).toList()
+                releaseDate = Date.parse('yyyy', doc.get(IndexField.RELEASE_DATE.name()))
+                director = new CastAndCrew(doc.get(IndexField.DIRECTOR.name()))
                 stars = doc.getValues('stars').toList().collect { aStar ->
-                    new CastAndCrew(aStar)
+                    new CastAndCrew(IndexField.STARS.name())
                 }
-                imdbRating = Float.parseFloat(doc.get('imdbRating'))
+                imdbRating = Float.parseFloat(doc.get(IndexField.IMDB_RATING.name()))
 
                 it
             }

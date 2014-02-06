@@ -15,6 +15,7 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.index
+
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import org.apache.lucene.analysis.Analyzer
@@ -26,14 +27,15 @@ import org.apache.lucene.util.Version
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import javax.enterprise.context.RequestScoped
-import javax.enterprise.inject.Disposes
-import javax.enterprise.inject.Produces
+import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
+import javax.enterprise.context.Dependent
 import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */
-@RequestScoped
+@Dependent
 class MovieIndexServiceUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexServiceUtil)
 
@@ -45,25 +47,31 @@ class MovieIndexServiceUtil {
     @SearchEngineVersion
     private Version version
 
-    @Produces
-    @name.abhijitsarkar.moviemanager.annotation.IndexWriter
-    IndexWriter openIndexWriter() {
-        LOGGER.info("Opening index writer for directory ${indexDirectory}.")
+    private IndexWriter indexWriter
+
+    @PostConstruct
+    void postConstruct() {
+        indexWriter = newIndexWriter()
+    }
+
+    private IndexWriter newIndexWriter() {
+        LOGGER.info("Creating index writer for directory ${indexDirectory}.")
 
         IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
 
-        new IndexWriter(indexDirectory, iwc)
-    }
-
-    void closeIndexWriter(@Disposes @name.abhijitsarkar.moviemanager.annotation.IndexWriter IndexWriter indexWriter) {
-        LOGGER.info("Closing index writer for directory ${indexDirectory}.")
-
-        indexWriter.close()
+        indexWriter = new IndexWriter(indexDirectory, iwc)
     }
 
     private Analyzer getAnalyzer() {
 //        new NameAnalyzer(version)
         new SimpleAnalyzer(version)
+    }
+
+    @PreDestroy
+    void preDestroy() {
+        LOGGER.info("Closing index writer for directory ${indexDirectory}.")
+
+        indexWriter?.close()
     }
 }

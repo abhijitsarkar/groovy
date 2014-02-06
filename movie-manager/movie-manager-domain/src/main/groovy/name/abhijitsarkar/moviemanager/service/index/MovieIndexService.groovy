@@ -26,13 +26,10 @@ import org.apache.lucene.document.FloatField
 import org.apache.lucene.document.LongField
 import org.apache.lucene.document.StringField
 import org.apache.lucene.document.TextField
-import org.apache.lucene.index.IndexWriter
-import org.apache.lucene.store.Directory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import javax.enterprise.context.RequestScoped
-import javax.enterprise.event.Event
 import javax.inject.Inject
 
 /**
@@ -42,16 +39,12 @@ import javax.inject.Inject
 class MovieIndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexService)
 
-    @name.abhijitsarkar.moviemanager.annotation.IndexWriter
-    @Inject
-    IndexWriter indexWriter
-
     @MovieRips
     @Inject
-    Set<MovieRip> movieRips
+    private Set<MovieRip> movieRips
 
     @Inject
-    Event<Directory> indexingEvent
+    private MovieIndexServiceUtil movieIndexServiceUtil
 
     void index() {
         movieRips.each { movieRip ->
@@ -61,61 +54,55 @@ class MovieIndexService {
 
             Document doc = new Document()
 
-            addTextField('title', movieRip.title, true, doc)
+            addTextField(IndexField.TITLE, movieRip.title, true, doc)
             movieRip.genres.each { genre ->
                 LOGGER.debug("Indexing movie genre ${genre}.")
-                addTextField('genres', genre, true, doc)
+                addTextField(IndexField.GENRES, genre, true, doc)
             }
-            addDateField('releaseDate', movieRip.releaseDate, true, doc)
-            addTextField('director', movieRip.director.name, true, doc)
+            addDateField(IndexField.RELEASE_DATE, movieRip.releaseDate, true, doc)
+            addTextField(IndexField.DIRECTOR, movieRip.director.name, true, doc)
             movieRip.stars.each { star ->
                 LOGGER.debug("Indexing movie star ${star.name}.")
-                addTextField('stars', star.name, true, doc)
+                addTextField(IndexField.STARS, star.name, true, doc)
             }
-            addFloatField('imdbRating', movieRip.imdbRating, true, doc)
-            addStringField('imdbURL', movieRip.imdbURL, true, doc)
-            addLongField('fileSize', movieRip.fileSize, false, doc)
-            addStringField('fileExtension', movieRip.fileExtension, false, doc)
+            addFloatField(IndexField.IMDB_RATING, movieRip.imdbRating, true, doc)
+            addStringField(IndexField.IMDB_URL, movieRip.imdbURL, true, doc)
+            addLongField(IndexField.FILE_SIZE, movieRip.fileSize, false, doc)
+            addStringField(IndexField.FILE_EXTENSION, movieRip.fileExtension, false, doc)
 
-            indexWriter.addDocument(doc)
+            movieIndexServiceUtil.indexWriter.addDocument(doc)
         }
 
-        Directory indexDirectory = indexWriter.directory
-
-        indexWriter.commit()
-
-        LOGGER.debug("Firing index event.")
-        indexingEvent.fire(indexDirectory)
+        movieIndexServiceUtil.indexWriter.commit()
     }
 
     @PackageScope
-    void addDateField(String fieldName, Date fieldValue, boolean isStoredField, Document doc) {
+    void addDateField(IndexField indexField, Date fieldValue, boolean isStoredField, Document doc) {
         String releaseYear = DateTools.dateToString(fieldValue, DateTools.Resolution.YEAR)
-//        addLongField(fieldName, releaseYear, isStoredField, doc)
-        doc.add(new Field(fieldName, releaseYear, Field.Store.YES, Field.Index.NOT_ANALYZED))
+        addStringField(indexField, releaseYear, isStoredField, doc)
     }
 
     @PackageScope
-    void addStringField(String fieldName, String fieldValue, boolean isStoredField, Document doc) {
-        Field field = new StringField(fieldName, trimToEmpty(fieldValue), fieldStorage(isStoredField))
+    void addStringField(IndexField indexField, String fieldValue, boolean isStoredField, Document doc) {
+        Field field = new StringField(indexField.name(), trimToEmpty(fieldValue), fieldStorage(isStoredField))
         doc.add(field)
     }
 
     @PackageScope
-    void addTextField(String fieldName, String fieldValue, boolean isStoredField, Document doc) {
-        Field field = new TextField(fieldName, trimToEmpty(fieldValue), fieldStorage(isStoredField))
+    void addTextField(IndexField indexField, String fieldValue, boolean isStoredField, Document doc) {
+        Field field = new TextField(indexField.name(), trimToEmpty(fieldValue), fieldStorage(isStoredField))
         doc.add(field)
     }
 
     @PackageScope
-    void addFloatField(String fieldName, float fieldValue, boolean isStoredField, Document doc) {
-        Field field = new FloatField(fieldName, fieldValue, fieldStorage(isStoredField))
+    void addFloatField(IndexField indexField, float fieldValue, boolean isStoredField, Document doc) {
+        Field field = new FloatField(indexField.name(), fieldValue, fieldStorage(isStoredField))
         doc.add(field)
     }
 
     @PackageScope
-    void addLongField(String fieldName, long fieldValue, boolean isStoredField, Document doc) {
-        Field field = new LongField(fieldName, fieldValue, fieldStorage(isStoredField))
+    void addLongField(IndexField indexField, long fieldValue, boolean isStoredField, Document doc) {
+        Field field = new LongField(indexField.name(), fieldValue, fieldStorage(isStoredField))
         doc.add(field)
     }
 

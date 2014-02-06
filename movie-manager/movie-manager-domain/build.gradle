@@ -24,6 +24,7 @@ configurations {
     }
 }
 repositories {
+    mavenCentral()
     maven { url 'http://repository.apache.org/snapshots' }
 }
 
@@ -33,25 +34,21 @@ dependencies {
             [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
             [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion]
     )
-
     provided(
             [group: 'javax', name: 'javaee-web-api', version: javaeeVersion]
     )
     testCompile(
-            [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion],
-            [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion]
+            [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion],
+            [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion]
     )
-//    testRuntime(
-//            [group: 'org.apache.deltaspike.core', name: 'deltaspike-core-impl', version: deltaspikeVersion]
-//    )
     weld(
             [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion],
             [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion]
     )
     owb(
             [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion],
-            [group: 'org.apache.openwebbeans.test', name: 'cditest', version: openWebBeansVersion],
-            [group: 'org.apache.openwebbeans.test', name: 'cditest-owb', version: openWebBeansVersion]
+            [group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: openWebBeansVersion],
+            [group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: openWebBeansVersion]
     )
 }
 

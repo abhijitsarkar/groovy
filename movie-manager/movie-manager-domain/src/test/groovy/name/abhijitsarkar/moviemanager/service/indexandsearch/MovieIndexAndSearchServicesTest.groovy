@@ -18,8 +18,10 @@ package name.abhijitsarkar.moviemanager.service.indexandsearch
 
 import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
+import name.abhijitsarkar.moviemanager.service.index.IndexField
 import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
+import name.abhijitsarkar.moviemanager.service.search.QueryBuilder
 import name.abhijitsarkar.moviemanager.util.AbstractCDITest
 import name.abhijitsarkar.moviemanager.util.MovieMock
 import org.junit.Before
@@ -41,6 +43,8 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
 
     private final Movie mock = new MovieMock()
 
+    private boolean isAlreadyIndexed
+
     @PostConstruct
     void postConstruct() {
         assert movieIndexService
@@ -49,48 +53,42 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
 
     @Before
     void index() {
-        movieIndexService.index()
+        if (!isAlreadyIndexed) {
+            movieIndexService.index()
+
+            isAlreadyIndexed = true
+        }
     }
 
     @Test
     void testSearchByTitle() {
-        // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
-        // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
-        // like PostConstruct
-        Set<MovieRip> movieRips = movieSearchService.search('title:terminator')
-
-        assert movieRips.size() == 1
-        assertIsMovieMock(movieRips.toList()[0])
+        String queryString = QueryBuilder.buildQuery(IndexField.TITLE, 'terminator')
+        fireSearch(queryString)
     }
 
     @Test
     void testSearchByReleaseDate() {
-        // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
-        // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
-        // like PostConstruct
-        Set<MovieRip> movieRips = movieSearchService.search('releaseDate:1991')
-
-        assert movieRips.size() == 1
-        assertIsMovieMock(movieRips.toList()[0])
+        String queryString = QueryBuilder.buildQuery(IndexField.RELEASE_DATE, '1991')
+        fireSearch(queryString)
     }
 
     @Test
     void testSearchByStars() {
-        // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
-        // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
-        // like PostConstruct
-        Set<MovieRip> movieRips = movieSearchService.search('stars:arnold')
-
-        assert movieRips.size() == 1
-        assertIsMovieMock(movieRips.toList()[0])
+        String queryString = QueryBuilder.buildQuery(IndexField.STARS, 'arnold')
+        fireSearch(queryString)
     }
 
     @Test
     void testSearchByDirector() {
+        String queryString = QueryBuilder.buildQuery(IndexField.DIRECTOR, 'cameron')
+        fireSearch(queryString)
+    }
+
+    private void fireSearch(String queryString) {
         // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
         // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
         // like PostConstruct
-        Set<MovieRip> movieRips = movieSearchService.search('director:cameron')
+        Set<MovieRip> movieRips = movieSearchService.search(queryString)
 
         assert movieRips.size() == 1
         assertIsMovieMock(movieRips.toList()[0])

@@ -15,10 +15,11 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
+
+import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.core.SimpleAnalyzer
-import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.IndexReader
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
 import org.apache.lucene.search.IndexSearcher
@@ -27,14 +28,16 @@ import org.apache.lucene.util.Version
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import javax.enterprise.context.ApplicationScoped
-import javax.enterprise.event.Observes
+import javax.enterprise.context.Dependent
 import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */
-@ApplicationScoped
+@Dependent
 class MovieSearchServiceUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchServiceUtil)
 
@@ -42,30 +45,35 @@ class MovieSearchServiceUtil {
     @SearchEngineVersion
     private Version version
 
+    @Inject
+    @IndexDirectory
+    private Directory indexDirectory
+
     private IndexReader indexReader
     private IndexSearcher indexSearcher
     private StandardQueryParser queryParser
 
-    void init(@Observes Directory indexDirectory) {
-        LOGGER.debug('Received index event.')
+    @PostConstruct
+    void postConstruct() {
+        indexReader = newIndexReader()
+        indexSearcher = newIndexSearcher()
+        queryParser = newQueryParser()
+    }
 
-        LOGGER.info("Opening index reader for directory ${indexDirectory}")
+    private IndexReader newIndexReader() {
+        LOGGER.info("Creating index reader for directory ${indexDirectory}.")
 
-        indexReader = DirectoryReader.open(indexDirectory)
-
-        newIndexSearcher()
-
-        newQueryParser()
+        org.apache.lucene.index.DirectoryReader.open(indexDirectory)
     }
 
     private IndexSearcher newIndexSearcher() {
-        LOGGER.debug('Creating new index searcher.')
+        LOGGER.debug('Creating index searcher.')
 
         indexSearcher = new IndexSearcher(indexReader)
     }
 
     private StandardQueryParser newQueryParser() {
-        LOGGER.debug('Creating new query parser.')
+        LOGGER.debug('Creating query parser.')
 
         queryParser = new StandardQueryParser(analyzer)
     }
@@ -75,17 +83,9 @@ class MovieSearchServiceUtil {
         new SimpleAnalyzer(version)
     }
 
-    IndexSearcher getIndexSearcher() {
-        indexSearcher
-    }
-
-    StandardQueryParser getQueryParser() {
-        queryParser
-    }
-
     @PreDestroy
     void preDestroy() {
-        LOGGER.info('Closing index reader.')
+        LOGGER.info("Closing index reader for directory ${indexDirectory}.")
 
         indexReader?.close()
     }
