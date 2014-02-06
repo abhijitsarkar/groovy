@@ -15,7 +15,6 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.index
-
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import org.apache.lucene.analysis.Analyzer
@@ -31,7 +30,6 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import javax.enterprise.context.Dependent
 import javax.inject.Inject
-
 /**
  * @author Abhijit Sarkar
  */
@@ -54,7 +52,7 @@ class MovieIndexServiceUtil {
         indexWriter = newIndexWriter()
     }
 
-    private IndexWriter newIndexWriter() {
+    protected IndexWriter newIndexWriter() {
         LOGGER.info("Creating index writer for directory ${indexDirectory}.")
 
         IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
@@ -63,7 +61,7 @@ class MovieIndexServiceUtil {
         indexWriter = new IndexWriter(indexDirectory, iwc)
     }
 
-    private Analyzer getAnalyzer() {
+    protected Analyzer getAnalyzer() {
 //        new NameAnalyzer(version)
         new SimpleAnalyzer(version)
     }

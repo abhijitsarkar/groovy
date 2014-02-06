@@ -17,20 +17,15 @@
 package name.abhijitsarkar.moviemanager.service.search
 
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
-import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-import org.apache.lucene.analysis.Analyzer
-import org.apache.lucene.analysis.core.SimpleAnalyzer
+import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.IndexReader
-import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.store.Directory
-import org.apache.lucene.util.Version
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
-import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.context.Dependent
 import javax.inject.Inject
 
@@ -42,45 +37,30 @@ class MovieSearchServiceUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchServiceUtil)
 
     @Inject
-    @SearchEngineVersion
-    private Version version
-
-    @Inject
     @IndexDirectory
     private Directory indexDirectory
 
     private IndexReader indexReader
     private IndexSearcher indexSearcher
-    private StandardQueryParser queryParser
 
     @PostConstruct
     void postConstruct() {
         indexReader = newIndexReader()
         indexSearcher = newIndexSearcher()
-        queryParser = newQueryParser()
     }
 
-    private IndexReader newIndexReader() {
+    protected IndexReader newIndexReader() {
         LOGGER.info("Creating index reader for directory ${indexDirectory}.")
 
-        org.apache.lucene.index.DirectoryReader.open(indexDirectory)
+        DirectoryReader.open(indexDirectory)
     }
 
-    private IndexSearcher newIndexSearcher() {
+    protected IndexSearcher newIndexSearcher() {
+        indexReader = newIndexReader()
+
         LOGGER.debug('Creating index searcher.')
 
         indexSearcher = new IndexSearcher(indexReader)
-    }
-
-    private StandardQueryParser newQueryParser() {
-        LOGGER.debug('Creating query parser.')
-
-        queryParser = new StandardQueryParser(analyzer)
-    }
-
-    private Analyzer getAnalyzer() {
-//        new NameAnalyzer(version)
-        new SimpleAnalyzer(version)
     }
 
     @PreDestroy

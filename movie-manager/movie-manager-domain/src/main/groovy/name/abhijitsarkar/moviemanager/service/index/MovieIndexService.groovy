@@ -17,7 +17,6 @@
 package name.abhijitsarkar.moviemanager.service.index
 
 import groovy.transform.PackageScope
-import name.abhijitsarkar.moviemanager.annotation.MovieRips
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
@@ -39,14 +38,10 @@ import javax.inject.Inject
 class MovieIndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexService)
 
-    @MovieRips
-    @Inject
-    private Set<MovieRip> movieRips
-
     @Inject
     private MovieIndexServiceUtil movieIndexServiceUtil
 
-    void index() {
+    void index(Set<MovieRip> movieRips) {
         movieRips.each { movieRip ->
             delegate = this
 

@@ -15,16 +15,15 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.indexandsearch
+
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
-import name.abhijitsarkar.moviemanager.annotation.MovieRips
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.util.MovieMock
 import org.apache.lucene.store.Directory
 import org.apache.lucene.util.Version
 
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.inject.Produces
+
 /**
  * @author Abhijit Sarkar
  */
@@ -43,12 +42,5 @@ class TestMovieIndexAndSearchServiceUtil {
     @SearchEngineVersion
     Version searchEngineVersion() {
         Version.LUCENE_46
-    }
-
-    @Produces
-    @MovieRips
-    Set<MovieRip> movieRips() {
-        Set<MovieRip> movieRips = [] as SortedSet
-        movieRips << new MovieRip(new MovieMock())
     }
 }

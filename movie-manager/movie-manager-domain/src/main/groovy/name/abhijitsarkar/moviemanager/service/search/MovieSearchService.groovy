@@ -15,7 +15,6 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
-
 import name.abhijitsarkar.moviemanager.domain.CastAndCrew
 import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
@@ -29,31 +28,28 @@ import org.slf4j.LoggerFactory
 
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-
 /**
  * @author Abhijit Sarkar
  */
 @ApplicationScoped
 class MovieSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchService)
-    private static final String DEFAULT_SEARCH_FIELD = IndexField.TITLE.name()
     private static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100
 
     @Inject
     MovieSearchServiceUtil movieSearchServiceUtil
 
-    Set<MovieRip> search(String queryString, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
+    Set<MovieRip> search(Query query, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
 
-        Query query = movieSearchServiceUtil.queryParser.parse(queryString, DEFAULT_SEARCH_FIELD)
         TopDocs topDocs = movieSearchServiceUtil.indexSearcher.search(query, numResultsToFetch)
 
-        movieRips(queryString, topDocs)
+        movieRips(query, topDocs)
     }
 
-    private Set<MovieRip> movieRips(String queryString, TopDocs results) {
+    private Set<MovieRip> movieRips(Query query, TopDocs results) {
         final int totalHits = results.totalHits
 
-        LOGGER.info("${totalHits} result(s) found for query: '${queryString}'.")
+        LOGGER.info("${totalHits} result(s) found for query: '${query.toString()}'.")
 
         ScoreDoc[] scoreDocs = results.scoreDocs
         final int hits = scoreDocs.length - 1

@@ -24,6 +24,7 @@ import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
 import name.abhijitsarkar.moviemanager.service.search.QueryBuilder
 import name.abhijitsarkar.moviemanager.util.AbstractCDITest
 import name.abhijitsarkar.moviemanager.util.MovieMock
+import org.apache.lucene.search.Query
 import org.junit.Before
 import org.junit.Test
 
@@ -41,6 +42,9 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
     @Inject
     private MovieSearchService movieSearchService
 
+    @Inject
+    private QueryBuilder queryBuilder
+
     private final Movie mock = new MovieMock()
 
     private boolean isAlreadyIndexed
@@ -49,46 +53,52 @@ class MovieIndexAndSearchServicesTest extends AbstractCDITest {
     void postConstruct() {
         assert movieIndexService
         assert movieSearchService
+        assert queryBuilder
     }
 
     @Before
     void index() {
         if (!isAlreadyIndexed) {
-            movieIndexService.index()
+            movieIndexService.index(movieRips())
 
             isAlreadyIndexed = true
         }
     }
 
+    private Set<MovieRip> movieRips() {
+        Set<MovieRip> movieRips = [] as SortedSet
+        movieRips << new MovieRip(new MovieMock())
+    }
+
     @Test
     void testSearchByTitle() {
-        String queryString = QueryBuilder.buildQuery(IndexField.TITLE, 'terminator')
-        fireSearch(queryString)
+        Query query = queryBuilder.buildQuery(IndexField.TITLE, 'terminator')
+        fireSearch(query)
     }
 
     @Test
     void testSearchByReleaseDate() {
-        String queryString = QueryBuilder.buildQuery(IndexField.RELEASE_DATE, '1991')
-        fireSearch(queryString)
+        Query query = queryBuilder.buildQuery(IndexField.RELEASE_DATE, '1991')
+        fireSearch(query)
     }
 
     @Test
     void testSearchByStars() {
-        String queryString = QueryBuilder.buildQuery(IndexField.STARS, 'arnold')
-        fireSearch(queryString)
+        Query query = queryBuilder.buildQuery(IndexField.STARS, 'arnold')
+        fireSearch(query)
     }
 
     @Test
     void testSearchByDirector() {
-        String queryString = QueryBuilder.buildQuery(IndexField.DIRECTOR, 'cameron')
-        fireSearch(queryString)
+        Query query = queryBuilder.buildQuery(IndexField.DIRECTOR, 'cameron')
+        fireSearch(query)
     }
 
-    private void fireSearch(String queryString) {
+    private void fireSearch(Query query) {
         // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
         // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
         // like PostConstruct
-        Set<MovieRip> movieRips = movieSearchService.search(queryString)
+        Set<MovieRip> movieRips = movieSearchService.search(query)
 
         assert movieRips.size() == 1
         assertIsMovieMock(movieRips.toList()[0])
