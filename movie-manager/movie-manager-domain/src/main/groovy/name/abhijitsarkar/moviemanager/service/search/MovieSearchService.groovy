@@ -18,7 +18,7 @@ package name.abhijitsarkar.moviemanager.service.search
 import name.abhijitsarkar.moviemanager.domain.CastAndCrew
 import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.service.index.IndexField
+import name.abhijitsarkar.moviemanager.service.indexing.IndexField
 import org.apache.lucene.document.Document
 import org.apache.lucene.search.Query
 import org.apache.lucene.search.ScoreDoc
@@ -37,7 +37,7 @@ class MovieSearchService {
     private static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100
 
     @Inject
-    MovieSearchServiceUtil movieSearchServiceUtil
+    MovieSearchServiceHelper movieSearchServiceUtil
 
     Set<MovieRip> search(Query query, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
 

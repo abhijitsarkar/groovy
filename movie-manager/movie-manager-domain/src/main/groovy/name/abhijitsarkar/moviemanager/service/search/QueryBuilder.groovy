@@ -16,7 +16,7 @@
 
 package name.abhijitsarkar.moviemanager.service.search
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-import name.abhijitsarkar.moviemanager.service.index.IndexField
+import name.abhijitsarkar.moviemanager.service.indexing.IndexField
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.core.SimpleAnalyzer
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser

@@ -14,28 +14,59 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service.indexandsearch
+package name.abhijitsarkar.moviemanager.facade
 
+import name.abhijitsarkar.moviemanager.annotation.IncludeFiles
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
+import name.abhijitsarkar.moviemanager.annotation.MovieGenres
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
+import name.abhijitsarkar.moviemanager.domain.MovieRipFileExtension
 import org.apache.lucene.store.Directory
+import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
 
-import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.context.Dependent
 import javax.enterprise.inject.Produces
 
 /**
  * @author Abhijit Sarkar
  */
-@ApplicationScoped
-class TestMovieIndexAndSearchServiceUtil {
+@Dependent
+// TODO: Read these from property file
+class MovieFacadeHelper {
+    @Produces
+    @MovieGenres
+    List<String> genreList() {
+        [
+                'Action and Adventure',
+                'Animation',
+                'Comedy',
+                'Documentary',
+                'Drama',
+                'Horror',
+                'R-Rated Mainstream Movies',
+                'Romance',
+                'Sci-Fi',
+                'Thriller',
+                'X-Rated'
+        ]
+    }
+
+    @Produces
+    @IncludeFiles
+    List<String> includes() {
+        MovieRipFileExtension.values().collect {
+            // GOTCHA ALERT: GString is not equal to String; "a" != 'a'
+            ".${it.name().toLowerCase()}".toString()
+        }
+    }
 
     @Produces
     @IndexDirectory
     Directory indexDirectory() {
 //        new RAMDirectory()
         File indexDirectory = new File('./build/lucene')
-        org.apache.lucene.store.FSDirectory.open(indexDirectory)
+        FSDirectory.open(indexDirectory)
     }
 
     @Produces

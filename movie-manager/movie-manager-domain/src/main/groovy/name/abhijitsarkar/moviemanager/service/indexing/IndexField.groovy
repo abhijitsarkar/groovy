@@ -14,7 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service.index
+package name.abhijitsarkar.moviemanager.service.indexing
 
 /**
  * @author Abhijit Sarkar

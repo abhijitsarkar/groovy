@@ -20,16 +20,16 @@
 
 package name.abhijitsarkar.moviemanager.service.rip
 
-import mockit.Mocked
-import mockit.NonStrictExpectations
 import name.abhijitsarkar.moviemanager.annotation.MovieGenres
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.util.AbstractCDITest
+import org.gmock.WithGMock
 import org.junit.Test
 
 import javax.inject.Inject
 
 //@org.junit.experimental.categories.Category(CDISuiteTest)
+@WithGMock
 class MovieRipServiceTest extends AbstractCDITest {
     @Inject
     private MovieRipService service
@@ -91,32 +91,49 @@ class MovieRipServiceTest extends AbstractCDITest {
     }
 
     @Test
-    void testGetParent(@Mocked final File f) {
-        // Test when file is the root directory and has no parent
-        new NonStrictExpectations() {
-            {
-                f.parentFile; result = (File) any
-                // Record the result of 2 consecutive isDirectory() calls
-                f.isDirectory(); result = [false, false]
-                f <=> ((File) any); result = -1
-            }
+    void testGetParentWhenParentIsNotDirectory() {
+        File f = mock(File)
+        File parentFile = mock(File)
+
+        f.parentFile.returns(parentFile)
+
+        parentFile.isDirectory().returns(false)
+
+        play {
+            assert 'immediateParent' == service.getParent(f, 'currentGenre', null, 'immediateParent')
         }
-
-        assert 'immediateParent' == service.getParent(f, 'currentGenre', null, 'immediateParent')
-
-        assert 'immediateParent' == service.getParent(f, 'currentGenre', null, 'immediateParent')
     }
 
-//    @Test
-//    void testGetParentWhenParentIsGenre(@Cascading File f) {
-//        new NonStrictExpectations() {
-//            {
-//                f.isDirectory(); result = Boolean.TRUE
-//                f.compareTo((File) withNull()); result = 1
-//                f.name; result = ['currentGenre', 'movieRip']
-//            }
-//        }
-//
-//        assert 'movieRip' == service.getParent(f, 'currentGenre', null, 'immediateParent')
-//    }
+    @Test
+    void testGetParentWhenParentIsRoot() {
+        File f = mock(File)
+        File parentFile = mock(File)
+
+        f.parentFile.returns(parentFile)
+
+        parentFile.isDirectory().returns(true)
+        parentFile.compareTo(null).returns(-1)
+
+        play {
+            assert 'immediateParent' == service.getParent(f, 'currentGenre', null, 'immediateParent')
+        }
+    }
+
+    @Test
+    void testGetParentWhenParentIsGenre() {
+        File f = mock(File)
+        File parentFile = mock(File)
+
+        f.parentFile.returns(parentFile)
+
+        parentFile.isDirectory().returns(true)
+        parentFile.compareTo(null).returns(1)
+        parentFile.name.returns('currentGenre')
+        f.isDirectory().returns(true)
+        f.name.returns('Sci-Fi')
+
+        play {
+            assert 'Sci-Fi' == service.getParent(f, 'currentGenre', null, 'immediateParent')
+        }
+    }
 }

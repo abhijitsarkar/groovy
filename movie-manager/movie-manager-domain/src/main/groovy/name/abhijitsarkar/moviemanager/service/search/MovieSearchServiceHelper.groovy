@@ -14,15 +14,13 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service.index
+package name.abhijitsarkar.moviemanager.service.search
+
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
-import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-import org.apache.lucene.analysis.Analyzer
-import org.apache.lucene.analysis.core.SimpleAnalyzer
-import org.apache.lucene.index.IndexWriter
-import org.apache.lucene.index.IndexWriterConfig
+import org.apache.lucene.index.DirectoryReader
+import org.apache.lucene.index.IndexReader
+import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.store.Directory
-import org.apache.lucene.util.Version
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -30,46 +28,45 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import javax.enterprise.context.Dependent
 import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */
 @Dependent
-class MovieIndexServiceUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexServiceUtil)
+class MovieSearchServiceHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchServiceHelper)
 
     @Inject
     @IndexDirectory
     private Directory indexDirectory
 
-    @Inject
-    @SearchEngineVersion
-    private Version version
-
-    private IndexWriter indexWriter
+    private IndexReader indexReader
+    private IndexSearcher indexSearcher
 
     @PostConstruct
     void postConstruct() {
-        indexWriter = newIndexWriter()
+        indexReader = newIndexReader()
+        indexSearcher = newIndexSearcher()
     }
 
-    protected IndexWriter newIndexWriter() {
-        LOGGER.info("Creating index writer for directory ${indexDirectory}.")
+    protected IndexReader newIndexReader() {
+        LOGGER.info("Creating indexing reader for directory ${indexDirectory}.")
 
-        IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
-        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
-
-        indexWriter = new IndexWriter(indexDirectory, iwc)
+        DirectoryReader.open(indexDirectory)
     }
 
-    protected Analyzer getAnalyzer() {
-//        new NameAnalyzer(version)
-        new SimpleAnalyzer(version)
+    protected IndexSearcher newIndexSearcher() {
+        indexReader = newIndexReader()
+
+        LOGGER.debug('Creating indexing searcher.')
+
+        indexSearcher = new IndexSearcher(indexReader)
     }
 
     @PreDestroy
     void preDestroy() {
-        LOGGER.info("Closing index writer for directory ${indexDirectory}.")
+        LOGGER.info("Closing indexing reader for directory ${indexDirectory}.")
 
-        indexWriter?.close()
+        indexReader?.close()
     }
 }

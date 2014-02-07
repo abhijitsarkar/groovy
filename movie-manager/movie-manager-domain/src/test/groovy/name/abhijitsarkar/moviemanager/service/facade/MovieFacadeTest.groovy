@@ -14,92 +14,59 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service.indexandsearch
+package name.abhijitsarkar.moviemanager.service.facade
 
 import name.abhijitsarkar.moviemanager.domain.Movie
+import name.abhijitsarkar.moviemanager.domain.MovieMock
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.service.index.IndexField
-import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
-import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
-import name.abhijitsarkar.moviemanager.service.search.QueryBuilder
+import name.abhijitsarkar.moviemanager.facade.MovieFacade
+import name.abhijitsarkar.moviemanager.service.indexing.IndexField
 import name.abhijitsarkar.moviemanager.util.AbstractCDITest
-import name.abhijitsarkar.moviemanager.util.MovieMock
-import org.apache.lucene.search.Query
 import org.junit.Before
 import org.junit.Test
 
-import javax.annotation.PostConstruct
 import javax.inject.Inject
 
 /**
  * @author Abhijit Sarkar
  */
 //@org.junit.experimental.categories.Category(CDISuiteTest)
-class MovieIndexAndSearchServicesTest extends AbstractCDITest {
-    @Inject
-    private MovieIndexService movieIndexService
-
-    @Inject
-    private MovieSearchService movieSearchService
-
-    @Inject
-    private QueryBuilder queryBuilder
-
+class MovieFacadeTest extends AbstractCDITest {
     private final Movie mock = new MovieMock()
 
-    private boolean isAlreadyIndexed
-
-    @PostConstruct
-    void postConstruct() {
-        assert movieIndexService
-        assert movieSearchService
-        assert queryBuilder
-    }
+    @Inject
+    MovieFacade movieFacade
 
     @Before
-    void index() {
-        if (!isAlreadyIndexed) {
-            movieIndexService.index(movieRips())
-
-            isAlreadyIndexed = true
-        }
-    }
-
-    private Set<MovieRip> movieRips() {
-        Set<MovieRip> movieRips = [] as SortedSet
-        movieRips << new MovieRip(new MovieMock())
+    void setUp() {
+        movieFacade.indexMovieRips(null)
     }
 
     @Test
     void testSearchByTitle() {
-        Query query = queryBuilder.buildQuery(IndexField.TITLE, 'terminator')
-        fireSearch(query)
+        Set<MovieRip> movieRips = movieFacade.searchMovieRips(IndexField.TITLE, 'terminator')
+        verifySearchResult(movieRips)
     }
 
     @Test
     void testSearchByReleaseDate() {
-        Query query = queryBuilder.buildQuery(IndexField.RELEASE_DATE, '1991')
-        fireSearch(query)
+        Set<MovieRip> movieRips = movieFacade.searchMovieRips(IndexField.RELEASE_DATE, '1991')
+        verifySearchResult(movieRips)
     }
 
     @Test
     void testSearchByStars() {
-        Query query = queryBuilder.buildQuery(IndexField.STARS, 'arnold')
-        fireSearch(query)
+        Set<MovieRip> movieRips = movieFacade.searchMovieRips(IndexField.STARS, 'arnold')
+        verifySearchResult(movieRips)
     }
 
     @Test
     void testSearchByDirector() {
-        Query query = queryBuilder.buildQuery(IndexField.DIRECTOR, 'cameron')
-        fireSearch(query)
+        Set<MovieRip> movieRips = movieFacade.searchMovieRips(IndexField.DIRECTOR, 'cameron')
+        verifySearchResult(movieRips)
     }
 
-    private void fireSearch(Query query) {
-        // Search is dependent on indexing. JUnit and CDI seem to be running independent threads
-        // so in order for search to work, need to index from a JUnit method, not CDI lifycycle mehtod,
-        // like PostConstruct
-        Set<MovieRip> movieRips = movieSearchService.search(query)
-
+    private void verifySearchResult(Set<MovieRip> movieRips) {
         assert movieRips.size() == 1
         assertIsMovieMock(movieRips.toList()[0])
     }

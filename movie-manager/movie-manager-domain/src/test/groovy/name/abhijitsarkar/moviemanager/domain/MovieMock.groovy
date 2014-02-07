@@ -18,10 +18,7 @@
  * @author Abhijit Sarkar
  */
 
-package name.abhijitsarkar.moviemanager.util
-
-import name.abhijitsarkar.moviemanager.domain.CastAndCrew
-import name.abhijitsarkar.moviemanager.domain.Movie
+package name.abhijitsarkar.moviemanager.domain
 
 class MovieMock extends Movie {
     MovieMock() {

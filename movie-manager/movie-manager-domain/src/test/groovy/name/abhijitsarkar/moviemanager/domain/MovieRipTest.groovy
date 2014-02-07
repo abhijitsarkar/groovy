@@ -20,7 +20,6 @@
 
 package name.abhijitsarkar.moviemanager.domain
 
-import name.abhijitsarkar.moviemanager.util.MovieMock
 import org.junit.Before
 import org.junit.Test
 

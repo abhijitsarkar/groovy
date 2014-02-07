@@ -63,7 +63,8 @@ allprojects {
         )
 
         testCompile(
-                [group: 'com.googlecode.jmockit', name: 'jmockit', version: jmockitVersion],
+                [group: 'org.gmock', name: 'gmock', version: gmockVersion],
+                [group: 'org.hamcrest', name: 'hamcrest-all', version: hamcrestVersion],
                 [group: 'junit', name: 'junit', version: junitVersion]
         )
     }

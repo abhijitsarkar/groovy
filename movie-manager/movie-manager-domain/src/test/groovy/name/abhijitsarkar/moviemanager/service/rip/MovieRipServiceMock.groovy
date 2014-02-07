@@ -14,14 +14,25 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.util
+package name.abhijitsarkar.moviemanager.service.rip
 
-import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner
-import org.junit.runner.RunWith
+import name.abhijitsarkar.moviemanager.domain.MovieMock
+import name.abhijitsarkar.moviemanager.domain.MovieRip
 
+import javax.enterprise.inject.Alternative
+import javax.enterprise.inject.Specializes
 /**
  * @author Abhijit Sarkar
  */
-@RunWith(CdiTestRunner)
-abstract class AbstractCDITest {
+@Specializes
+@Alternative
+class MovieRipServiceMock extends MovieRipService {
+    Set<MovieRip> getMovieRips(String movieDirectory) {
+        // Do something with the parameter to make CodeNarc happy
+        movieDirectory.toString()
+
+        Set<MovieRip> movieRips = [] as SortedSet
+
+        movieRips << new MovieRip(new MovieMock())
+    }
 }
