@@ -17,7 +17,6 @@
 package name.abhijitsarkar.moviemanager.facade
 
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.service.indexing.IndexField
 import name.abhijitsarkar.moviemanager.service.indexing.MovieIndexingService
 import name.abhijitsarkar.moviemanager.service.rip.MovieRipService
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
@@ -26,6 +25,7 @@ import org.apache.lucene.search.Query
 
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */
@@ -43,14 +43,29 @@ class MovieFacade {
     @Inject
     QueryBuilder queryBuilder
 
-    void indexMovieRips(String movieDirectory) {
+    void index(String movieDirectory) {
         Set<MovieRip> movieRips = movieRipService.getMovieRips(movieDirectory)
 
         movieIndexingService.index(movieRips)
     }
 
-    Set<MovieRip> searchMovieRips(IndexField indexField, String searchText) {
-        Query query = queryBuilder.buildQuery(indexField, searchText)
+    Set<MovieRip> searchByField(String searchText, String indexField) {
+
+        Query query = queryBuilder.perFieldQuery(searchText, indexField)
+
+        movieSearchService.search(query)
+    }
+
+    Set<MovieRip> advancedSearch(String searchText) {
+
+        Query query = queryBuilder.advancedQuery(searchText)
+
+        movieSearchService.search(query)
+    }
+
+    Set<MovieRip> fetchAll() {
+
+        Query query = queryBuilder.matchAllDocsQuery()
 
         movieSearchService.search(query)
     }

@@ -1,5 +1,111 @@
 apply plugin: 'war'
+//apply plugin: 'cargo'
+
+//buildscript {
+//    repositories { jcenter() }
+//    dependencies {
+//        classpath(
+//                // https://github.com/bmuschko/gradle-cargo-plugin
+//                [group: 'org.gradle.api.plugins', name: 'gradle-cargo-plugin', version: cargoPluginVersion]
+//        )
+//    }
+//}
+
+configurations {
+    embeddedJetty
+    resteasy
+    weld
+}
 
 dependencies {
-	compile project(':movie-manager-domain')
+    compile project(':movie-manager-domain')
+    runtime(
+            [group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: jacksonVersion]
+    )
+    providedCompile([group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]) {
+        exclude group: 'javax.el', module: 'el-api'
+    }
+    providedCompile(
+            [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
+            [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: jaxRsVersion]
+    )
+    resteasy(
+            [group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: resteasyVersion],
+            [group: 'org.jboss.resteasy', name: 'resteasy-servlet-initializer', version: resteasyVersion],
+            [group: 'org.jboss.resteasy', name: 'resteasy-cdi', version: resteasyVersion]
+    )
+    weld(
+            [group: 'org.jboss.weld.servlet', name: 'weld-servlet', version: weldServletVersion]
+    )
+    embeddedJetty(
+            [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
+            [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
+            [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
+            [group: 'org.eclipse.jetty', name: 'jetty-jndi', version: jettyVersion],
+            [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
+            [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
+            [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion],
+            [group: 'javax.el', name: 'javax.el-api', version: elVersion],
+            [group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: jspApiVersion]
+    )
+//    cargo(
+//            [group: 'org.codehaus.cargo', name: 'cargo-core-uberjar', version: cargoVersion],
+//            [group: 'org.codehaus.cargo', name: 'cargo-ant', version: cargoVersion]
+//    )
 }
+
+sourceSets {
+    [main, test].each {
+        it.compileClasspath += project.configurations.providedCompile + project.configurations.embeddedJetty
+        it.output.resourcesDir = project.file("$buildDir/classes/${it.name}")
+    }
+    main.runtimeClasspath += project.configurations.resteasy + project.configurations.weld
+}
+
+war {
+    // Unzip and add all jetty dependencies into the root of the war file
+    from {
+        configurations.embeddedJetty.collect {
+            project.zipTree(it)
+        }
+    }
+
+// Exclude unnecessary files
+    exclude 'about.html', 'META-INF/*LICENSE*', 'META-INF/*NOTICE*', 'jetty-dir.css', 'overview*.html'
+
+// Exclude application classes from being copied to the root of the war; those are in WEB-INF/classes anyway
+    from "$buildDir/classes/main"
+    exclude 'name/abhijitsarkar/moviemanager/web'
+
+// Set the main class to run when the generate war be executed using 'java -jar'
+    doFirst {
+        manifest {
+            attributes(
+                    'Main-Class': 'name.abhijitsarkar.moviemanager.EmbeddedJettyServer'
+            )
+        }
+    }
+}
+
+//cargo {
+//    containerId = 'jetty9x'
+//    port = 8080
+//
+//    deployable {
+//        context = project.name
+//    }
+//    timeout = 30000
+//
+//    local {
+//        homeDir = file("${System.getProperty('user.home')}/Applications/jetty-9.1.1.v20140108")
+//        logLevel = 'high'
+////        output = file("$buildDir/cargo.log")
+//
+//        configFile {
+//            file = file("${project.webAppDir}/WEB-INF/jetty-web.xml")
+//            toDir = file('conf/props')
+//        }
+//    }
+//}
+//
+//cargoRunLocal.dependsOn assemble

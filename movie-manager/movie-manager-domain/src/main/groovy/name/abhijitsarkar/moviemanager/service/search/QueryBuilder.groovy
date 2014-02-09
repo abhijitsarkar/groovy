@@ -15,11 +15,13 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
+
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.service.indexing.IndexField
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.core.SimpleAnalyzer
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
+import org.apache.lucene.search.MatchAllDocsQuery
 import org.apache.lucene.search.Query
 import org.apache.lucene.util.Version
 import org.slf4j.Logger
@@ -28,6 +30,7 @@ import org.slf4j.LoggerFactory
 import javax.annotation.PostConstruct
 import javax.enterprise.context.Dependent
 import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */
@@ -47,19 +50,36 @@ class QueryBuilder {
         queryParser = newQueryParser()
     }
 
-    Query buildQuery(IndexField indexField, String searchText) {
+    Query perFieldQuery(String searchText, String indexField) {
+        LOGGER.debug('Per field query - field {}, search text {}.', indexField, searchText)
+
+        IndexField idxField = IndexField.valueOf(IndexField, indexField)
         String queryString
 
-        switch (indexField) {
+        switch (idxField) {
             case IndexField.RELEASE_DATE:
-                queryString = "${indexField.name()}:[${searchText} TO ${searchText}]".toString()
-                break;
+                queryString = "${idxField.name()}:[${searchText} TO ${searchText}]".toString()
+                break
             default:
-                queryString = "${indexField.name()}:${searchText}".toString()
-                break;
+                queryString = "${idxField.name()}:${searchText}".toString()
+                break
         }
 
+        LOGGER.debug('Query - {}.', queryString)
+
         queryParser.parse(queryString, DEFAULT_SEARCH_FIELD)
+    }
+
+    Query advancedQuery(String searchText) {
+        LOGGER.debug('Advanced query - {}.', searchText)
+
+        queryParser.parse(searchText, DEFAULT_SEARCH_FIELD)
+    }
+
+    Query matchAllDocsQuery() {
+        LOGGER.debug('Match all docs query.')
+
+        new MatchAllDocsQuery()
     }
 
     protected StandardQueryParser newQueryParser() {

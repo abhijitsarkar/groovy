@@ -33,6 +33,11 @@ allprojects {
     apply plugin: 'codenarc'
     apply plugin: 'cobertura'
 
+    configurations {
+        // Old Jetty dependencies brought in by Cobertura
+        all*.exclude group: 'org.mortbay.jetty'
+    }
+
     codenarc {
         configFile = file("${rootProject.projectDir}/src/main/config/codenarc/codenarc.groovy")
         toolVersion = codenarcToolVersion
@@ -54,14 +59,10 @@ allprojects {
                 [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
                 [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion]
         )
-
         runtime(
                 [group: 'org.gmetrics', name: 'GMetrics', version: gmetricsVersion],
                 [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
-                // Use this for Logback
-//              [group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion]
         )
-
         testCompile(
                 [group: 'org.gmock', name: 'gmock', version: gmockVersion],
                 [group: 'org.hamcrest', name: 'hamcrest-all', version: hamcrestVersion],

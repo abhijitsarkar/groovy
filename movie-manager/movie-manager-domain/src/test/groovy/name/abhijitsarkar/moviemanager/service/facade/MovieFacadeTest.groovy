@@ -39,30 +39,60 @@ class MovieFacadeTest extends AbstractCDITest {
 
     @Before
     void setUp() {
-        movieFacade.indexMovieRips(null)
+        movieFacade.index(null)
     }
 
     @Test
     void testSearchByTitle() {
-        Set<MovieRip> movieRips = movieFacade.searchMovieRips(IndexField.TITLE, 'terminator')
+        Set<MovieRip> movieRips = movieFacade.searchByField('terminator', IndexField.TITLE.name())
+        verifySearchResult(movieRips)
+    }
+
+    @Test
+    void testAdvancedSearchByTitle() {
+        Set<MovieRip> movieRips = movieFacade.advancedSearch("${IndexField.TITLE.name()}:terminator")
         verifySearchResult(movieRips)
     }
 
     @Test
     void testSearchByReleaseDate() {
-        Set<MovieRip> movieRips = movieFacade.searchMovieRips(IndexField.RELEASE_DATE, '1991')
+        Set<MovieRip> movieRips = movieFacade.searchByField('1991', IndexField.RELEASE_DATE.name())
+        verifySearchResult(movieRips)
+    }
+
+    @Test
+    void testAdvancedSearchByReleaseDate() {
+        Set<MovieRip> movieRips = movieFacade.advancedSearch("${IndexField.RELEASE_DATE.name()}:[1991 TO 1991]")
         verifySearchResult(movieRips)
     }
 
     @Test
     void testSearchByStars() {
-        Set<MovieRip> movieRips = movieFacade.searchMovieRips(IndexField.STARS, 'arnold')
+        Set<MovieRip> movieRips = movieFacade.searchByField('arnold', IndexField.STARS.name())
+        verifySearchResult(movieRips)
+    }
+
+    @Test
+    void testAdvancedSearchByStars() {
+        Set<MovieRip> movieRips = movieFacade.advancedSearch("${IndexField.STARS.name()}:arnold")
         verifySearchResult(movieRips)
     }
 
     @Test
     void testSearchByDirector() {
-        Set<MovieRip> movieRips = movieFacade.searchMovieRips(IndexField.DIRECTOR, 'cameron')
+        Set<MovieRip> movieRips = movieFacade.searchByField('cameron', IndexField.DIRECTOR.name())
+        verifySearchResult(movieRips)
+    }
+
+    @Test
+    void testAdvancedSearchByDirector() {
+        Set<MovieRip> movieRips = movieFacade.advancedSearch("${IndexField.DIRECTOR.name()}:cameron")
+        verifySearchResult(movieRips)
+    }
+
+    @Test
+    void testFetchAll() {
+        Set<MovieRip> movieRips = movieFacade.fetchAll()
         verifySearchResult(movieRips)
     }
 

@@ -24,7 +24,6 @@ configurations {
     }
 }
 repositories {
-    mavenCentral()
     maven { url 'http://repository.apache.org/snapshots' }
 }
 
@@ -35,8 +34,11 @@ dependencies {
             [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion]
     )
     provided(
-            [group: 'javax', name: 'javaee-web-api', version: javaeeVersion]
+            [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion]
     )
+    provided([group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]) {
+        exclude group: 'javax.el', module: 'el-api'
+    }
     testCompile(
             [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion],
             [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion]
@@ -53,17 +55,17 @@ dependencies {
 }
 
 sourceSets {
-    all {
-        compileClasspath += configurations.provided
-        runtimeClasspath += configurations.provided
+    [main, test].each {
+        it.compileClasspath += configurations.provided
+        it.runtimeClasspath += configurations.provided
 
-        output.resourcesDir = project.file("build/classes/${name}")
+        it.output.resourcesDir = project.file("$buildDir/classes/${it.name}")
     }
     test {
         if (project.hasProperty('owb')) {
-            runtimeClasspath += configurations.owb
+            it.runtimeClasspath += configurations.owb
         } else {
-            runtimeClasspath += configurations.weld
+            it.runtimeClasspath += configurations.weld
         }
     }
 }

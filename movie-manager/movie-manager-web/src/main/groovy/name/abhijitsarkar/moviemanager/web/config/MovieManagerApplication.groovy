@@ -14,18 +14,28 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder
-import ch.qos.logback.core.ConsoleAppender
+package name.abhijitsarkar.moviemanager.web.config
 
-import static ch.qos.logback.classic.Level.DEBUG
+import name.abhijitsarkar.moviemanager.web.MovieResource
 
-appender('STDOUT', ConsoleAppender) {
-    encoder(PatternLayoutEncoder) {
-        pattern = "[%date{ISO8601}] [%thread] [%-5level] %logger{3}    %m%n"
+import javax.ws.rs.ApplicationPath
+import javax.ws.rs.core.Application
+
+/**
+ * @author Abhijit Sarkar
+ */
+@ApplicationPath('/')
+class MovieManagerApplication extends Application {
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = [] as Set
+        classes.add(MovieResource)
+
+        classes
+    }
+
+    @Override
+    public Set<Object> getSingletons() {
+        [] as Set
     }
 }
-
-//logger('org.apache.openejb', DEBUG, ['STDOUT'])
-logger('org.apache.deltaspike', DEBUG, ['STDOUT'])
-logger('org.jboss.logging', DEBUG, ['STDOUT'])
-root(DEBUG, ['STDOUT'])
