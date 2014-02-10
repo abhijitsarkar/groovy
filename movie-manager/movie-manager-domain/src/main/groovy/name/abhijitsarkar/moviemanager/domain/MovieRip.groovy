@@ -23,12 +23,38 @@ package name.abhijitsarkar.moviemanager.domain
 import java.util.regex.Pattern
 
 class MovieRip extends Movie implements Comparable {
-    long fileSize
-    String fileExtension
-    String parent
+    private long fileSize
+    private String fileExtension
+    private String parent
 
     MovieRip(movie) {
         super(movie)
+    }
+
+    // The getters and setters are required for serialization
+
+    long getFileSize() {
+        fileSize
+    }
+
+    void setFileSize(long fileSize) {
+        this.fileSize = fileSize
+    }
+
+    String getFileExtension() {
+        fileExtension
+    }
+
+    void setFileExtension(String fileExtension) {
+        this.fileExtension = fileExtension
+    }
+
+    String getParent() {
+        parent
+    }
+
+    void setParent(String parent) {
+        this.parent = parent
     }
 
     @Override

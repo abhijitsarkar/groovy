@@ -16,10 +16,12 @@
 
 package name.abhijitsarkar.moviemanager.web
 
+import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.facade.MovieFacade
 
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
+import javax.ws.rs.Consumes
 import javax.ws.rs.FormParam
 import javax.ws.rs.GET
 import javax.ws.rs.POST
@@ -33,34 +35,32 @@ import javax.ws.rs.core.MediaType
  */
 @Path('movies')
 @RequestScoped
+@Produces(MediaType.APPLICATION_JSON)
 class MovieResource {
     @Inject
     private MovieFacade movieFacade
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     String index(@FormParam('dir') String movieDirectory) {
         movieFacade.index(movieDirectory)
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    String fetchAll() {
+    Set<MovieRip> fetchAll() {
         movieFacade.fetchAll()
     }
 
     @GET
     @Path('{searchText}')
-    @Produces(MediaType.APPLICATION_JSON)
-    String advancedSearch(@PathParam('searchText') String searchText) {
+    Set<MovieRip> advancedSearch(@PathParam('searchText') String searchText) {
         movieFacade.advancedSearch(searchText)
     }
 
     @GET
     @Path('{searchField}/{searchText}')
-    @Produces(MediaType.APPLICATION_JSON)
-    String searchByField(@PathParam('searchField') String indexField,
-                         @PathParam('searchText') String searchText) {
+    Set<MovieRip> searchByField(@PathParam('searchField') String indexField,
+                                @PathParam('searchText') String searchText) {
         movieFacade.searchByField(searchText, indexField)
     }
 }

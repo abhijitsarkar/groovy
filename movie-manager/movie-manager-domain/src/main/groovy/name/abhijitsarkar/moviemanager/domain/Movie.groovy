@@ -21,13 +21,13 @@
 package name.abhijitsarkar.moviemanager.domain
 
 class Movie implements Comparable {
-    protected String title
-    protected Set<String> genres
-    protected Date releaseDate
-    protected CastAndCrew director
-    protected Set<CastAndCrew> stars
-    protected float imdbRating
-    protected URL imdbURL
+    private String title
+    private Set<String> genres
+    private Date releaseDate
+    private CastAndCrew director
+    private Set<CastAndCrew> stars
+    private float imdbRating
+    private URL imdbURL
 
     Movie() {
     }
@@ -40,6 +40,64 @@ class Movie implements Comparable {
         stars = anotherMovie.stars
         imdbRating = anotherMovie.imdbRating
         imdbURL = anotherMovie.imdbURL
+    }
+
+    // The getters and setters are required for serialization
+
+    String getTitle() {
+        title
+    }
+
+    void setTitle(String title) {
+        this.title = title
+    }
+
+    Set<String> getGenres() {
+        genres
+    }
+
+    void setGenres(Set<String> genres) {
+        this.genres = genres
+    }
+
+    Date getReleaseDate() {
+        releaseDate
+    }
+
+    void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate
+    }
+
+    CastAndCrew getDirector() {
+        director
+    }
+
+    void setDirector(CastAndCrew director) {
+        this.director = director
+    }
+
+    Set<CastAndCrew> getStars() {
+        stars
+    }
+
+    void setStars(Set<CastAndCrew> stars) {
+        this.stars = stars
+    }
+
+    float getImdbRating() {
+        imdbRating
+    }
+
+    void setImdbRating(float imdbRating) {
+        this.imdbRating = imdbRating
+    }
+
+    URL getImdbURL() {
+        imdbURL
+    }
+
+    void setImdbURL(URL imdbURL) {
+        this.imdbURL = imdbURL
     }
 
     @Override

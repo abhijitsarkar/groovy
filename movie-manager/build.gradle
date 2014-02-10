@@ -25,8 +25,8 @@ buildscript {
 }
 
 allprojects {
-    group = 'name.abhijitsarkar.moviemanager'
-    version = '1.0-SNAPSHOT'
+    group = projectGroup
+    version = projectVersion
 
     apply plugin: 'groovy'
     apply plugin: 'maven'
@@ -76,6 +76,8 @@ allprojects {
     }
 
     jar { manifest.attributes provider: 'Abhijit Sarkar' }
+
+    build.dependsOn tasks.cobertura
 }
 
 test {

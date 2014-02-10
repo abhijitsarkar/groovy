@@ -17,6 +17,7 @@
 package name.abhijitsarkar.moviemanager.web.config
 
 import name.abhijitsarkar.moviemanager.web.MovieResource
+import name.abhijitsarkar.moviemanager.web.ext.MoviesMarshaller
 
 import javax.ws.rs.ApplicationPath
 import javax.ws.rs.core.Application
@@ -27,7 +28,7 @@ import javax.ws.rs.core.Application
 @ApplicationPath('/')
 class MovieManagerApplication extends Application {
     @Override
-    public Set<Class<?>> getClasses() {
+    Set<Class<?>> getClasses() {
         Set<Class<?>> classes = [] as Set
         classes.add(MovieResource)
 
@@ -35,7 +36,10 @@ class MovieManagerApplication extends Application {
     }
 
     @Override
-    public Set<Object> getSingletons() {
-        [] as Set
+    Set<Object> getSingletons() {
+        Set<Object> objects = [] as Set
+        objects.add(new MoviesMarshaller())
+
+        objects
     }
 }

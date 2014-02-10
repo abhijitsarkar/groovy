@@ -91,10 +91,11 @@ class MovieRipService {
         rootDir.eachFileRecurse { File f ->
             delegate = this
 
-            LOGGER.debug('Found file, path {}, name {}.', f.absolutePath, f.name)
+            LOGGER.trace('Found file, path {}, name {}.', f.absolutePath, f.name)
 
             if (f.isDirectory() && isGenre(f.name)) {
                 LOGGER.debug('Setting current genre to {}.', f.name)
+
                 currentGenre = f.name
             } else if (isMovieRip(f.name)) {
                 MovieRip movieRip = parseMovieRip(f.name)
@@ -102,9 +103,13 @@ class MovieRipService {
                 movieRip.genres = (movieRip.genres ?: [] as Set)
                 movieRip.genres << currentGenre
 
-                movieRip.fileSize = f.length()
+                movieRip.fileSize = f.size()
+
+                LOGGER.trace('File size {}.', movieRip.fileSize)
 
                 String parent = getParent(f, currentGenre, rootDir)
+
+                LOGGER.trace('Parent {}.', parent)
 
                 if (!currentGenre?.equalsIgnoreCase(parent)) {
                     movieRip.parent = parent
@@ -126,7 +131,7 @@ class MovieRipService {
     MovieRip parseMovieRip(String fileName) {
         String movieTitle
         final String movieRipFileExtension = getFileExtension(fileName)
-        LOGGER.debug('movieRipFileExtension {}.', movieRipFileExtension)
+        LOGGER.trace('File extension {}.', movieRipFileExtension)
         String lastPart
 
         int year = 0
@@ -136,26 +141,26 @@ class MovieRipService {
         if (matcher.find() && matcher.groupCount() >= 1) {
             // 1st group is the title, always present
             final String group1 = matcher.group(1)
-            LOGGER.debug('matcher.group(1) {}.', group1)
+            LOGGER.trace('matcher.group(1) {}.', group1)
 
             movieTitle = group1.trim()
 
             // If present, the 2nd group is the release year
             final String group2 = matcher.group(2)
-            LOGGER.debug('matcher.group(2) {}.', group2)
+            LOGGER.trace('matcher.group(2) {}.', group2)
             year = group2 ? Integer.parseInt(group2) : year
 
             // If present, the 3rd group might be one of 2 things:
             // 1) The file extension
             // 2) A "qualifier" to the name like "part 1" and the file extension
             final String group3 = matcher.group(3)
-            LOGGER.debug('matcher.group(3) {}.', group3)
+            LOGGER.trace('matcher.group(3) {}.', group3)
             lastPart = group3 ?: null
 
             if (lastPart && (lastPart != movieRipFileExtension)) {
                 // Extract the qualifier
                 String qualifier = lastPart[0..-(movieRipFileExtension.length() + 1)]
-                LOGGER.debug('qualifier {}.', qualifier)
+                LOGGER.trace('qualifier {}.', qualifier)
                 movieTitle += qualifier
             }
         } else {
@@ -168,7 +173,7 @@ class MovieRipService {
                 releaseDate:Date.parse('MM/dd/yyyy', "01/01/${year}"))
 
         final MovieRip mr = new MovieRip(m)
-        mr.fileExtension = "${movieRipFileExtension}"
+        mr.fileExtension = movieRipFileExtension
 
         mr
     }

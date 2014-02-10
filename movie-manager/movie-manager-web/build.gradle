@@ -19,31 +19,37 @@ configurations {
 
 dependencies {
     compile project(':movie-manager-domain')
-    providedCompile([group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]) {
+    compile(
+        [group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: jacksonVersion],
+        [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion]
+    )
+    providedCompile(
+        [group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]
+    ) {
         exclude group: 'javax.el', module: 'el-api'
     }
     providedCompile(
-            [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
-            [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: jaxRsVersion]
+        [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
+        [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: jaxRsVersion]
     )
     resteasy(
-            [group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: resteasyVersion],
-            [group: 'org.jboss.resteasy', name: 'resteasy-servlet-initializer', version: resteasyVersion],
-            [group: 'org.jboss.resteasy', name: 'resteasy-cdi', version: resteasyVersion]
+        [group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: resteasyVersion],
+        [group: 'org.jboss.resteasy', name: 'resteasy-servlet-initializer', version: resteasyVersion],
+        [group: 'org.jboss.resteasy', name: 'resteasy-cdi', version: resteasyVersion]
     )
     weld(
             [group: 'org.jboss.weld.servlet', name: 'weld-servlet', version: weldServletVersion]
     )
     embeddedJetty(
-            [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
-            [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
-            [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
-            [group: 'org.eclipse.jetty', name: 'jetty-jndi', version: jettyVersion],
-            [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
-            [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
-            [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion],
-            [group: 'javax.el', name: 'javax.el-api', version: elVersion],
-            [group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: jspApiVersion]
+        [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
+        [group: 'org.eclipse.jetty', name: 'jetty-jndi', version: jettyVersion],
+        [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
+        [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
+        [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion],
+        [group: 'javax.el', name: 'javax.el-api', version: elVersion],
+        [group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: jspApiVersion]
     )
 //    cargo(
 //            [group: 'org.codehaus.cargo', name: 'cargo-core-uberjar', version: cargoVersion],
