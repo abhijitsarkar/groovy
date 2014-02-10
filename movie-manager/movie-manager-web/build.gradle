@@ -19,6 +19,7 @@ configurations {
 
 dependencies {
     compile project(':movie-manager-domain')
+    compile project(':movie-manager-service')
     compile(
         [group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: jacksonVersion],
         [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion]

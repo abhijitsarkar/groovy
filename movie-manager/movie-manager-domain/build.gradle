@@ -14,67 +14,19 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+task testJar(type: Jar, dependsOn: testClasses) {
+    baseName = "${project.archivesBaseName}-tests"
+
+    from sourceSets.test.output
+    include '**/MovieMock.class'
+}
+
 configurations {
-    provided
-    weld {
-        extendsFrom(testRuntime)
-    }
-    owb {
-        extendsFrom(testRuntime)
-    }
-}
-repositories {
-    maven { url 'http://repository.apache.org/snapshots' }
-}
-
-dependencies {
-    compile(
-            [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
-            [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
-            [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion]
-    )
-    provided(
-            [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
-            [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
-            [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
-    )
-    provided(
-            [group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]
-    ) {
-        exclude group: 'javax.el', module: 'el-api'
-    }
-    testCompile(
-            [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion],
-            [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion]
-    )
-    weld(
-            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion],
-            [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion]
-    )
-    owb(
-            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion],
-            [group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: openWebBeansVersion],
-            [group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: openWebBeansVersion]
-    )
-}
-
-sourceSets {
-    [main, test].each {
-        it.compileClasspath += configurations.provided
-        it.runtimeClasspath += configurations.provided
-
-        it.output.resourcesDir = project.file("$buildDir/classes/${it.name}")
-    }
     test {
-        if (project.hasProperty('owb')) {
-            it.runtimeClasspath += configurations.owb
-        } else {
-            it.runtimeClasspath += configurations.weld
-        }
+        extendsFrom(testRuntime)
     }
 }
 
-test {
-    // Exclude individual CDI test classes, they'll be ran as CDI suite
-    excludes = ['**/MovieRipServiceTest.class', '**/MovieFacadeTest.class'] as Set
+artifacts {
+    test testJar
 }
