@@ -15,10 +15,11 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
+
 import name.abhijitsarkar.moviemanager.domain.CastAndCrew
 import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.service.indexing.IndexField
+import name.abhijitsarkar.moviemanager.service.index.IndexField
 import org.apache.lucene.document.Document
 import org.apache.lucene.search.Query
 import org.apache.lucene.search.ScoreDoc
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory
 
 import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */
@@ -37,11 +39,11 @@ class MovieSearchService {
     private static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100
 
     @Inject
-    MovieSearchServiceHelper movieSearchServiceUtil
+    MovieSearchServiceHelper movieSearchServiceHelper
 
     Set<MovieRip> search(Query query, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
 
-        TopDocs topDocs = movieSearchServiceUtil.indexSearcher.search(query, numResultsToFetch)
+        TopDocs topDocs = movieSearchServiceHelper.indexSearcher.search(query, numResultsToFetch)
 
         movieRips(query, topDocs)
     }
@@ -49,7 +51,7 @@ class MovieSearchService {
     private Set<MovieRip> movieRips(Query query, TopDocs results) {
         final int totalHits = results.totalHits
 
-        LOGGER.info("${totalHits} result(s) found for query: '${query.toString()}'.")
+        LOGGER.info('{} result(s) found for query {}.', totalHits, query.toString())
 
         ScoreDoc[] scoreDocs = results.scoreDocs
         final int hits = scoreDocs.length - 1
@@ -61,7 +63,7 @@ class MovieSearchService {
         }
 
         for (i in 0..hits) {
-            final Document doc = movieSearchServiceUtil.indexSearcher.doc(scoreDocs[i].doc)
+            final Document doc = movieSearchServiceHelper.indexSearcher.doc(scoreDocs[i].doc)
 
             Movie movie = new Movie().with {
                 title = doc.get(IndexField.TITLE.name())

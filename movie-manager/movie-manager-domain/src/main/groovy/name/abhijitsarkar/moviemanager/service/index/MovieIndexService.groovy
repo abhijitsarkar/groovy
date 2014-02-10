@@ -14,7 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service.indexing
+package name.abhijitsarkar.moviemanager.service.index
 
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import org.apache.lucene.document.DateTools
@@ -34,24 +34,24 @@ import javax.inject.Inject
  * @author Abhijit Sarkar
  */
 @RequestScoped
-class MovieIndexingService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexingService)
+class MovieIndexService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexService)
     private static final String EMPTY = ''
 
     @Inject
-    private MovieIndexingServiceHelper movieIndexServiceUtil
+    private MovieIndexServiceHelper movieIndexServiceHelper
 
-    private Field titleField
+    private final Field titleField
     private Field genresField
-    private Field releaseDateField
-    private Field directorField
+    private final Field releaseDateField
+    private final Field directorField
     private Field starsField
-    private Field imdbRatingField
-    private Field imdbURLField
-    private Field fileSizeField
-    private Field fileExtensionField
+    private final Field imdbRatingField
+    private final Field imdbURLField
+    private final Field fileSizeField
+    private final Field fileExtensionField
 
-    MovieIndexingService() {
+    MovieIndexService() {
         titleField = new TextField(IndexField.TITLE.name(), EMPTY, Field.Store.YES)
 
         releaseDateField = new StringField(IndexField.RELEASE_DATE.name(), EMPTY, Field.Store.YES)
@@ -67,26 +67,26 @@ class MovieIndexingService {
         fileExtensionField = new StringField(IndexField.IMDB_URL.name(), EMPTY, Field.Store.NO)
     }
 
-    void index(Set<MovieRip> movieRips) {
+    String index(Set<MovieRip> movieRips) {
         movieRips.each { movieRip ->
             delegate = this
 
-            LOGGER.debug("Indexing movie rip ${movieRip}.")
+            LOGGER.debug('Indexing movie rip {}.', movieRip)
 
             Document doc = new Document()
 
             addTextField(titleField, movieRip.title, doc)
-            movieRip.genres.each { genre ->
-                LOGGER.debug("Indexing movie genre ${genre}.")
+            movieRip.genres?.each { genre ->
+                LOGGER.debug('Indexing movie genre {}.', genre)
 
                 genresField = new TextField(IndexField.GENRES.name(), EMPTY, Field.Store.YES)
 
                 addTextField(genresField, genre, doc)
             }
             addDateField(releaseDateField, movieRip.releaseDate, doc)
-            addTextField(directorField, movieRip.director.name, doc)
-            movieRip.stars.each { star ->
-                LOGGER.debug("Indexing movie star ${star.name}.")
+            addTextField(directorField, movieRip.director?.name, doc)
+            movieRip.stars?.each { star ->
+                LOGGER.debug('Indexing movie star {}.', star.name)
 
                 starsField = new TextField(IndexField.STARS.name(), EMPTY, Field.Store.YES)
 
@@ -97,10 +97,12 @@ class MovieIndexingService {
             addLongField(fileSizeField, movieRip.fileSize, doc)
             addTextField(fileExtensionField, movieRip.fileExtension, doc)
 
-            movieIndexServiceUtil.indexWriter.addDocument(doc)
+            movieIndexServiceHelper.indexWriter.addDocument(doc)
         }
 
-        movieIndexServiceUtil.indexWriter.commit()
+        movieIndexServiceHelper.indexWriter.commit()
+
+        movieIndexServiceHelper.directory
     }
 
     private void addDateField(Field field, Date fieldValue, Document doc) {

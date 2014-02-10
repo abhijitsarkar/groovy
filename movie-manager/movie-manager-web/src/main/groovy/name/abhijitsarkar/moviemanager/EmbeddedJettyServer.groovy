@@ -51,17 +51,25 @@ class EmbeddedJettyServer {
     }
 
     static void main(String[] args) {
+        new EmbeddedJettyServer().start()
+    }
+
+    void start() {
         ProtectionDomain domain = EmbeddedJettyServer.protectionDomain
         URL location = domain.codeSource.location
 
         LOGGER.debug('Source code location - {}', location)
 
         WebAppContext webAppCtx = new WebAppContext()
+
         webAppCtx.descriptor = DEPLOYMENT_DESCRIPTOR
+
         // The "override" descriptors are applied on top of the web.xml. It is a good idea to separate vendor-specific
         // configuration in these.
         webAppCtx.overrideDescriptors = OVERRIDE_DESCRIPTORS
+
         webAppCtx.configurations = CONFIGURATIONS
+
         // The way Jetty's default classloading works, the web application does not see some "server" classes.
         // However, Jetty throws ClassNotFoundException: org.eclipse.jetty.servlet.ServletContextHandler$Decorator
         // during startup of the application.  Hence we call a setter method but with a '-', meant to remove
@@ -74,13 +82,12 @@ class EmbeddedJettyServer {
 
         // Start the embedded server and bind it on given port
         Server server = new Server(HTTP_PORT)
+
         server.handler = webAppCtx
 
-        LOGGER.debug('Starting embedded Jetty server...')
+        LOGGER.debug('Starting embedded Jetty server on port {}, please wait...', HTTP_PORT)
 
         server.start()
         server.join()
-
-        LOGGER.debug('Jetty server has started and listening on HTTP port {}.', HTTP_PORT)
     }
 }

@@ -50,7 +50,7 @@ class MovieSearchServiceHelper {
     }
 
     protected IndexReader newIndexReader() {
-        LOGGER.info("Creating indexing reader for directory ${indexDirectory}.")
+        LOGGER.info('Creating index reader for directory {}.', indexDirectory)
 
         DirectoryReader.open(indexDirectory)
     }
@@ -58,14 +58,14 @@ class MovieSearchServiceHelper {
     protected IndexSearcher newIndexSearcher() {
         indexReader = newIndexReader()
 
-        LOGGER.debug('Creating indexing searcher.')
+        LOGGER.debug('Creating index searcher.')
 
         indexSearcher = new IndexSearcher(indexReader)
     }
 
     @PreDestroy
     void preDestroy() {
-        LOGGER.info("Closing indexing reader for directory ${indexDirectory}.")
+        LOGGER.info('Closing index reader for directory {}.', indexDirectory)
 
         indexReader?.close()
     }

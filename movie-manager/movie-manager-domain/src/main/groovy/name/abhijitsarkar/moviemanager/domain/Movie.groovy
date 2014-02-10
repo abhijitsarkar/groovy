@@ -95,6 +95,6 @@ class Movie implements Comparable {
             }
             return releaseDateDiff
         }
-        return title?.hashCode() - o.title?.hashCode()
+        title?.hashCode() - o.title?.hashCode()
     }
 }

@@ -14,64 +14,54 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.facade
+package name.abhijitsarkar.moviemanager.service.facade
 
 import name.abhijitsarkar.moviemanager.annotation.IncludeFiles
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.MovieGenres
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-import name.abhijitsarkar.moviemanager.domain.MovieRipFileExtension
+import name.abhijitsarkar.moviemanager.facade.MovieFacadeHelper
 import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
 
-import javax.enterprise.context.Dependent
+import javax.enterprise.inject.Alternative
 import javax.enterprise.inject.Produces
+import javax.enterprise.inject.Specializes
 
 /**
  * @author Abhijit Sarkar
  */
-@Dependent
-// TODO: Read these from property file
-class MovieFacadeHelper {
+@Alternative
+@Specializes
+class TestMovieFacadeHelper extends MovieFacadeHelper {
+    @Override
     @Produces
     @MovieGenres
     List<String> genreList() {
-        [
-                'Action and Adventure',
-                'Animation',
-                'Comedy',
-                'Documentary',
-                'Drama',
-                'Horror',
-                'R-Rated Mainstream Movies',
-                'Romance',
-                'Sci-Fi',
-                'Thriller',
-                'X-Rated'
-        ]
+        super.genreList()
     }
 
+    @Override
     @Produces
     @IncludeFiles
     List<String> includes() {
-        MovieRipFileExtension.values().collect {
-            // GOTCHA ALERT: GString is not equal to String; "a" != 'a'
-            ".${it.name().toLowerCase()}".toString()
-        }
+        super.includes()
     }
 
+    @Override
     @Produces
     @IndexDirectory
     Directory indexDirectory() {
-        String userHome = System.properties['user.home']
-        File indexDirectory = new File(userHome, '.movie-manager/index')
+        // Override the actual indexing location so that tests don't destroy it
+        File indexDirectory = new File('./build/lucene')
         FSDirectory.open(indexDirectory)
     }
 
+    @Override
     @Produces
     @SearchEngineVersion
     Version searchEngineVersion() {
-        Version.LUCENE_46
+        super.searchEngineVersion()
     }
 }

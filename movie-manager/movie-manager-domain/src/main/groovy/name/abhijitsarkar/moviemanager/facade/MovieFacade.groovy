@@ -17,7 +17,7 @@
 package name.abhijitsarkar.moviemanager.facade
 
 import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.service.indexing.MovieIndexingService
+import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
 import name.abhijitsarkar.moviemanager.service.rip.MovieRipService
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
 import name.abhijitsarkar.moviemanager.service.search.QueryBuilder
@@ -35,7 +35,7 @@ class MovieFacade {
     MovieRipService movieRipService
 
     @Inject
-    MovieIndexingService movieIndexingService
+    MovieIndexService movieIndexingService
 
     @Inject
     MovieSearchService movieSearchService
@@ -43,7 +43,7 @@ class MovieFacade {
     @Inject
     QueryBuilder queryBuilder
 
-    void index(String movieDirectory) {
+    String index(String movieDirectory) {
         Set<MovieRip> movieRips = movieRipService.getMovieRips(movieDirectory)
 
         movieIndexingService.index(movieRips)

@@ -28,10 +28,11 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import javax.annotation.PostConstruct
+import javax.enterprise.context.Dependent
 import javax.inject.Inject
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-
+@Dependent
 class MovieRipService {
     /*
      * The following regex matches file names with release year in parentheses,
@@ -63,13 +64,18 @@ class MovieRipService {
     void postConstruct() {
         assert genres: 'Genre list must not be null.'
         assert includes: 'File includes must not be null.'
+
+        LOGGER.debug('All genres {}.', genres)
+        LOGGER.debug('Included files {}.', includes)
     }
 
     Set<MovieRip> getMovieRips(String movieDirectory) {
+        LOGGER.debug('Indexing movies from {}.', movieDirectory)
+
         File rootDir = new File(movieDirectory)
 
         if (!rootDir.isAbsolute()) {
-            LOGGER.warn("Path ${movieDirectory} is not absolute: it's resolved to ${rootDir.absolutePath}")
+            LOGGER.warn('Path {} is not absolute and is resolved to {}.', movieDirectory, rootDir.absolutePath)
         }
 
         if (!rootDir.exists() || !rootDir.isDirectory()) {
@@ -85,12 +91,17 @@ class MovieRipService {
         rootDir.eachFileRecurse { File f ->
             delegate = this
 
+            LOGGER.debug('Found file, path {}, name {}.', f.absolutePath, f.name)
+
             if (f.isDirectory() && isGenre(f.name)) {
+                LOGGER.debug('Setting current genre to {}.', f.name)
                 currentGenre = f.name
             } else if (isMovieRip(f.name)) {
                 MovieRip movieRip = parseMovieRip(f.name)
 
-                movieRip.genres = currentGenre as List
+                movieRip.genres = (movieRip.genres ?: [] as Set)
+                movieRip.genres << currentGenre
+
                 movieRip.fileSize = f.length()
 
                 String parent = getParent(f, currentGenre, rootDir)
@@ -99,21 +110,23 @@ class MovieRipService {
                     movieRip.parent = parent
                 }
 
-                LOGGER.info("Found movie: ${movieRip}")
+                LOGGER.info('Found movie {}.', movieRip)
 
                 boolean isUnique = movieRips.add(movieRip)
 
                 if (!isUnique) {
-                    LOGGER.warn("Found duplicate movie: ${movieRip}")
+                    LOGGER.info('Found duplicate movie {}.', movieRip)
                 }
             }
         }
+
+        movieRips
     }
 
     MovieRip parseMovieRip(String fileName) {
         String movieTitle
         final String movieRipFileExtension = getFileExtension(fileName)
-        LOGGER.debug("movieRipFileExtension: ${movieRipFileExtension}")
+        LOGGER.debug('movieRipFileExtension {}.', movieRipFileExtension)
         String lastPart
 
         int year = 0
@@ -123,36 +136,36 @@ class MovieRipService {
         if (matcher.find() && matcher.groupCount() >= 1) {
             // 1st group is the title, always present
             final String group1 = matcher.group(1)
-            LOGGER.debug("matcher.group(1): ${group1}")
+            LOGGER.debug('matcher.group(1) {}.', group1)
 
             movieTitle = group1.trim()
 
             // If present, the 2nd group is the release year
             final String group2 = matcher.group(2)
-            LOGGER.debug("matcher.group(2): ${group2}")
+            LOGGER.debug('matcher.group(2) {}.', group2)
             year = group2 ? Integer.parseInt(group2) : year
 
             // If present, the 3rd group might be one of 2 things:
             // 1) The file extension
             // 2) A "qualifier" to the name like "part 1" and the file extension
             final String group3 = matcher.group(3)
-            LOGGER.debug("matcher.group(3): ${group3}")
+            LOGGER.debug('matcher.group(3) {}.', group3)
             lastPart = group3 ?: null
 
             if (lastPart && (lastPart != movieRipFileExtension)) {
                 // Extract the qualifier
                 String qualifier = lastPart[0..-(movieRipFileExtension.length() + 1)]
-                LOGGER.debug("qualifier: ${qualifier}")
+                LOGGER.debug('qualifier {}.', qualifier)
                 movieTitle += qualifier
             }
         } else {
-            LOGGER.debug("Found unconventional filename: ${fileName}")
+            LOGGER.debug('Found unconventional filename {}.', fileName)
             // Couldn't parse file name, extract as-is without file extension
             movieTitle = fileName[0..-(movieRipFileExtension.length() + 1)]
         }
 
-        final Movie m = new Movie(title: movieTitle, imdbRating: imdbRating,
-                releaseDate: Date.parse('MM/dd/yyyy', "01/01/${year}"))
+        final Movie m = new Movie(title:movieTitle, imdbRating:imdbRating,
+                releaseDate:Date.parse('MM/dd/yyyy', "01/01/${year}"))
 
         final MovieRip mr = new MovieRip(m)
         mr.fileExtension = "${movieRipFileExtension}"

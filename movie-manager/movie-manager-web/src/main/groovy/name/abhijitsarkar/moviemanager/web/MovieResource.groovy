@@ -20,7 +20,9 @@ import name.abhijitsarkar.moviemanager.facade.MovieFacade
 
 import javax.enterprise.context.RequestScoped
 import javax.inject.Inject
+import javax.ws.rs.FormParam
 import javax.ws.rs.GET
+import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
@@ -29,11 +31,17 @@ import javax.ws.rs.core.MediaType
 /**
  * @author Abhijit Sarkar
  */
-@Path('movie')
+@Path('movies')
 @RequestScoped
 class MovieResource {
     @Inject
     private MovieFacade movieFacade
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    String index(@FormParam('dir') String movieDirectory) {
+        movieFacade.index(movieDirectory)
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

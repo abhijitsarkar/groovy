@@ -1,4 +1,4 @@
-package name.abhijitsarkar.moviemanager.service.indexing.analysis;
+package name.abhijitsarkar.moviemanager.service.index.analysis;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.BaseTokenStreamTestCase;

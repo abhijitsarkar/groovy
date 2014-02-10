@@ -20,5 +20,6 @@
       http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
     <alternatives>
         <class>name.abhijitsarkar.moviemanager.service.rip.MovieRipServiceMock</class>
+        <class>name.abhijitsarkar.moviemanager.service.facade.TestMovieFacadeHelper</class>
     </alternatives>
 </beans>

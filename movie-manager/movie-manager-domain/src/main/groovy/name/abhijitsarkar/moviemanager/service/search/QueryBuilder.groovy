@@ -17,7 +17,7 @@
 package name.abhijitsarkar.moviemanager.service.search
 
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
-import name.abhijitsarkar.moviemanager.service.indexing.IndexField
+import name.abhijitsarkar.moviemanager.service.index.IndexField
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.core.SimpleAnalyzer
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
@@ -53,7 +53,7 @@ class QueryBuilder {
     Query perFieldQuery(String searchText, String indexField) {
         LOGGER.debug('Per field query - field {}, search text {}.', indexField, searchText)
 
-        IndexField idxField = IndexField.valueOf(IndexField, indexField)
+        IndexField idxField = IndexField.valueOf(IndexField, indexField.toUpperCase())
         String queryString
 
         switch (idxField) {

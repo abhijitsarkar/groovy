@@ -14,7 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.service.indexing
+package name.abhijitsarkar.moviemanager.service.index
 import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import org.apache.lucene.analysis.Analyzer
@@ -22,6 +22,7 @@ import org.apache.lucene.analysis.core.SimpleAnalyzer
 import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.store.Directory
+import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -34,8 +35,8 @@ import javax.inject.Inject
  * @author Abhijit Sarkar
  */
 @Dependent
-class MovieIndexingServiceHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexingServiceHelper)
+class MovieIndexServiceHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexServiceHelper)
 
     @Inject
     @IndexDirectory
@@ -53,7 +54,7 @@ class MovieIndexingServiceHelper {
     }
 
     protected IndexWriter newIndexWriter() {
-        LOGGER.info("Creating indexing writer for directory ${indexDirectory}.")
+        LOGGER.info('Creating index writer for directory {}.', indexDirectory)
 
         IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
@@ -68,8 +69,16 @@ class MovieIndexingServiceHelper {
 
     @PreDestroy
     void preDestroy() {
-        LOGGER.info("Closing indexing writer for directory ${indexDirectory}.")
+        LOGGER.info('Closing index writer for directory {}.', indexDirectory)
 
         indexWriter?.close()
+    }
+
+    String getDirectory() {
+        if (indexDirectory instanceof FSDirectory) {
+            return indexDirectory.directory.absolutePath
+        }
+
+        indexDirectory.toString()
     }
 }

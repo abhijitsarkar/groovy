@@ -20,7 +20,7 @@ import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieMock
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.facade.MovieFacade
-import name.abhijitsarkar.moviemanager.service.indexing.IndexField
+import name.abhijitsarkar.moviemanager.service.index.IndexField
 import name.abhijitsarkar.moviemanager.util.AbstractCDITest
 import org.junit.Before
 import org.junit.Test
