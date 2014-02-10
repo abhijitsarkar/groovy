@@ -14,13 +14,13 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.annotation;
+package name.abhijitsarkar.moviemanager.annotation
 
-import javax.inject.Qualifier;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.inject.Qualifier
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
 
 /**
  * @author Abhijit Sarkar
@@ -28,5 +28,5 @@ import java.lang.annotation.Target;
 @Target([ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE])
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier
-public @interface IndexDirectory {
+@interface IndexDirectory {
 }
