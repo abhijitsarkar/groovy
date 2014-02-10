@@ -19,9 +19,6 @@ configurations {
 
 dependencies {
     compile project(':movie-manager-domain')
-    runtime(
-            [group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: jacksonVersion]
-    )
     providedCompile([group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]) {
         exclude group: 'javax.el', module: 'el-api'
     }
