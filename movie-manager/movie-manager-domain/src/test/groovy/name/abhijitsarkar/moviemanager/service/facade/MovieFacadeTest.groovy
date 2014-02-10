@@ -30,7 +30,6 @@ import javax.inject.Inject
 /**
  * @author Abhijit Sarkar
  */
-//@org.junit.experimental.categories.Category(CDISuiteTest)
 class MovieFacadeTest extends AbstractCDITest {
     private final Movie mock = new MovieMock()
 

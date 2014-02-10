@@ -28,7 +28,6 @@ import org.junit.Test
 
 import javax.inject.Inject
 
-//@org.junit.experimental.categories.Category(CDISuiteTest)
 @WithGMock
 class MovieRipServiceTest extends AbstractCDITest {
     @Inject

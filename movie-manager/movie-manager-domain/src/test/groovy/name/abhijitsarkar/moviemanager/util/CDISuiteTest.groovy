@@ -16,8 +16,19 @@
 
 package name.abhijitsarkar.moviemanager.util
 
+import name.abhijitsarkar.moviemanager.service.facade.MovieFacadeTest
+import name.abhijitsarkar.moviemanager.service.rip.MovieRipServiceTest
+import org.apache.deltaspike.testcontrol.api.junit.CdiTestSuiteRunner
+import org.junit.runner.RunWith
+import org.junit.runners.Suite
+
 /**
  * @author Abhijit Sarkar
  */
-interface CDISuiteTest {
+@RunWith(CdiTestSuiteRunner)
+@Suite.SuiteClasses([
+MovieFacadeTest,
+MovieRipServiceTest
+])
+class CDISuiteTest {
 }

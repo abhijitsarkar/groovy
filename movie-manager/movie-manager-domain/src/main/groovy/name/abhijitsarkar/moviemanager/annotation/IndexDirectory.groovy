@@ -14,27 +14,19 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+package name.abhijitsarkar.moviemanager.annotation;
+
+import javax.inject.Qualifier;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * @author Abhijit Sarkar
  */
-
-package name.abhijitsarkar.moviemanager.annotation;
-
-import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Stereotype;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-// Define a stereotype for class level
-@Stereotype
-@Retention(RUNTIME)
-@Target(TYPE)
-// Here define all annotations you want to replace by this one.
-// This stereotype define an alternative
-@Alternative
-public @interface MovieService {
-	MovieDatabase value();
+@Target([ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE])
+@Retention(RetentionPolicy.RUNTIME)
+@Qualifier
+public @interface IndexDirectory {
 }
