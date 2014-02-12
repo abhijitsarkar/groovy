@@ -23,6 +23,8 @@ import org.eclipse.jetty.webapp.WebInfConfiguration
 import org.eclipse.jetty.webapp.WebXmlConfiguration
 import org.eclipse.jetty.webapp.JettyWebXmlConfiguration
 import org.eclipse.jetty.annotations.AnnotationConfiguration
+import org.eclipse.jetty.plus.webapp.EnvConfiguration
+import org.eclipse.jetty.plus.webapp.PlusConfiguration
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -43,7 +45,7 @@ class EmbeddedJettyServer {
 
     static {
         CONFIGURATIONS = [new WebInfConfiguration(), new WebXmlConfiguration(), new JettyWebXmlConfiguration(),
-                new AnnotationConfiguration()]
+                new AnnotationConfiguration(), new EnvConfiguration(), new PlusConfiguration()]
         DEPLOYMENT_DESCRIPTOR = 'WEB-INF/web.xml'
         OVERRIDE_DESCRIPTORS = ['WEB-INF/jetty-override.xml'] as String[]
         HTTP_PORT = 8080

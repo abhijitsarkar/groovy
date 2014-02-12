@@ -16,6 +16,7 @@
 
 package name.abhijitsarkar.moviemanager.web
 
+import javax.validation.constraints.NotNull
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.facade.MovieFacade
 
@@ -42,6 +43,7 @@ class MovieResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @NotNull(message='Movie directory cannot be null.')
     String index(@FormParam('dir') String movieDirectory) {
         movieFacade.index(movieDirectory)
     }
