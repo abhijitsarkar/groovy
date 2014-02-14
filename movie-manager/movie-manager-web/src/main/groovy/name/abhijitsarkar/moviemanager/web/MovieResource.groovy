@@ -16,7 +16,6 @@
 
 package name.abhijitsarkar.moviemanager.web
 
-import javax.validation.constraints.NotNull
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.facade.MovieFacade
 
