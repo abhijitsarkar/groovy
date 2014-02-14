@@ -17,6 +17,7 @@
 package name.abhijitsarkar.moviemanager.web.config
 
 import name.abhijitsarkar.moviemanager.web.MovieResource
+import name.abhijitsarkar.moviemanager.web.ext.HK2Binder
 import name.abhijitsarkar.moviemanager.web.ext.MoviesMarshaller
 
 import javax.ws.rs.ApplicationPath
@@ -39,6 +40,7 @@ class MovieManagerApplication extends Application {
     Set<Object> getSingletons() {
         Set<Object> objects = [] as Set
         objects.add(new MoviesMarshaller())
+        objects.add(new HK2Binder())
 
         objects
     }

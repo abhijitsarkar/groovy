@@ -13,7 +13,7 @@ apply plugin: 'war'
 
 configurations {
     embeddedJetty
-    resteasy
+    jersey
     weld
 }
 
@@ -21,25 +21,32 @@ dependencies {
     compile project(':movie-manager-domain')
     compile project(':movie-manager-service')
     compile(
+        [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
+        [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: jaxRsVersion],
+        [group: 'javax.annotation', name: 'javax.annotation-api', version: annotationApiVersion],
+        [group: 'javax.validation', name: 'validation-api', version: beanValidationApiVersion],
         [group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: jacksonVersion],
         [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion]
     )
-    providedCompile(
+    compile(
         [group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]
     ) {
+        // We're using the javax.el-api
         exclude group: 'javax.el', module: 'el-api'
+        // We're using the newer javax.annotation-api
+        exclude group: 'javax.annotation', module: 'jsr250-api'
+        // We're using weld-servlet
+        exclude group: 'org.jboss.spec.javax.interceptor', module: 'jboss-interceptors-api_1.1_spec'
     }
     providedCompile(
-        [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
-        [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: jaxRsVersion]
+        [group: 'org.glassfish.hk2', name: 'hk2-api', version: hk2ApiVersion]
     )
-    resteasy(
-        [group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: resteasyVersion],
-        [group: 'org.jboss.resteasy', name: 'resteasy-servlet-initializer', version: resteasyVersion],
-        [group: 'org.jboss.resteasy', name: 'resteasy-cdi', version: resteasyVersion]
+    jersey(
+        [group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: jerseyVersion],
+        [group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: jerseyVersion]
     )
     weld(
-            [group: 'org.jboss.weld.servlet', name: 'weld-servlet', version: weldServletVersion]
+        [group: 'org.jboss.weld.servlet', name: 'weld-servlet', version: weldServletVersion]
     )
     embeddedJetty(
         [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
@@ -60,10 +67,10 @@ dependencies {
 
 sourceSets {
     [main, test].each {
-        it.compileClasspath += project.configurations.providedCompile + project.configurations.embeddedJetty
+        it.compileClasspath += configurations.providedCompile + configurations.embeddedJetty
         it.output.resourcesDir = project.file("$buildDir/classes/${it.name}")
     }
-    main.runtimeClasspath += project.configurations.resteasy + project.configurations.weld
+    main.runtimeClasspath += configurations.jersey + configurations.weld
 }
 
 war {
