@@ -76,10 +76,10 @@ sourceSets {
         it.output.resourcesDir = project.file("$buildDir/classes/${it.name}")
     }
     test {
-        if (project.hasProperty('owb')) {
-            it.runtimeClasspath += configurations.owb
-        } else {
+        if (project.hasProperty('weld')) {
             it.runtimeClasspath += configurations.weld
+        } else {
+            it.runtimeClasspath += configurations.owb
         }
     }
 }
