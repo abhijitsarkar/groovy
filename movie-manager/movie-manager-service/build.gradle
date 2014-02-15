@@ -22,9 +22,8 @@ configurations {
     owb {
         extendsFrom(testRuntime)
     }
-}
-repositories {
-    maven { url 'http://repository.apache.org/snapshots' }
+    all*.exclude group: 'org.jboss.spec.javax.annotation'
+    all*.exclude group: 'org.jboss.spec.javax.interceptor'
 }
 
 dependencies {
@@ -45,8 +44,6 @@ dependencies {
         exclude group: 'javax.el', module: 'el-api'
         // We're using newer versions
         exclude group: 'javax.annotation', module: 'jsr250-api'
-        // We're using weld-se
-        exclude group: 'org.jboss.spec.javax.interceptor', module: 'jboss-interceptors-api_1.1_spec'
     }
     provided(
         [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],

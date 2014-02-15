@@ -20,8 +20,8 @@ configurations {
 
     // We're using javax.ws.rs-api
     all*.exclude group: 'org.jboss.resteasy', module: 'jaxrs-api'
-    // We're using the javax.annotation-api
-    all*.exclude group: 'org.jboss.spec.javax.annotation', module: 'jboss-annotations-api_1.1_spec'
+    all*.exclude group: 'org.jboss.spec.javax.annotation'
+    all*.exclude group: 'org.jboss.spec.javax.interceptor'
 }
 
 dependencies {
@@ -43,9 +43,9 @@ dependencies {
         // We're using weld-servlet
         exclude group: 'org.jboss.spec.javax.interceptor', module: 'jboss-interceptors-api_1.1_spec'
     }
-    providedCompile(
-            [group: 'org.glassfish.hk2', name: 'hk2-api', version: hk2ApiVersion]
-    )
+//    providedCompile(
+//            [group: 'org.glassfish.hk2', name: 'hk2-api', version: hk2ApiVersion]
+//    )
 //    jersey(
 //            [group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: jerseyVersion]
 //    )
