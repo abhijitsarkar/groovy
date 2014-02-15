@@ -30,33 +30,41 @@ repositories {
 dependencies {
     compile project(':movie-manager-domain')
     compile(
-            [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
-            [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
-            [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion]
+        [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
+        [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
+        [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion],
+        [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
+        [group: 'javax.validation', name: 'validation-api', version: beanValidationApiVersion],
+        [group: 'javax.annotation', name: 'javax.annotation-api', version: annotationApiVersion],
+        [group: 'javax.interceptor', name: 'javax.interceptor-api', version: interceptorApiVersion]
     )
-    provided(
-            [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
-            [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
-            [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
-    )
-    provided(
-            [group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]
+    compile(
+        [group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]
     ) {
+        // We're using the javax.el-api
         exclude group: 'javax.el', module: 'el-api'
+        // We're using newer versions
+        exclude group: 'javax.annotation', module: 'jsr250-api'
+        // We're using weld-se
+        exclude group: 'org.jboss.spec.javax.interceptor', module: 'jboss-interceptors-api_1.1_spec'
     }
+    provided(
+        [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
+        [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
+    )
     testCompile project(path: ':movie-manager-domain', configuration: 'test')
     testCompile(
-            [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion],
-            [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion]
+        [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion],
+        [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion]
     )
     weld(
-            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion],
-            [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion]
+        [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion],
+        [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion]
     )
     owb(
-            [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion],
-            [group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: openWebBeansVersion],
-            [group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: openWebBeansVersion]
+        [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-owb', version: deltaspikeVersion],
+        [group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: openWebBeansVersion],
+        [group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: openWebBeansVersion]
     )
 }
 

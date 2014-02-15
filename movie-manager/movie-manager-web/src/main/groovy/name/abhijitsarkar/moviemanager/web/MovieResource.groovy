@@ -29,7 +29,6 @@ import javax.ws.rs.Path
 import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
-import javax.validation.constraints.NotNull
 
 /**
  * @author Abhijit Sarkar
@@ -43,9 +42,7 @@ class MovieResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    String index(
-            @NotNull(message = 'Movie directory cannot be null.')
-            @FormParam('dir') String movieDirectory) {
+    String index(@FormParam('dir') String movieDirectory) {
         movieFacade.index(movieDirectory)
     }
 

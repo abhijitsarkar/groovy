@@ -15,33 +15,24 @@
  */
 
 package name.abhijitsarkar.moviemanager.web.ext
-
-import name.abhijitsarkar.moviemanager.facade.MovieFacade
-
-import javax.enterprise.context.spi.CreationalContext
-import javax.enterprise.inject.spi.Bean
-import javax.enterprise.inject.spi.BeanManager
-import javax.enterprise.inject.spi.CDI
-
-import org.glassfish.hk2.utilities.binding.AbstractBinder
-
 /**
  * @author Abhijit Sarkar
  */
-class HK2Binder extends AbstractBinder {
-    @Override
-    protected void configure() {
-        BeanManager bm = getBeanManager()
-        bind(getBean(bm, MovieFacade)).to(MovieFacade)
-    }
-
-    private BeanManager getBeanManager() {
-        CDI.current().getBeanManager()
-    }
-
-    private <T> T getBean(BeanManager bm, Class<T> clazz) {
-        Bean<T> bean = (Bean<T>) bm.getBeans(clazz).iterator().next()
-        CreationalContext<T> ctx = bm.createCreationalContext(bean)
-        return (T) bm.getReference(bean, clazz, ctx)
-    }
+class HK2Binder {
+//        extends AbstractBinder {
+//    @Override
+//    protected void configure() {
+//        BeanManager bm = getBeanManager()
+//        bind(getBean(bm, MovieFacade)).to(MovieFacade)
+//    }
+//
+//    private BeanManager getBeanManager() {
+//        CDI.current().getBeanManager()
+//    }
+//
+//    private <T> T getBean(BeanManager bm, Class<T> clazz) {
+//        Bean<T> bean = (Bean<T>) bm.getBeans(clazz).iterator().next()
+//        CreationalContext<T> ctx = bm.createCreationalContext(bean)
+//        return (T) bm.getReference(bean, clazz, ctx)
+//    }
 }

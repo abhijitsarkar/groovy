@@ -15,7 +15,6 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
-
 import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.service.index.IndexField
 import org.apache.lucene.analysis.Analyzer
@@ -30,6 +29,7 @@ import org.slf4j.LoggerFactory
 import javax.annotation.PostConstruct
 import javax.enterprise.context.Dependent
 import javax.inject.Inject
+import javax.validation.constraints.NotNull
 
 /**
  * @author Abhijit Sarkar
@@ -50,7 +50,7 @@ class QueryBuilder {
         queryParser = newQueryParser()
     }
 
-    Query perFieldQuery(String searchText, String indexField) {
+    Query perFieldQuery(@NotNull String searchText, @NotNull String indexField) {
         LOGGER.debug('Per field query - field {}, search text {}.', indexField, searchText)
 
         IndexField idxField = IndexField.valueOf(IndexField, indexField.toUpperCase())
@@ -70,7 +70,7 @@ class QueryBuilder {
         queryParser.parse(queryString, DEFAULT_SEARCH_FIELD)
     }
 
-    Query advancedQuery(String searchText) {
+    Query advancedQuery(@NotNull String searchText) {
         LOGGER.debug('Advanced query - {}.', searchText)
 
         queryParser.parse(searchText, DEFAULT_SEARCH_FIELD)

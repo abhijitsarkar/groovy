@@ -8,16 +8,17 @@
 
     <listener>
         <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
+        <!--<listener-class>org.apache.webbeans.servlet.WebBeansConfigurationListener</listener-class>-->
     </listener>
 
-    <servlet>
+    <!--<servlet>
         <servlet-name>JerseyServlet</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
             <param-value>name.abhijitsarkar.moviemanager.web.config.MovieManagerApplication</param-value>
         </init-param>
-        <!--Without this, client gets a 404 but not the validation error message-->
+        &lt;!&ndash;Without this, client gets a 404 but not the validation error message&ndash;&gt;
         <init-param>
             <param-name>jersey.config.beanValidation.enableOutputValidationErrorEntity.server</param-name>
             <param-value>true</param-value>
@@ -28,7 +29,7 @@
     <servlet-mapping>
         <servlet-name>JerseyServlet</servlet-name>
         <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
 
     <resource-env-ref>
         <resource-env-ref-name>BeanManager</resource-env-ref-name>
@@ -36,4 +37,8 @@
             javax.enterprise.inject.spi.BeanManager
         </resource-env-ref-type>
     </resource-env-ref>
+    <context-param>
+        <param-name>resteasy.injector.factory</param-name>
+        <param-value>org.jboss.resteasy.cdi.CdiInjectorFactory</param-value>
+    </context-param>
 </web-app>

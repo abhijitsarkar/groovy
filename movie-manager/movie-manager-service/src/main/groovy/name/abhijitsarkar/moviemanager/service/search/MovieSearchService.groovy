@@ -16,6 +16,7 @@
 
 package name.abhijitsarkar.moviemanager.service.search
 
+import name.abhijitsarkar.moviemanager.annotation.Logged
 import name.abhijitsarkar.moviemanager.domain.CastAndCrew
 import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
@@ -48,10 +49,11 @@ class MovieSearchService {
         movieRips(query, topDocs)
     }
 
+    @Logged
     private Set<MovieRip> movieRips(Query query, TopDocs results) {
         final int totalHits = results.totalHits
 
-        LOGGER.info('{} result(s) found for query {}.', totalHits, query.toString())
+//        LOGGER.info('{} result(s) found for query {}.', totalHits, query.toString())
 
         ScoreDoc[] scoreDocs = results.scoreDocs
         final int hits = scoreDocs.length - 1

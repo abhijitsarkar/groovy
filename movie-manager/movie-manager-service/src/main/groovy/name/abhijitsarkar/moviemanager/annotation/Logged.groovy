@@ -14,31 +14,21 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.web.config
-import name.abhijitsarkar.moviemanager.web.MovieResource
-import name.abhijitsarkar.moviemanager.web.ext.MoviesMarshaller
+package name.abhijitsarkar.moviemanager.annotation
 
-import javax.ws.rs.ApplicationPath
-import javax.ws.rs.core.Application
+import javax.interceptor.InterceptorBinding
+import java.lang.annotation.ElementType
+import java.lang.annotation.Inherited
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
+
 /**
  * @author Abhijit Sarkar
  */
-@ApplicationPath('/')
-class MovieManagerApplication extends Application {
-    @Override
-    Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = [] as Set
-        classes.add(MovieResource)
-
-        classes
-    }
-
-    @Override
-    Set<Object> getSingletons() {
-        Set<Object> objects = [] as Set
-        objects.add(new MoviesMarshaller())
-//        objects.add(new HK2Binder())
-
-        objects
-    }
+@Inherited
+@InterceptorBinding
+@Retention(RetentionPolicy.RUNTIME)
+@Target([ElementType.METHOD, ElementType.TYPE])
+public @interface Logged {
 }

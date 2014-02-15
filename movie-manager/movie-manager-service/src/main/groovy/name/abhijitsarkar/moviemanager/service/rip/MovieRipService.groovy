@@ -22,6 +22,7 @@ package name.abhijitsarkar.moviemanager.service.rip
 
 import name.abhijitsarkar.moviemanager.annotation.IncludeFiles
 import name.abhijitsarkar.moviemanager.annotation.MovieGenres
+import name.abhijitsarkar.moviemanager.annotation.ValidDirectory
 import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import org.slf4j.Logger
@@ -32,6 +33,7 @@ import javax.enterprise.context.Dependent
 import javax.inject.Inject
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+
 @Dependent
 class MovieRipService {
     /*
@@ -69,20 +71,14 @@ class MovieRipService {
         LOGGER.debug('Included files {}.', includes)
     }
 
-    Set<MovieRip> getMovieRips(String movieDirectory) {
+    Set<MovieRip> getMovieRips(
+            @ValidDirectory(message = 'Movie directory is not valid.') String movieDirectory) {
         LOGGER.debug('Indexing movies from {}.', movieDirectory)
 
         File rootDir = new File(movieDirectory)
 
         if (!rootDir.isAbsolute()) {
             LOGGER.warn('Path {} is not absolute and is resolved to {}.', movieDirectory, rootDir.absolutePath)
-        }
-
-        if (!rootDir.exists() || !rootDir.isDirectory()) {
-            throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not a directory.")
-        }
-        if (!rootDir.canRead()) {
-            throw new IllegalArgumentException("${rootDir.canonicalPath} does not exist or is not readable.")
         }
 
         String currentGenre
@@ -169,8 +165,8 @@ class MovieRipService {
             movieTitle = fileName[0..-(movieRipFileExtension.length() + 1)]
         }
 
-        final Movie m = new Movie(title:movieTitle, imdbRating:imdbRating,
-                releaseDate:Date.parse('MM/dd/yyyy', "01/01/${year}"))
+        final Movie m = new Movie(title: movieTitle, imdbRating: imdbRating,
+                releaseDate: Date.parse('MM/dd/yyyy', "01/01/${year}"))
 
         final MovieRip mr = new MovieRip(m)
         mr.fileExtension = movieRipFileExtension

@@ -14,22 +14,27 @@ apply plugin: 'war'
 configurations {
     embeddedJetty
     jersey
+//    owb
     weld
+    resteasy
+
+    // We're using javax.ws.rs-api
+    all*.exclude group: 'org.jboss.resteasy', module: 'jaxrs-api'
+    // We're using the javax.annotation-api
+    all*.exclude group: 'org.jboss.spec.javax.annotation', module: 'jboss-annotations-api_1.1_spec'
 }
 
 dependencies {
     compile project(':movie-manager-domain')
     compile project(':movie-manager-service')
     compile(
-        [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
-        [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: jaxRsVersion],
-        [group: 'javax.annotation', name: 'javax.annotation-api', version: annotationApiVersion],
-        [group: 'javax.validation', name: 'validation-api', version: beanValidationApiVersion],
-        [group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: jacksonVersion],
-        [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion]
+            [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
+            [group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: jaxRsVersion],
+            [group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: jacksonVersion],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion]
     )
     compile(
-        [group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]
+            [group: 'javax.enterprise', name: 'cdi-api', version: cdiApiVersion]
     ) {
         // We're using the javax.el-api
         exclude group: 'javax.el', module: 'el-api'
@@ -39,25 +44,55 @@ dependencies {
         exclude group: 'org.jboss.spec.javax.interceptor', module: 'jboss-interceptors-api_1.1_spec'
     }
     providedCompile(
-        [group: 'org.glassfish.hk2', name: 'hk2-api', version: hk2ApiVersion]
+            [group: 'org.glassfish.hk2', name: 'hk2-api', version: hk2ApiVersion]
     )
-    jersey(
-        [group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: jerseyVersion],
-        [group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: jerseyVersion]
-    )
+//    jersey(
+//            [group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: jerseyVersion]
+//    )
+//    jersey(
+//            [group: 'org.glassfish.jersey.ext', name: 'jersey-bean-validation', version: jerseyVersion]
+//    ) {
+//        // We're using newer versions
+//        exclude group: 'javax.el', module: 'javax.el-api'
+//        exclude group: 'org.hibernate', module: 'hibernate-validator'
+//    }
     weld(
-        [group: 'org.jboss.weld.servlet', name: 'weld-servlet', version: weldServletVersion]
+            [group: 'org.jboss.weld.servlet', name: 'weld-servlet', version: weldServletVersion]
     )
+//    owb(
+//            [group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: openWebBeansVersion],
+//            [group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: openWebBeansVersion],
+//            [group: 'org.apache.openwebbeans', name: 'openwebbeans-web', version: openWebBeansVersion],
+//            [group: 'org.apache.openwebbeans', name: 'openwebbeans-cdi11-preview', version: openWebBeansVersion]
+//    )
+    resteasy(
+            [group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: resteasyVersion],
+            [group: 'org.jboss.resteasy', name: 'resteasy-servlet-initializer', version: resteasyVersion],
+            [group: 'org.jboss.resteasy', name: 'resteasy-cdi', version: resteasyVersion]
+    )
+    resteasy(
+            [group: 'org.jboss.resteasy', name: 'resteasy-validator-provider-11', version: resteasyVersion]
+    ) {
+        // We're using newer versions
+        exclude group: 'org.hibernate', module: 'hibernate-validator'
+        exclude group: 'com.fasterxml', module: 'classmate'
+    }
     embeddedJetty(
-        [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
-        [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
-        [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
-        [group: 'org.eclipse.jetty', name: 'jetty-jndi', version: jettyVersion],
-        [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
-        [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
-        [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion],
-        [group: 'javax.el', name: 'javax.el-api', version: elVersion],
-        [group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: jspApiVersion]
+            [group: 'org.eclipse.jetty', name: 'jetty-server', version: jettyVersion],
+            [group: 'org.eclipse.jetty', name: 'jetty-webapp', version: jettyVersion],
+            [group: 'org.eclipse.jetty', name: 'jetty-annotations', version: jettyVersion],
+            [group: 'org.eclipse.jetty', name: 'jetty-jndi', version: jettyVersion],
+            [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
+            [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
+            [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion],
+            [group: 'javax.el', name: 'javax.el-api', version: elVersion],
+            [group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: jspApiVersion]
+    )
+    runtime(
+            [group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion],
+            [group: 'javax.el', name: 'javax.el-api', version: elVersion],
+            [group: 'org.glassfish.web', name: 'javax.el', version: glassfishElVersion],
+            [group: 'org.hibernate', name: 'hibernate-validator-cdi', version: hibernateValidatorVersion]
     )
 //    cargo(
 //            [group: 'org.codehaus.cargo', name: 'cargo-core-uberjar', version: cargoVersion],
@@ -70,7 +105,7 @@ sourceSets {
         it.compileClasspath += configurations.providedCompile + configurations.embeddedJetty
         it.output.resourcesDir = project.file("$buildDir/classes/${it.name}")
     }
-    main.runtimeClasspath += configurations.jersey + configurations.weld
+    main.runtimeClasspath += configurations.resteasy + configurations.weld
 }
 
 war {
