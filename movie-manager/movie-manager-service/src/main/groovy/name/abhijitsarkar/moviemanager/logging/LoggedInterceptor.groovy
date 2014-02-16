@@ -15,7 +15,6 @@
  */
 
 package name.abhijitsarkar.moviemanager.logging
-
 import name.abhijitsarkar.moviemanager.annotation.Logged
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
 import org.slf4j.Logger
@@ -26,7 +25,6 @@ import javax.interceptor.AroundInvoke
 import javax.interceptor.Interceptor as JavaxInterceptor
 import javax.interceptor.InvocationContext
 import java.lang.reflect.Method
-
 /**
  * @author Abhijit Sarkar
  */
@@ -47,8 +45,8 @@ class LoggedInterceptor implements Serializable {
         if (MovieSearchService.class.name == inClass && 'movieRips' == aroundMethod.name) {
             Object[] parameters = ctx.parameters
 
-            LOGGER.trace('{}.{} query: {}.', inClass, aroundMethod.name, parameters[0].toString())
-            LOGGER.trace('{}.{} num hits: {}.', inClass, aroundMethod.name, parameters[0].totalHits)
+            LOGGER.info('{}.{} query: {}.', inClass, aroundMethod.name, parameters[0].toString())
+            LOGGER.info('{}.{} num hits: {}.', inClass, aroundMethod.name, parameters[0].totalHits)
         }
 
         ctx.proceed()

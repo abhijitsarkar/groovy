@@ -28,13 +28,13 @@ import org.apache.lucene.search.TopDocs
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import javax.enterprise.context.ApplicationScoped
+import javax.enterprise.context.Dependent
 import javax.inject.Inject
 
 /**
  * @author Abhijit Sarkar
  */
-@ApplicationScoped
+@Dependent
 class MovieSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchService)
     private static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100

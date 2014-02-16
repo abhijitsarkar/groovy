@@ -92,3 +92,7 @@ cobertura {
 
     coverageMergeDatafiles = project.subprojects.buildDir.collect { file("${it}/cobertura/cobertura.ser") }
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = project.gradleVersion
+}

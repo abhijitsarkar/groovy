@@ -14,7 +14,6 @@ apply plugin: 'war'
 configurations {
     embeddedJetty
     jersey
-//    owb
     weld
     resteasy
 
@@ -59,12 +58,6 @@ dependencies {
     weld(
             [group: 'org.jboss.weld.servlet', name: 'weld-servlet', version: weldServletVersion]
     )
-//    owb(
-//            [group: 'org.apache.openwebbeans', name: 'openwebbeans-spi', version: openWebBeansVersion],
-//            [group: 'org.apache.openwebbeans', name: 'openwebbeans-impl', version: openWebBeansVersion],
-//            [group: 'org.apache.openwebbeans', name: 'openwebbeans-web', version: openWebBeansVersion],
-//            [group: 'org.apache.openwebbeans', name: 'openwebbeans-cdi11-preview', version: openWebBeansVersion]
-//    )
     resteasy(
             [group: 'org.jboss.resteasy', name: 'resteasy-jaxrs', version: resteasyVersion],
             [group: 'org.jboss.resteasy', name: 'resteasy-servlet-initializer', version: resteasyVersion],
