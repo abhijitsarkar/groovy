@@ -15,7 +15,6 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
-
 import name.abhijitsarkar.moviemanager.annotation.Logged
 import name.abhijitsarkar.moviemanager.domain.CastAndCrew
 import name.abhijitsarkar.moviemanager.domain.Movie
@@ -28,13 +27,12 @@ import org.apache.lucene.search.TopDocs
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import javax.enterprise.context.Dependent
+import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
-
 /**
  * @author Abhijit Sarkar
  */
-@Dependent
+@ApplicationScoped
 class MovieSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchService)
     private static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100
