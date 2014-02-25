@@ -21,6 +21,7 @@ configurations {
     all*.exclude group: 'org.jboss.resteasy', module: 'jaxrs-api'
     all*.exclude group: 'org.jboss.spec.javax.annotation'
     all*.exclude group: 'org.jboss.spec.javax.interceptor'
+    all*.exclude group: 'javassist'
 }
 
 dependencies {
@@ -85,7 +86,8 @@ dependencies {
             [group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion],
             [group: 'javax.el', name: 'javax.el-api', version: elVersion],
             [group: 'org.glassfish.web', name: 'javax.el', version: glassfishElVersion],
-            [group: 'org.hibernate', name: 'hibernate-validator-cdi', version: hibernateValidatorVersion]
+            [group: 'org.hibernate', name: 'hibernate-validator-cdi', version: hibernateValidatorVersion],
+            [group: 'org.javassist', name: 'javassist', version: javassistVersion]
     )
 //    cargo(
 //            [group: 'org.codehaus.cargo', name: 'cargo-core-uberjar', version: cargoVersion],
