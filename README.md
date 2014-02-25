@@ -1,4 +1,4 @@
 groovy
 ======
 
-My Groovy/Gradle projects
+My Groovy projects
