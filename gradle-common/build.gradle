@@ -3,7 +3,7 @@ apply plugin: 'pmd'
 apply plugin: 'findbugs'
 
 def props = new Properties()
-new File('https://raw.github.com/abhijitsarkar/groovy/master/gradle-common/gradle.properties').withInputStream {
+new File('https:////raw.github.com/abhijitsarkar/groovy/master/gradle-common/gradle.properties').withInputStream {
     stream -> props.load(stream)
 }
 
