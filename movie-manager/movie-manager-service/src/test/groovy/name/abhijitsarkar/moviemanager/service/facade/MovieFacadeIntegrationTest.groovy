@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author Abhijit Sarkar
  */
-class MovieFacadeSpringIntegrationTest extends AbstractSpringIntegrationTest {
+class MovieFacadeIntegrationTest extends AbstractSpringIntegrationTest {
     @Autowired
     private MovieFacade movieFacade
 

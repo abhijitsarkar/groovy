@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 /**
  * @author Abhijit Sarkar
  */
-class MovieSearchServiceSpringIntegrationTest extends AbstractSpringIntegrationTest {
+class MovieSearchServiceIntegrationTest extends AbstractSpringIntegrationTest {
     @Autowired
     private MovieSearchService movieSearchService
 

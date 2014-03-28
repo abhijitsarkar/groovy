@@ -1,9 +1,9 @@
 package name.abhijitsarkar.moviemanager
 
-import name.abhijitsarkar.moviemanager.service.facade.MovieFacadeSpringIntegrationTest
-import name.abhijitsarkar.moviemanager.service.index.analysis.MovieIndexServiceSpringIntegrationTest
-import name.abhijitsarkar.moviemanager.service.rip.MovieRipServiceSpringIntegrationTest
-import name.abhijitsarkar.moviemanager.service.search.MovieSearchServiceSpringIntegrationTest
+import name.abhijitsarkar.moviemanager.service.facade.MovieFacadeIntegrationTest
+import name.abhijitsarkar.moviemanager.service.index.analysis.MovieIndexServiceIntegrationTest
+import name.abhijitsarkar.moviemanager.service.rip.MovieRipServiceIntegrationTest
+import name.abhijitsarkar.moviemanager.service.search.MovieSearchServiceIntegrationTest
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -11,7 +11,7 @@ import org.junit.runners.Suite
  * @author Abhijit Sarkar
  */
 @RunWith(Suite)
-@Suite.SuiteClasses([MovieRipServiceSpringIntegrationTest, MovieIndexServiceSpringIntegrationTest,
-        MovieSearchServiceSpringIntegrationTest, MovieFacadeSpringIntegrationTest])
+@Suite.SuiteClasses([MovieRipServiceIntegrationTest, MovieIndexServiceIntegrationTest,
+        MovieSearchServiceIntegrationTest, MovieFacadeIntegrationTest])
 class SpringIntegrationTestSuite {
 }
