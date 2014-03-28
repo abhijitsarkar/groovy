@@ -1,7 +1,8 @@
-package name.abhijitsarkar.moviemanager.service.index.analysis
+package name.abhijitsarkar.moviemanager.service.index
 
 import name.abhijitsarkar.moviemanager.AbstractSpringIntegrationTest
 import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
+import org.apache.lucene.store.RAMDirectory
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -16,5 +17,10 @@ class MovieIndexServiceIntegrationTest extends AbstractSpringIntegrationTest {
     void testNotNull() {
         assert movieIndexService?.indexDirectory
         assert movieIndexService?.version
+    }
+
+    @Test
+    void 'test that index directory is overridden correctly'() {
+        assert movieIndexService?.indexDirectory instanceof RAMDirectory
     }
 }

@@ -1,7 +1,7 @@
 package name.abhijitsarkar.moviemanager
 
 import name.abhijitsarkar.moviemanager.service.facade.MovieFacadeIntegrationTest
-import name.abhijitsarkar.moviemanager.service.index.analysis.MovieIndexServiceIntegrationTest
+import name.abhijitsarkar.moviemanager.service.index.MovieIndexServiceIntegrationTest
 import name.abhijitsarkar.moviemanager.service.rip.MovieRipServiceIntegrationTest
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchServiceIntegrationTest
 import org.junit.runner.RunWith
