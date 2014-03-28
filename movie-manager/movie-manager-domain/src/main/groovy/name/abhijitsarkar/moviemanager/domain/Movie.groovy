@@ -21,18 +21,18 @@
 package name.abhijitsarkar.moviemanager.domain
 
 class Movie implements Comparable {
-    private String title
-    private Set<String> genres
-    private Date releaseDate
-    private CastAndCrew director
-    private Set<CastAndCrew> stars
-    private float imdbRating
-    private URL imdbURL
+    String title
+    Set<String> genres
+    Date releaseDate
+    CastAndCrew director
+    Set<CastAndCrew> stars
+    float imdbRating
+    URL imdbURL
 
     Movie() {
     }
 
-    Movie(anotherMovie) {
+    Movie(final Movie anotherMovie) {
         title = anotherMovie.title
         genres = anotherMovie.genres
         releaseDate = anotherMovie.releaseDate
@@ -42,67 +42,67 @@ class Movie implements Comparable {
         imdbURL = anotherMovie.imdbURL
     }
 
-    // The getters and setters are required for serialization
-
-    String getTitle() {
-        title
-    }
-
-    void setTitle(String title) {
-        this.title = title
-    }
-
-    Set<String> getGenres() {
-        genres
-    }
-
-    void setGenres(Set<String> genres) {
-        this.genres = genres
-    }
-
-    Date getReleaseDate() {
-        releaseDate
-    }
-
-    void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate
-    }
-
-    CastAndCrew getDirector() {
-        director
-    }
-
-    void setDirector(CastAndCrew director) {
-        this.director = director
-    }
-
-    Set<CastAndCrew> getStars() {
-        stars
-    }
-
-    void setStars(Set<CastAndCrew> stars) {
-        this.stars = stars
-    }
-
-    float getImdbRating() {
-        imdbRating
-    }
-
-    void setImdbRating(float imdbRating) {
-        this.imdbRating = imdbRating
-    }
-
-    URL getImdbURL() {
-        imdbURL
-    }
-
-    void setImdbURL(URL imdbURL) {
-        this.imdbURL = imdbURL
-    }
+//    // The getters and setters are required for serialization
+//
+//    String getTitle() {
+//        title
+//    }
+//
+//    void setTitle(String title) {
+//        this.title = title
+//    }
+//
+//    Set<String> getGenres() {
+//        genres
+//    }
+//
+//    void setGenres(Set<String> genres) {
+//        this.genres = genres
+//    }
+//
+//    Date getReleaseDate() {
+//        releaseDate
+//    }
+//
+//    void setReleaseDate(Date releaseDate) {
+//        this.releaseDate = releaseDate
+//    }
+//
+//    CastAndCrew getDirector() {
+//        director
+//    }
+//
+//    void setDirector(CastAndCrew director) {
+//        this.director = director
+//    }
+//
+//    Set<CastAndCrew> getStars() {
+//        stars
+//    }
+//
+//    void setStars(Set<CastAndCrew> stars) {
+//        this.stars = stars
+//    }
+//
+//    float getImdbRating() {
+//        imdbRating
+//    }
+//
+//    void setImdbRating(float imdbRating) {
+//        this.imdbRating = imdbRating
+//    }
+//
+//    URL getImdbURL() {
+//        imdbURL
+//    }
+//
+//    void setImdbURL(URL imdbURL) {
+//        this.imdbURL = imdbURL
+//    }
 
     @Override
     String toString() {
-        "Movie[title:${title}, year:${releaseDate[Calendar.YEAR]}, genres:${genres}]"
+        "${this.class.simpleName}[title:${title}, year:${releaseDate[Calendar.YEAR]}, genres:${genres}]"
     }
 
     @Override
@@ -140,19 +140,21 @@ class Movie implements Comparable {
             throw new IllegalArgumentException("Invalid type parameter: ${o?.class.name}")
         }
 
-        if (title == o.title) {
-            int releaseDateDiff = (releaseDate[Calendar.YEAR] ?: 0) - (o.releaseDate[Calendar.YEAR] ?: 0)
+        final Movie other = (Movie) o;
+
+        if (title == other.title) {
+            int releaseDateDiff = (releaseDate[Calendar.YEAR] ?: 0) - (other.releaseDate[Calendar.YEAR] ?: 0)
 
             if (releaseDateDiff == 0) {
-                int genreSizeDiff = (genres?.size() ?: 0) - (o.genres?.size() ?: 0)
+                int genreSizeDiff = (genres?.size() ?: 0) - (other.genres?.size() ?: 0)
 
                 if (genreSizeDiff == 0) {
-                    return genres?.containsAll((String[]) o.genres) ? EQUAL : GREATER
+                    return genres?.containsAll(other.genres) ? EQUAL : GREATER
                 }
                 return genreSizeDiff
             }
             return releaseDateDiff
         }
-        title?.hashCode() - o.title?.hashCode()
+        title?.hashCode() - other.title?.hashCode()
     }
 }

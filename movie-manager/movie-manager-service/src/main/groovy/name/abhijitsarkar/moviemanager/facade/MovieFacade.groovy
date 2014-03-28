@@ -15,38 +15,36 @@
  */
 
 package name.abhijitsarkar.moviemanager.facade
-
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
 import name.abhijitsarkar.moviemanager.service.rip.MovieRipService
 import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
 import name.abhijitsarkar.moviemanager.service.search.QueryBuilder
 import org.apache.lucene.search.Query
-
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
 /**
  * @author Abhijit Sarkar
  */
-@ApplicationScoped
+@Service
 class MovieFacade {
-    @Inject
+    @Autowired
     MovieRipService movieRipService
 
-    @Inject
-    MovieIndexService movieIndexingService
+    @Autowired
+    MovieIndexService movieIndexService
 
-    @Inject
+    @Autowired
     MovieSearchService movieSearchService
 
-    @Inject
+    @Autowired
     QueryBuilder queryBuilder
 
     String index(String movieDirectory) {
         Set<MovieRip> movieRips = movieRipService.getMovieRips(movieDirectory)
 
-        movieIndexingService.index(movieRips)
+        movieIndexService.index(movieRips)
     }
 
     Set<MovieRip> searchByField(String searchText, String indexField) {

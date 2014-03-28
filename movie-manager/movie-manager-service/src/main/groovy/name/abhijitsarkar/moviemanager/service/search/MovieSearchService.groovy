@@ -15,7 +15,7 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
-import name.abhijitsarkar.moviemanager.annotation.Logged
+
 import name.abhijitsarkar.moviemanager.domain.CastAndCrew
 import name.abhijitsarkar.moviemanager.domain.Movie
 import name.abhijitsarkar.moviemanager.domain.MovieRip
@@ -26,28 +26,28 @@ import org.apache.lucene.search.ScoreDoc
 import org.apache.lucene.search.TopDocs
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
 /**
  * @author Abhijit Sarkar
  */
-@ApplicationScoped
+@Service
 class MovieSearchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchService)
     private static final int DEFAULT_NUM_RESULTS_TO_FETCH = 100
 
-    @Inject
-    MovieSearchServiceHelper movieSearchServiceHelper
+    @Delegate
+    @Autowired
+    private MovieSearchServiceHelper helper
 
     Set<MovieRip> search(Query query, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
 
-        TopDocs topDocs = movieSearchServiceHelper.indexSearcher.search(query, numResultsToFetch)
+        TopDocs topDocs = indexSearcher.search(query, numResultsToFetch)
 
         movieRips(query, topDocs)
     }
 
-    @Logged
     private Set<MovieRip> movieRips(Query query, TopDocs results) {
         final int totalHits = results.totalHits
 
@@ -63,7 +63,7 @@ class MovieSearchService {
         }
 
         for (i in 0..hits) {
-            final Document doc = movieSearchServiceHelper.indexSearcher.doc(scoreDocs[i].doc)
+            final Document doc = indexSearcher.doc(scoreDocs[i].doc)
 
             Movie movie = new Movie().with {
                 title = doc.get(IndexField.TITLE.name())

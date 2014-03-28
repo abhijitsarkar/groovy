@@ -19,75 +19,69 @@
  */
 
 package name.abhijitsarkar.moviemanager.domain
+import groovy.transform.EqualsAndHashCode
 
-import java.util.regex.Pattern
-
+@EqualsAndHashCode(callSuper = true, excludes = ['fileSize', 'fileExtension', 'parent'])
 class MovieRip extends Movie implements Comparable {
-    private long fileSize
-    private String fileExtension
-    private String parent
+    long fileSize
+    String fileExtension
+    String parent
 
-    MovieRip(movie) {
+    MovieRip(final Movie movie) {
         super(movie)
     }
 
-    // The getters and setters are required for serialization
+//    // The getters and setters are required for serialization
+//
+//    long getFileSize() {
+//        fileSize
+//    }
+//
+//    void setFileSize(long fileSize) {
+//        this.fileSize = fileSize
+//    }
+//
+//    String getFileExtension() {
+//        fileExtension
+//    }
+//
+//    void setFileExtension(String fileExtension) {
+//        this.fileExtension = fileExtension
+//    }
+//
+//    String getParent() {
+//        parent
+//    }
+//
+//    void setParent(String parent) {
+//        this.parent = parent
+//    }
 
-    long getFileSize() {
-        fileSize
-    }
-
-    void setFileSize(long fileSize) {
-        this.fileSize = fileSize
-    }
-
-    String getFileExtension() {
-        fileExtension
-    }
-
-    void setFileExtension(String fileExtension) {
-        this.fileExtension = fileExtension
-    }
-
-    String getParent() {
-        parent
-    }
-
-    void setParent(String parent) {
-        this.parent = parent
-    }
+//    @Override
+//    boolean equals(Object obj) {
+//        if (this.class != obj?.class) {
+//            return false
+//        }
+//
+//        super.equals((Movie) obj)
+//    }
+//
+//    @Override
+//    int hashCode() {
+//        // Codenarc is making me write extra code! On one hand, it thinks hashCode should've more code than just a
+//        // super call, on the other hand if I remove the method, Codenarc complains of it's absence.
+//        int hashCode = super.hashCode()
+//
+//        hashCode
+//    }
 
     @Override
     String toString() {
-        Pattern pattern = Pattern.compile('Movie*')
-        super.toString().replaceAll(pattern, 'MovieRip')
-    }
-
-    @Override
-    boolean equals(Object obj) {
-        if (this.class != obj?.class) {
-            return false
-        }
-
-        super.equals((Movie) obj)
-    }
-
-    @Override
-    int hashCode() {
-        // Codenarc is making me write extra code! On one hand, it thinks hashCode should've more code than just a
-        // super call, on the other hand if I remove the method, Codenarc complains of it's absence.
-        int hashCode = super.hashCode()
-
-        hashCode
+       super.toString()
     }
 
     @Override
     int compareTo(Object o) {
-        // Codenarc is making me write extra code! On one hand, it thinks compareTo should've more code than just a
-        // super call, on the other hand if I remove the method, Codenarc complains of it's absence.
-
-        int result = super.compareTo(o)
-
-        result
+        super.compareTo(o)
     }
 }

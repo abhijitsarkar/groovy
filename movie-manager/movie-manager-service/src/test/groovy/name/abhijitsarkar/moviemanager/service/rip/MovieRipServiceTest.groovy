@@ -20,28 +20,36 @@
 
 package name.abhijitsarkar.moviemanager.service.rip
 
-import name.abhijitsarkar.moviemanager.annotation.MovieGenres
-import name.abhijitsarkar.moviemanager.domain.MovieRip
-import name.abhijitsarkar.moviemanager.util.AbstractCDITest
+import name.abhijitsarkar.moviemanager.domain.MovieRipFileExtension
 import org.gmock.WithGMock
 import org.junit.Test
 
-import javax.inject.Inject
-
 @WithGMock
-class MovieRipServiceTest extends AbstractCDITest {
-    @Inject
+class MovieRipServiceTest {
     private MovieRipService service
+    private List<String> genres = [
+            'Action and Adventure',
+            'Animation',
+            'Comedy',
+            'Documentary',
+            'Drama',
+            'Horror',
+            'R-Rated Mainstream Movies',
+            'Romance',
+            'Sci-Fi',
+            'Thriller',
+            'X-Rated'
+    ]
 
-    @Inject
-    @MovieGenres
-    private List<String> genres
+    private List<String> includes = MovieRipFileExtension.values().collect {
+        // GOTCHA ALERT: GString is not equal to String; "a" != 'a'
+        ".${it.name().toLowerCase()}".toString()
+    }
 
-    @Test
-    void testGetFileExtension() {
-        assert '.txt' == service.getFileExtension('file.txt')
-        assert '.txt' == service.getFileExtension('.txt')
-        assert '' == service.getFileExtension('file')
+    MovieRipServiceTest() {
+        service = new MovieRipService()
+        service.genres = this.genres
+        service.includes = this.includes
     }
 
     @Test
@@ -66,27 +74,6 @@ class MovieRipServiceTest extends AbstractCDITest {
         }
 
         assert !service.isMovieRip('file.txt')
-    }
-
-    @Test
-    void testParseMovieRip() {
-        MovieRip mr = service.parseMovieRip('Casino Royal (2006).mkv')
-
-        assert mr.title == 'Casino Royal'
-        assert mr.releaseDate[Calendar.YEAR] == 2006
-        assert mr.fileExtension == '.mkv'
-
-        mr = service.parseMovieRip('2 Fast 2 Furious - part 1 (2001).mkv')
-
-        assert mr.title == '2 Fast 2 Furious - part 1'
-        assert mr.releaseDate[Calendar.YEAR] == 2001
-        assert mr.fileExtension == '.mkv'
-
-        mr = service.parseMovieRip('He-Man - A Friend In Need.avi')
-
-        assert mr.title == 'He-Man - A Friend In Need'
-        assert mr.releaseDate[Calendar.YEAR] == 1
-        assert mr.fileExtension == '.avi'
     }
 
     @Test

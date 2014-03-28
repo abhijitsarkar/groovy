@@ -15,7 +15,6 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.index
-
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
@@ -26,20 +25,19 @@ import org.apache.lucene.document.StringField
 import org.apache.lucene.document.TextField
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-
-import javax.enterprise.context.RequestScoped
-import javax.inject.Inject
-
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 /**
  * @author Abhijit Sarkar
  */
-@RequestScoped
+@Service
 class MovieIndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexService)
     private static final String EMPTY = ''
 
-    @Inject
-    private MovieIndexServiceHelper movieIndexServiceHelper
+    @Delegate
+    @Autowired
+    private MovieIndexServiceHelper helper
 
     private final Field titleField
     private Field genresField
@@ -97,12 +95,12 @@ class MovieIndexService {
             addLongField(fileSizeField, movieRip.fileSize, doc)
             addTextField(fileExtensionField, movieRip.fileExtension, doc)
 
-            movieIndexServiceHelper.indexWriter.addDocument(doc)
+            indexWriter.addDocument(doc)
         }
 
-        movieIndexServiceHelper.indexWriter.commit()
+        indexWriter.commit()
 
-        movieIndexServiceHelper.directory
+        indexDirectory
     }
 
     private void addDateField(Field field, Date fieldValue, Document doc) {

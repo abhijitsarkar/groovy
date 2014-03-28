@@ -15,7 +15,6 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.search
-import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
 import name.abhijitsarkar.moviemanager.service.index.IndexField
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.core.SimpleAnalyzer
@@ -25,28 +24,31 @@ import org.apache.lucene.search.Query
 import org.apache.lucene.util.Version
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 import javax.annotation.PostConstruct
-import javax.enterprise.context.Dependent
-import javax.inject.Inject
 import javax.validation.constraints.NotNull
+
+import static org.springframework.util.Assert.notNull
 
 /**
  * @author Abhijit Sarkar
  */
-@Dependent
+@Component
 class QueryBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryBuilder)
     private static final String DEFAULT_SEARCH_FIELD = IndexField.TITLE.name()
 
-    @Inject
-    @SearchEngineVersion
-    private Version version
+    @Autowired
+    Version version
 
     private StandardQueryParser queryParser
 
     @PostConstruct
     void postConstruct() {
+        notNull(version, 'Lucene version must not be null.')
+
         queryParser = newQueryParser()
     }
 

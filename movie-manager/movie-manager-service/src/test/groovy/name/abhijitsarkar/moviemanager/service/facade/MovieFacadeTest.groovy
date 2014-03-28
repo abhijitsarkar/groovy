@@ -21,100 +21,162 @@ import name.abhijitsarkar.moviemanager.domain.MovieMock
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.facade.MovieFacade
 import name.abhijitsarkar.moviemanager.service.index.IndexField
-import name.abhijitsarkar.moviemanager.util.AbstractCDITest
+import name.abhijitsarkar.moviemanager.service.index.MovieIndexService
+import name.abhijitsarkar.moviemanager.service.rip.MovieRipService
+import name.abhijitsarkar.moviemanager.service.search.MovieSearchService
+import name.abhijitsarkar.moviemanager.service.search.QueryBuilder
+import org.apache.lucene.search.Query
+import org.gmock.WithGMock
 import org.junit.Before
 import org.junit.Test
-
-import javax.inject.Inject
 
 /**
  * @author Abhijit Sarkar
  */
-class MovieFacadeTest extends AbstractCDITest {
+@WithGMock
+class MovieFacadeTest {
     private final Movie mock = new MovieMock()
 
-    @Inject
-    MovieFacade movieFacade
+    private MovieFacade movieFacade
+
+    private MovieRipService movieRipService
+
+    private MovieIndexService movieIndexService
+
+    private MovieSearchService movieSearchService
+
+    private QueryBuilder queryBuilder
+
+    private Query query
+
+    private movieRips
 
     @Before
     void setUp() {
-        movieFacade.index(null)
+        movieRipService = mock(MovieRipService)
+        movieIndexService = mock(MovieIndexService)
+        movieSearchService = mock(MovieSearchService)
+        queryBuilder = mock(QueryBuilder)
+
+        query = mock(Query)
+        movieRips = makeMovieRips()
+
+        movieFacade = new MovieFacade(movieIndexService: movieIndexService, movieRipService: movieRipService,
+                movieSearchService: movieSearchService, queryBuilder: queryBuilder)
+    }
+
+    private Set<MovieRip> makeMovieRips() {
+        Movie m = new MovieMock()
+        [new MovieRip(m)] as Set
     }
 
     @Test
     void testSearchByTitle() {
-        Set<MovieRip> movieRips = movieFacade.searchByField('terminator', IndexField.TITLE.name())
-        verifySearchResult(movieRips)
+        String searchText = 'terminator'
+        String indexField = IndexField.TITLE.name()
+
+        helpTestPerFieldQuery(searchText, indexField)
     }
 
-    @Test
-    void testAdvancedSearchByTitle() {
-        Set<MovieRip> movieRips = movieFacade.advancedSearch("${IndexField.TITLE.name()}:terminator")
-        verifySearchResult(movieRips)
+    void helpTestPerFieldQuery(String searchText, String indexField) {
+        setUpPerFieldQueryExpectations(searchText, indexField)
+
+        verifyPerFieldQueryExpectations(searchText, indexField)
+    }
+
+    private setUpPerFieldQueryExpectations(String searchText, String indexField) {
+        queryBuilder.perFieldQuery(searchText, indexField).returns(query)
+        movieSearchService.search(query).returns(movieRips)
+    }
+
+    private verifyPerFieldQueryExpectations(String searchText, String indexField) {
+        play {
+            Set<MovieRip> mr = movieFacade.searchByField(searchText, indexField)
+
+            assert mr == movieRips
+        }
     }
 
     @Test
     void testSearchByReleaseDate() {
-        Set<MovieRip> movieRips = movieFacade.searchByField('1991', IndexField.RELEASE_DATE.name())
-        verifySearchResult(movieRips)
-    }
+        String searchText = '1991'
+        String indexField = IndexField.RELEASE_DATE.name()
 
-    @Test
-    void testAdvancedSearchByReleaseDate() {
-        Set<MovieRip> movieRips = movieFacade.advancedSearch("${IndexField.RELEASE_DATE.name()}:[1991 TO 1991]")
-        verifySearchResult(movieRips)
+        helpTestPerFieldQuery(searchText, indexField)
     }
 
     @Test
     void testSearchByStars() {
-        Set<MovieRip> movieRips = movieFacade.searchByField('arnold', IndexField.STARS.name())
-        verifySearchResult(movieRips)
-    }
+        String searchText = 'arnold'
+        String indexField = IndexField.STARS.name()
 
-    @Test
-    void testAdvancedSearchByStars() {
-        Set<MovieRip> movieRips = movieFacade.advancedSearch("${IndexField.STARS.name()}:arnold")
-        verifySearchResult(movieRips)
+        helpTestPerFieldQuery(searchText, indexField)
     }
 
     @Test
     void testSearchByDirector() {
-        Set<MovieRip> movieRips = movieFacade.searchByField('cameron', IndexField.DIRECTOR.name())
-        verifySearchResult(movieRips)
+        String searchText = 'cameron'
+        String indexField = IndexField.DIRECTOR.name()
+
+        helpTestPerFieldQuery(searchText, indexField)
+    }
+
+    @Test
+    void testAdvancedSearchByTitle() {
+        String searchText = "${IndexField.TITLE.name()}:terminator"
+
+        helpTestAdvancedQuery(searchText)
+    }
+
+    void helpTestAdvancedQuery(String searchText) {
+        setUpAdvancedQueryExpectations(searchText)
+
+        verifyAdvancedQueryExpectations(searchText)
+    }
+
+    private setUpAdvancedQueryExpectations(String searchText) {
+        queryBuilder.advancedQuery(searchText).returns(query)
+        movieSearchService.search(query).returns(movieRips)
+    }
+
+    private verifyAdvancedQueryExpectations(String searchText) {
+        play {
+            Set<MovieRip> mr = movieFacade.advancedSearch(searchText)
+
+            assert mr == movieRips
+        }
+    }
+
+    @Test
+    void testAdvancedSearchByReleaseDate() {
+        String searchText = "${IndexField.RELEASE_DATE.name()}:[1991 TO 1991]"
+
+        helpTestAdvancedQuery(searchText)
+    }
+
+    @Test
+    void testAdvancedSearchByStars() {
+        String searchText = "${IndexField.STARS.name()}:arnold"
+
+        helpTestAdvancedQuery(searchText)
     }
 
     @Test
     void testAdvancedSearchByDirector() {
-        Set<MovieRip> movieRips = movieFacade.advancedSearch("${IndexField.DIRECTOR.name()}:cameron")
-        verifySearchResult(movieRips)
+        String searchText = "${IndexField.DIRECTOR.name()}:cameron"
+
+        helpTestAdvancedQuery(searchText)
     }
 
     @Test
     void testFetchAll() {
-        Set<MovieRip> movieRips = movieFacade.fetchAll()
-        verifySearchResult(movieRips)
-    }
+        queryBuilder.matchAllDocsQuery().returns(query)
+        movieSearchService.search(query).returns(movieRips)
 
-    private void verifySearchResult(Set<MovieRip> movieRips) {
-        assert movieRips.size() == 1
-        assertIsMovieMock(movieRips.toList()[0])
-    }
+        play {
+            Set<MovieRip> mr = movieFacade.fetchAll()
 
-    private void assertIsMovieMock(MovieRip mr) {
-        assert mr.title == mock.title
-        assert mr.releaseDate[Calendar.YEAR] == mock.releaseDate[Calendar.YEAR]
-        assert mr.genres == mock.genres
+            assert mr == movieRips
+        }
     }
-
-//    @SuppressWarnings('unchecked')
-//    private <T> T lookupBeanByType(final Class<T> clazz) {
-//        final Iterator<Bean<?>> iter = beanManager.getBeans(clazz).iterator()
-//        if (!iter.hasNext()) {
-//            throw new IllegalStateException('CDI BeanManager cannot find an instance of type ${clazz.name}')
-//        }
-//        final Bean<T> bean = (Bean<T>) iter.next()
-//        final CreationalContext<T> ctx = beanManager.createCreationalContext(bean)
-//
-//        (T) beanManager.getReference(bean, clazz, ctx)
-//    }
 }

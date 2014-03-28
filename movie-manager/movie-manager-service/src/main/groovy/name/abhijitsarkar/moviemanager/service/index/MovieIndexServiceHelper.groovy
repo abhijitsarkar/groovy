@@ -15,51 +15,40 @@
  */
 
 package name.abhijitsarkar.moviemanager.service.index
-import name.abhijitsarkar.moviemanager.annotation.IndexDirectory
-import name.abhijitsarkar.moviemanager.annotation.SearchEngineVersion
+
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.core.SimpleAnalyzer
 import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.store.Directory
-import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
-import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
-import javax.enterprise.context.Dependent
-import javax.inject.Inject
+
 /**
  * @author Abhijit Sarkar
  */
-@Dependent
+@Component
 class MovieIndexServiceHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexServiceHelper)
+    @Autowired
+    Directory indexDirectory
 
-    @Inject
-    @IndexDirectory
-    private Directory indexDirectory
-
-    @Inject
-    @SearchEngineVersion
-    private Version version
+    @Autowired
+    Version version
 
     private IndexWriter indexWriter
 
-    @PostConstruct
-    void postConstruct() {
-        indexWriter = newIndexWriter()
-    }
+    protected IndexWriter getIndexWriter() {
+        if (!indexWriter) {
+            IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
+            iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
 
-    protected IndexWriter newIndexWriter() {
-        LOGGER.info('Creating index writer for directory {}.', indexDirectory)
+            indexWriter = new IndexWriter(indexDirectory, iwc)
+        }
 
-        IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
-        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
-
-        indexWriter = new IndexWriter(indexDirectory, iwc)
+        indexWriter
     }
 
     protected Analyzer getAnalyzer() {
@@ -69,16 +58,6 @@ class MovieIndexServiceHelper {
 
     @PreDestroy
     void preDestroy() {
-        LOGGER.info('Closing index writer for directory {}.', indexDirectory)
-
         indexWriter?.close()
-    }
-
-    String getDirectory() {
-        if (indexDirectory instanceof FSDirectory) {
-            return indexDirectory.directory.absolutePath
-        }
-
-        indexDirectory.toString()
     }
 }

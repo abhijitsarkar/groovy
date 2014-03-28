@@ -47,7 +47,7 @@ class MovieTest {
 
     @Test
     void testToString() {
-        assert m.toString() == 'Movie[title:Terminator 2 Judgment Day, year:1991, genres:[Action, Sci-Fi, Thriller]]'
+        assert m.toString() == 'MovieMock[title:Terminator 2 Judgment Day, year:1991, genres:[Action, Sci-Fi, Thriller]]'
     }
 
     @Test

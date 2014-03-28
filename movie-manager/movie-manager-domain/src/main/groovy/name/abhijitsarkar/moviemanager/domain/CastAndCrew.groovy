@@ -19,7 +19,9 @@
  */
 
 package name.abhijitsarkar.moviemanager.domain
+import groovy.transform.EqualsAndHashCode
 
+@EqualsAndHashCode
 class CastAndCrew {
     String name
 
@@ -32,22 +34,4 @@ class CastAndCrew {
         "${this.class.simpleName}[name:${name}]"
     }
 
-    @Override
-    int hashCode() {
-        int result = 17
-        int c = 0
-        int magicNum = 37
-
-        c = name ? name.hashCode() : 0
-        result = magicNum * result + c
-    }
-
-    @Override
-    boolean equals(Object obj) {
-        if (this.class != obj?.class) {
-            return false
-        }
-
-        this.name == obj?.name
-    }
 }
