@@ -14,7 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviemanager.annotation
+package name.abhijitsarkar.moviemanager.validation
 
 import name.abhijitsarkar.moviemanager.validation.ValidDirectoryValidation
 
@@ -36,7 +36,7 @@ ElementType.CONSTRUCTOR,
 ElementType.PARAMETER])
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidDirectory {
-    String message() default '{name.abhijitsarkar.moviemanager.annotation.ValidDirectory.message}'
+    String message() default '{name.abhijitsarkar.moviemanager.validation.ValidDirectory.message}'
 
     Class<?>[] groups() default []
 

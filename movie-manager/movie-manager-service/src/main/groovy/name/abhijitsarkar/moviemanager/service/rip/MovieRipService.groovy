@@ -20,7 +20,7 @@
 
 package name.abhijitsarkar.moviemanager.service.rip
 
-import name.abhijitsarkar.moviemanager.annotation.ValidDirectory
+import name.abhijitsarkar.moviemanager.validation.ValidDirectory
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

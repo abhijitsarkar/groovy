@@ -16,7 +16,6 @@
 
 package name.abhijitsarkar.moviemanager.validation
 
-import name.abhijitsarkar.moviemanager.annotation.ValidDirectory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

@@ -46,7 +46,7 @@ class BeanFactory {
         config.luceneVersion
     }
 
-    static Collection<String> includes() {
+    static Collection<String> includes(String unused) {
         config.includes.asImmutable()
     }
 }

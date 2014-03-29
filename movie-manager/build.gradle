@@ -14,17 +14,26 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-subprojects {
-    apply from: 'https://raw.github.com/abhijitsarkar/gradle/master/gradle-common/build.gradle'
-
+allprojects {
     apply plugin: 'groovy'
-    apply plugin: 'maven'
-    apply plugin: 'idea'
 
     group = projectGroup
     version = projectVersion
 
+    task unitTest(type: Test) {
+        excludes = ['**/*IntegrationTest*.class'] as Set
+    }
+
+    task integrationTest(type: Test) {
+        includes = ['**/*IntegrationTestSuite.class'] as Set
+    }
+}
+
+subprojects {
     apply plugin: 'maven'
+    apply plugin: 'idea'
+
+    apply from: 'https://raw.github.com/abhijitsarkar/gradle/master/gradle-common/build.gradle'
 
     dependencies {
         compile(
@@ -40,7 +49,6 @@ subprojects {
         testCompile(
                 [group: 'org.springframework', name: 'spring-test', version: springVersion],
                 [group: 'org.gmock', name: 'gmock', version: gmockVersion],
-                [group: 'org.hamcrest', name: 'hamcrest-all', version: hamcrestVersion],
                 [group: 'junit', name: 'junit', version: junitVersion]
         )
     }

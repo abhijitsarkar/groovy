@@ -33,8 +33,8 @@ beans {
 
     genres(myBeanFactory: 'genres')
 
-    /* Static factory method, just for demo. */
-    includes(BeanFactory) { bean ->
+    /* Static factory method. The parameter is unused, only for demo. */
+    includes(BeanFactory, 'unused') { bean ->
         bean.factoryMethod = 'includes'
     }
 }
