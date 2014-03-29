@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, the original author or authors.
+ * Copyright (c) ${date}, the original author or authors.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ class MovieSearchService {
     private Set<MovieRip> movieRips(Query query, TopDocs results) {
         final int totalHits = results.totalHits
 
-//        LOGGER.info('{} result(s) found for query {}.', totalHits, query.toString())
+        LOGGER.info('{} result(s) found for query {}.', totalHits, query.toString())
 
         ScoreDoc[] scoreDocs = results.scoreDocs
         final int hits = scoreDocs.length - 1

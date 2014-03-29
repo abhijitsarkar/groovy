@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, the original author or authors.
+ * Copyright (c) ${date}, the original author or authors.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ import org.apache.lucene.index.IndexWriter
 import org.apache.lucene.index.IndexWriterConfig
 import org.apache.lucene.store.Directory
 import org.apache.lucene.util.Version
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -32,16 +34,20 @@ import javax.annotation.PreDestroy
  */
 @Component
 class MovieIndexServiceHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieIndexServiceHelper)
+
     @Autowired
     Directory indexDirectory
 
     @Autowired
     Version version
 
-    private IndexWriter indexWriter
+    IndexWriter indexWriter
 
     protected IndexWriter getIndexWriter() {
         if (!indexWriter) {
+            LOGGER.info('Creating index writer for directory {}.', indexDirectory)
+
             IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
             iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
 
@@ -58,6 +64,8 @@ class MovieIndexServiceHelper {
 
     @PreDestroy
     void preDestroy() {
+        LOGGER.info('Closing index writer for directory {}.', indexDirectory)
+
         indexWriter?.close()
     }
 }

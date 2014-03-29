@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, the original author or authors.
+ * Copyright (c) ${date}, the original author or authors.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@ import org.apache.lucene.index.DirectoryReader
 import org.apache.lucene.index.IndexReader
 import org.apache.lucene.search.IndexSearcher
 import org.apache.lucene.store.Directory
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -30,14 +32,18 @@ import javax.annotation.PreDestroy
  */
 @Component
 class MovieSearchServiceHelper {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieSearchServiceHelper)
+
     @Autowired
     Directory indexDirectory
 
     private IndexReader indexReader
-    private IndexSearcher indexSearcher
+    IndexSearcher indexSearcher
 
     protected IndexSearcher getIndexSearcher() {
         if (!indexSearcher) {
+            LOGGER.info('Creating index reader for directory {}.', indexDirectory)
+
             indexReader = newIndexReader()
             indexSearcher = new IndexSearcher(indexReader)
         }
@@ -51,6 +57,8 @@ class MovieSearchServiceHelper {
 
     @PreDestroy
     void preDestroy() {
+        LOGGER.info('Closing index reader for directory {}.', indexDirectory)
+
         indexReader?.close()
     }
 }
