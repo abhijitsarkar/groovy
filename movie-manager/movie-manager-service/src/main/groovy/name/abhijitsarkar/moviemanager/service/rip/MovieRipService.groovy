@@ -48,7 +48,7 @@ class MovieRipService {
         LOGGER.debug('Included files {}.', includes)
     }
 
-    Set<MovieRip> getMovieRips(
+    Collection<MovieRip> getMovieRips(
             @ValidDirectory(message = 'Movie directory is not valid.') String movieDirectory) {
         LOGGER.debug('Indexing movies from {}.', movieDirectory)
 
@@ -59,7 +59,7 @@ class MovieRipService {
         }
 
         String currentGenre
-        Set<MovieRip> movieRips = [] as SortedSet
+        Collection<MovieRip> movieRips = [] as SortedSet
 
         rootDir.eachFileRecurse { File f ->
             delegate = this
@@ -99,11 +99,11 @@ class MovieRipService {
     }
 
     boolean isMovieRip(final String fileName) {
-        includes.contains(fileExtension(fileName).toLowerCase())
+        fileExtension(fileName).toLowerCase() in includes
     }
 
     boolean isGenre(final String fileName) {
-        genres.contains(fileName)
+        fileName in genres
     }
 
     final String getParent(File file, String currentGenre, File rootDirectory, String immediateParent = null) {

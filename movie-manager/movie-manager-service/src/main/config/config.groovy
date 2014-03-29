@@ -30,6 +30,15 @@ genres = [
         'X-Rated'
 ]
 
+includes = [
+        '.avi',
+        '.mkv',
+        '.mp4',
+        '.divx',
+        '.mov'
+]
+
 luceneVersion = LUCENE_46
 
-indexDirectoryPath = './target/lucene'
+// This path is relative to $HOME
+indexDirectoryPath = '.movie-manager/index'

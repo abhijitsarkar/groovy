@@ -27,11 +27,11 @@ class MovieMock extends Movie {
                 'Action',
                 'Sci-Fi',
                 'Thriller'
-        ]
+        ] as Set
         releaseDate = Date.parse('MM/dd/yyyy', '07/03/1991')
         director = new CastAndCrew('James Cameron')
 
-        Set<CastAndCrew> stars = [] as Set
+        Collection<CastAndCrew> stars = [] as Set
         stars.add(new CastAndCrew('Arnold Schwarzenegger'))
         stars.add(new CastAndCrew('Linda Hamilton'))
         stars.add(new CastAndCrew('Edward Furlong'))

@@ -22,10 +22,10 @@ package name.abhijitsarkar.moviemanager.domain
 
 class Movie implements Comparable {
     String title
-    Set<String> genres
+    Collection<String> genres
     Date releaseDate
     CastAndCrew director
-    Set<CastAndCrew> stars
+    Collection<CastAndCrew> stars
     float imdbRating
     URL imdbURL
 

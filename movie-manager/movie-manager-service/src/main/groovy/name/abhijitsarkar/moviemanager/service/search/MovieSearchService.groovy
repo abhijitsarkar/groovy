@@ -41,14 +41,14 @@ class MovieSearchService {
     @Autowired
     private MovieSearchServiceHelper helper
 
-    Set<MovieRip> search(Query query, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
+    Collection<MovieRip> search(Query query, int numResultsToFetch = DEFAULT_NUM_RESULTS_TO_FETCH) {
 
         TopDocs topDocs = indexSearcher.search(query, numResultsToFetch)
 
         movieRips(query, topDocs)
     }
 
-    private Set<MovieRip> movieRips(Query query, TopDocs results) {
+    private Collection<MovieRip> movieRips(Query query, TopDocs results) {
         final int totalHits = results.totalHits
 
         LOGGER.info('{} result(s) found for query {}.', totalHits, query.toString())
@@ -56,7 +56,7 @@ class MovieSearchService {
         ScoreDoc[] scoreDocs = results.scoreDocs
         final int hits = scoreDocs.length - 1
 
-        Set<MovieRip> movieRips = [] as Set
+        Collection<MovieRip> movieRips = [] as Set
 
         if (hits < 0) {
             return movieRips

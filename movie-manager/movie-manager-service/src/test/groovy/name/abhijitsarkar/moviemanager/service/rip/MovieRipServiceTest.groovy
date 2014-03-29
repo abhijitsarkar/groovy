@@ -20,41 +20,28 @@
 
 package name.abhijitsarkar.moviemanager.service.rip
 
-import name.abhijitsarkar.moviemanager.domain.MovieRipFileExtension
+
 import org.gmock.WithGMock
 import org.junit.Test
 
 @WithGMock
 class MovieRipServiceTest {
-    private MovieRipService service
-    private List<String> genres = [
-            'Action and Adventure',
-            'Animation',
-            'Comedy',
-            'Documentary',
-            'Drama',
-            'Horror',
-            'R-Rated Mainstream Movies',
-            'Romance',
-            'Sci-Fi',
-            'Thriller',
-            'X-Rated'
-    ]
+    private ConfigObject config
 
-    private List<String> includes = MovieRipFileExtension.values().collect {
-        // GOTCHA ALERT: GString is not equal to String; "a" != 'a'
-        ".${it.name().toLowerCase()}".toString()
-    }
+    private MovieRipService service
 
     MovieRipServiceTest() {
         service = new MovieRipService()
-        service.genres = this.genres
-        service.includes = this.includes
+
+        config = new ConfigSlurper().parse(getClass().getResource('/config.groovy'))
+
+        service.genres = config.genres
+        service.includes = config.includes
     }
 
     @Test
     void testIsGenre() {
-        genres.each {
+        config.genres.each {
             assert service.isGenre(it)
         }
 

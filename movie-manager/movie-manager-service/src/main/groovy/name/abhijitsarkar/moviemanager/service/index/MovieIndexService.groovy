@@ -65,7 +65,7 @@ class MovieIndexService {
         fileExtensionField = new StringField(IndexField.IMDB_URL.name(), EMPTY, Field.Store.NO)
     }
 
-    String index(Set<MovieRip> movieRips) {
+    String index(Collection<MovieRip> movieRips) {
         movieRips.each { movieRip ->
             delegate = this
 

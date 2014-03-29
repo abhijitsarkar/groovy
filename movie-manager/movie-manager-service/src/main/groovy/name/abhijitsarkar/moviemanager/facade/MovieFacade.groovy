@@ -42,26 +42,26 @@ class MovieFacade {
     QueryBuilder queryBuilder
 
     String index(String movieDirectory) {
-        Set<MovieRip> movieRips = movieRipService.getMovieRips(movieDirectory)
+        Collection<MovieRip> movieRips = movieRipService.getMovieRips(movieDirectory)
 
         movieIndexService.index(movieRips)
     }
 
-    Set<MovieRip> searchByField(String searchText, String indexField) {
+    Collection<MovieRip> searchByField(String searchText, String indexField) {
 
         Query query = queryBuilder.perFieldQuery(searchText, indexField)
 
         movieSearchService.search(query)
     }
 
-    Set<MovieRip> advancedSearch(String searchText) {
+    Collection<MovieRip> advancedSearch(String searchText) {
 
         Query query = queryBuilder.advancedQuery(searchText)
 
         movieSearchService.search(query)
     }
 
-    Set<MovieRip> fetchAll() {
+    Collection<MovieRip> fetchAll() {
 
         Query query = queryBuilder.matchAllDocsQuery()
 

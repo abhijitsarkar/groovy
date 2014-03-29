@@ -19,8 +19,11 @@ package name.abhijitsarkar.moviemanager.service.facade
 import name.abhijitsarkar.moviemanager.AbstractSpringIntegrationTest
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 import name.abhijitsarkar.moviemanager.facade.MovieFacade
+import name.abhijitsarkar.moviemanager.service.index.IndexField
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+
+import javax.annotation.PostConstruct
 
 /**
  * @author Abhijit Sarkar
@@ -28,6 +31,18 @@ import org.springframework.beans.factory.annotation.Autowired
 class MovieFacadeIntegrationTest extends AbstractSpringIntegrationTest {
     @Autowired
     private MovieFacade movieFacade
+
+    private static final String MOVIE_DIR = new File(MovieFacadeIntegrationTest.class.getResource('/movies').toURI())
+            .absolutePath
+
+    private final Closure byTitleAndYear = { String title, int year, MovieRip mr ->
+        title == mr.title && year == mr.releaseDate[Calendar.YEAR]
+    }
+
+    @PostConstruct
+    void postConstruct() {
+        movieFacade.index(MOVIE_DIR)
+    }
 
     @Test
     void testNotNull() {
@@ -38,15 +53,35 @@ class MovieFacadeIntegrationTest extends AbstractSpringIntegrationTest {
     }
 
     @Test
-    void 'test end to end - rip, index, search'() {
-        final String movieDir = new File(getClass().getResource('/movies').toURI()).absolutePath
-        println movieDir
-
-        assert movieFacade.index(movieDir)
-        Set<MovieRip> searchResults = movieFacade.searchByField('exorcist', 'title')
+    void testSearchByTitle() {
+        Collection<MovieRip> searchResults = movieFacade.searchByField('exorcist', 'title')
 
         assert searchResults
-        assert searchResults[0].title == 'The Exorcist'
-        assert searchResults[0].releaseDate[Calendar.YEAR] == 1973
+        assert searchResults.size() == 1
+
+        assert searchResults.find(byTitleAndYear.curry('The Exorcist', 1973))
+    }
+
+    @Test
+    void testAdvancedSearchByReleaseDate() {
+        String searchText = "${IndexField.RELEASE_DATE.name()}:[2001 TO 2001]"
+        Collection<MovieRip> searchResults = movieFacade.advancedSearch(searchText)
+
+        assert searchResults
+        assert searchResults.size() == 1
+
+        assert searchResults.find(byTitleAndYear.curry('A Beautiful Mind', 2001))
+    }
+
+    @Test
+    void testFetchAll() {
+        Collection<MovieRip> searchResults = movieFacade.fetchAll()
+
+        assert searchResults
+        assert searchResults.size() == 3
+
+        assert searchResults.find(byTitleAndYear.curry('A Beautiful Mind', 2001))
+        assert searchResults.find(byTitleAndYear.curry('The Exorcist', 1973))
+        assert searchResults.find(byTitleAndYear.curry('Memento', 2000))
     }
 }

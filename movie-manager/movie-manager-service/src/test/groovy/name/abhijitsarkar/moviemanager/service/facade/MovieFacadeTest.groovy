@@ -65,7 +65,7 @@ class MovieFacadeTest {
                 movieSearchService: movieSearchService, queryBuilder: queryBuilder)
     }
 
-    private Set<MovieRip> makeMovieRips() {
+    private Collection<MovieRip> makeMovieRips() {
         Movie m = new MovieMock()
         [new MovieRip(m)] as Set
     }
@@ -91,7 +91,7 @@ class MovieFacadeTest {
 
     private verifyPerFieldQueryExpectations(String searchText, String indexField) {
         play {
-            Set<MovieRip> mr = movieFacade.searchByField(searchText, indexField)
+            Collection<MovieRip> mr = movieFacade.searchByField(searchText, indexField)
 
             assert mr == movieRips
         }
@@ -141,7 +141,7 @@ class MovieFacadeTest {
 
     private verifyAdvancedQueryExpectations(String searchText) {
         play {
-            Set<MovieRip> mr = movieFacade.advancedSearch(searchText)
+            Collection<MovieRip> mr = movieFacade.advancedSearch(searchText)
 
             assert mr == movieRips
         }
@@ -174,7 +174,7 @@ class MovieFacadeTest {
         movieSearchService.search(query).returns(movieRips)
 
         play {
-            Set<MovieRip> mr = movieFacade.fetchAll()
+            Collection<MovieRip> mr = movieFacade.fetchAll()
 
             assert mr == movieRips
         }
