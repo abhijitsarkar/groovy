@@ -16,12 +16,12 @@
 
 package name.abhijitsarkar.moviedatabase.service.facade
 
-import name.abhijitsarkar.moviedatabase.AbstractSpringIntegrationTest
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
-import name.abhijitsarkar.moviedatabase.facade.MovieFacade
 import name.abhijitsarkar.moviedatabase.service.index.IndexField
+import name.abhijitsarkar.moviedatabase.test.integration.AbstractSpringIntegrationTest
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.ClassPathResource
 
 import javax.annotation.PostConstruct
 
@@ -32,8 +32,7 @@ class MovieFacadeIntegrationTest extends AbstractSpringIntegrationTest {
     @Autowired
     private MovieFacade movieFacade
 
-    private static final String MOVIE_DIR = new File(MovieFacadeIntegrationTest.class.getResource('/movies').toURI())
-            .absolutePath
+    private static final String MOVIE_DIR = new File(new ClassPathResource('movies').URL.toURI()).absolutePath
 
     private final Closure byTitleAndYear = { String title, int year, MovieRip mr ->
         title == mr.title && year == mr.releaseDate[Calendar.YEAR]

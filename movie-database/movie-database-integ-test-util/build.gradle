@@ -14,26 +14,10 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviedatabase.service.rip
-
-import name.abhijitsarkar.moviedatabase.test.integration.AbstractSpringIntegrationTest
-import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
-
-/**
- * @author Abhijit Sarkar
- */
-class MovieRipServiceIntegrationTest extends AbstractSpringIntegrationTest {
-    @Autowired
-    private MovieRipService movieRipService
-
-    @Test
-    void testGenres() {
-        assert 'Horror' in movieRipService.genres
-    }
-
-    @Test
-    void testIncludes() {
-        assert '.mkv' in movieRipService.includes
-    }
+dependencies {
+    compile(
+            [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
+            [group: 'junit', name: 'junit', version: junitVersion],
+            [group: 'org.springframework', name: 'spring-test', version: springVersion]
+    )
 }

@@ -14,6 +14,54 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+buildscript {
+    repositories {
+        maven {
+            url 'http://repo.spring.io/milestone'
+        }
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath(
+            [group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: springBootVersion]
+        )
+    }
+}
+
+apply plugin: 'spring-boot'
+
+configurations.all {
+    resolutionStrategy {
+        eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.eclipse.jetty') {
+                details.useVersion jettyVersion
+            }
+        }
+    }
+}
+
+repositories {
+    maven {
+        url 'http://repo.spring.io/milestone'
+    }
+    mavenLocal()
+    mavenCentral()
+}
+
 dependencies {
-    compile project(':movie-database-service')
+    compile(
+            project(':movie-database-service'),
+            [group: 'org.springframework.boot', name: 'spring-boot-starter', version: springBootVersion],
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-jetty', version: springBootVersion],
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion],
+            [group: 'org.springframework', name: 'spring-webmvc', version: springVersion]
+    )
+    runtime(
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
+    )
+    testCompile(
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion],
+            project(':movie-database-integ-test-util')
+    )
 }

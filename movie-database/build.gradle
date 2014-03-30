@@ -14,11 +14,25 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-allprojects {
+subprojects {
     apply plugin: 'groovy'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+
+    apply from: 'https://raw.github.com/abhijitsarkar/gradle/master/gradle-common/build.gradle'
 
     group = projectGroup
     version = projectVersion
+
+    configurations.all {
+        resolutionStrategy {
+            eachDependency { DependencyResolveDetails details ->
+                if (details.requested.group == 'org.springframework') {
+                    details.useVersion springVersion
+                }
+            }
+        }
+    }
 
     task unitTest(type: Test) {
         excludes = ['**/*IntegrationTest*.class'] as Set
@@ -27,34 +41,39 @@ allprojects {
     task integrationTest(type: Test) {
         includes = ['**/*IntegrationTestSuite.class'] as Set
     }
-}
-
-subprojects {
-    apply plugin: 'maven'
-    apply plugin: 'idea'
-
-    apply from: 'https://raw.github.com/abhijitsarkar/gradle/master/gradle-common/build.gradle'
 
     dependencies {
         compile(
                 [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
                 [group: 'org.springframework', name: 'spring-beans', version: springVersion],
-                [group: 'org.springframework', name: 'spring-context', version: springVersion],
-                [group: 'org.springframework', name: 'spring-aop', version: springVersion],
-                [group: 'org.aspectj', name: 'aspectjrt', version: aspectjVersion]
-        )
-        runtime(
-                [group: 'org.aspectj', name: 'aspectjweaver', version: aspectjVersion]
+                [group: 'org.springframework', name: 'spring-context', version: springVersion]
         )
         testCompile(
-                [group: 'org.springframework', name: 'spring-test', version: springVersion],
                 [group: 'org.gmock', name: 'gmock', version: gmockVersion],
-                [group: 'junit', name: 'junit', version: junitVersion]
+                [group: 'junit', name: 'junit', version: junitVersion],
+                [group: 'org.springframework', name: 'spring-test', version: springVersion]
         )
     }
 
-    // Add the Logback file to classpath without having to copy it to each subproject
     sourceSets {
-        compile.runtimeClasspath += files("${rootProject.projectDir}/src/test/resources")
+        main {
+            resources {
+                srcDir 'src/main/config'
+            }
+        }
     }
+
+    idea {
+        module {
+            sourceDirs += file('src/main/config')
+//        testSourceDirs += file('src/test/config')
+        }
+    }
+
+//    project.sourceSets.test.runtimeClasspath += files("${rootProject.projectDir}/src/main/resources")
+
+    // Add the Logback file to classpath without having to copy it to each subproject
+//    sourceSets {
+//        compile.runtimeClasspath += files("${rootProject.projectDir}/src/main/resources")
+//    }
 }

@@ -17,9 +17,8 @@
 package name.abhijitsarkar.moviedatabase.service.facade
 
 import name.abhijitsarkar.moviedatabase.domain.Movie
-import name.abhijitsarkar.moviedatabase.domain.MovieMock
+import name.abhijitsarkar.moviedatabase.test.domain.MovieMock
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
-import name.abhijitsarkar.moviedatabase.facade.MovieFacade
 import name.abhijitsarkar.moviedatabase.service.index.IndexField
 import name.abhijitsarkar.moviedatabase.service.index.MovieIndexService
 import name.abhijitsarkar.moviedatabase.service.rip.MovieRipService

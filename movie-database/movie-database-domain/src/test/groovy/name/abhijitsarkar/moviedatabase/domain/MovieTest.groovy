@@ -20,6 +20,7 @@
 
 package name.abhijitsarkar.moviedatabase.domain
 
+import name.abhijitsarkar.moviedatabase.test.domain.MovieMock
 import org.junit.Before
 import org.junit.Test
 

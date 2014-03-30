@@ -16,38 +16,24 @@
 
 dependencies {
     compile(
-        project(':movie-database-domain'),
-        [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
-        [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
-        [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion],
-        [group: 'javax.validation', name: 'validation-api', version: beanValidationApiVersion]
+            project(':movie-database-domain'),
+            [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
+            [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
+            [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion],
+            [group: 'javax.validation', name: 'validation-api', version: beanValidationApiVersion],
+            [group: 'org.springframework', name: 'spring-aop', version: springVersion],
+            [group: 'org.aspectj', name: 'aspectjrt', version: aspectjVersion]
     )
     runtime(
+            [group: 'org.aspectj', name: 'aspectjweaver', version: aspectjVersion],
             [group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion]
     )
     testCompile(
-        [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion],
-        project(path: ':movie-database-domain', configuration: 'testJ')
+            [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion],
+            project(path: ':movie-database-domain', configuration: 'testJ'),
+            project(':movie-database-integ-test-util')
     )
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDir 'src/main/config'
-        }
-    }
-    test {
-        resources {
-            srcDir 'src/test/config'
-        }
-    }
-}
 
-idea {
-    module {
-        sourceDirs += file('src/main/config')
-        testSourceDirs += file('src/test/config')
-    }
-}
 

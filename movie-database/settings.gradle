@@ -15,4 +15,4 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-include 'movie-database-domain', 'movie-database-service', 'movie-database-client'
+include 'movie-database-domain', 'movie-database-service', 'movie-database-client', 'movie-database-integ-test-util'

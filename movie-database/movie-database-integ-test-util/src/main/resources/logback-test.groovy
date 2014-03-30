@@ -1,3 +1,8 @@
+import static ch.qos.logback.classic.Level.DEBUG
+
+import ch.qos.logback.core.ConsoleAppender
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
+
 /*
  * Copyright (c) ${date}, the original author or authors.
  *
@@ -13,27 +18,12 @@
  * A copy of the GNU General Public License accompanies this software,
  * and is also available at http://www.gnu.org/licenses.
  */
+def appenderList = ['CONSOLE']
 
-package name.abhijitsarkar.moviedatabase.service.rip
-
-import name.abhijitsarkar.moviedatabase.test.integration.AbstractSpringIntegrationTest
-import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
-
-/**
- * @author Abhijit Sarkar
- */
-class MovieRipServiceIntegrationTest extends AbstractSpringIntegrationTest {
-    @Autowired
-    private MovieRipService movieRipService
-
-    @Test
-    void testGenres() {
-        assert 'Horror' in movieRipService.genres
-    }
-
-    @Test
-    void testIncludes() {
-        assert '.mkv' in movieRipService.includes
+appender('CONSOLE', ConsoleAppender) {
+    encoder(PatternLayoutEncoder) {
+        pattern = '%date{yyyy-MM-dd HH:mm:ss.SSS, EST} [%thread] [%-5level] %logger{3} - %msg%n'
     }
 }
+
+root(DEBUG, appenderList)

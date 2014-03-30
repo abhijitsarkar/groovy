@@ -1,3 +1,5 @@
+import name.abhijitsarkar.moviedatabase.test.integration.TestBeanFactory
+
 /*
  * Copyright (c) ${date}, the original author or authors.
  *
@@ -14,26 +16,8 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviedatabase.service.rip
+beans {
+    myTestBeanFactory(TestBeanFactory)
 
-import name.abhijitsarkar.moviedatabase.test.integration.AbstractSpringIntegrationTest
-import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
-
-/**
- * @author Abhijit Sarkar
- */
-class MovieRipServiceIntegrationTest extends AbstractSpringIntegrationTest {
-    @Autowired
-    private MovieRipService movieRipService
-
-    @Test
-    void testGenres() {
-        assert 'Horror' in movieRipService.genres
-    }
-
-    @Test
-    void testIncludes() {
-        assert '.mkv' in movieRipService.includes
-    }
+    indexDirectory(myTestBeanFactory: 'indexDirectory')
 }

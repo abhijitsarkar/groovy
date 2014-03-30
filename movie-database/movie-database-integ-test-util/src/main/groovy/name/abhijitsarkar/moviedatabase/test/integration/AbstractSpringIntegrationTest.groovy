@@ -14,27 +14,17 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviedatabase.service.search
+package name.abhijitsarkar.moviedatabase.test.integration
 
-import name.abhijitsarkar.moviedatabase.test.integration.AbstractSpringIntegrationTest
-import org.apache.lucene.store.RAMDirectory
-import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
+import org.junit.runner.RunWith
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 
 /**
  * @author Abhijit Sarkar
  */
-class MovieSearchServiceIntegrationTest extends AbstractSpringIntegrationTest {
-    @Autowired
-    private MovieSearchService movieSearchService
-
-    @Test
-    void testNotNull() {
-        assert movieSearchService?.indexDirectory
-    }
-
-    @Test
-    void 'test that index directory is overridden correctly'() {
-        assert movieSearchService?.indexDirectory instanceof RAMDirectory
-    }
+@RunWith(SpringJUnit4ClassRunner)
+@ContextConfiguration(locations = ['classpath:service-config.groovy', 'classpath:integ-test-config.groovy',
+        'classpath:service-config-scan.groovy'], loader = GenericGroovyContextLoader)
+abstract class AbstractSpringIntegrationTest {
 }
