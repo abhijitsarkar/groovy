@@ -1,5 +1,5 @@
 /*
- * Copyright (c) ${date}, the original author or authors.
+ * Copyright (c) 2014, the original author or authors.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,13 @@
 package name.abhijitsarkar.moviedatabase.service.facade
 
 import name.abhijitsarkar.moviedatabase.domain.Movie
-import name.abhijitsarkar.moviedatabase.test.domain.MovieMock
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 import name.abhijitsarkar.moviedatabase.service.index.IndexField
 import name.abhijitsarkar.moviedatabase.service.index.MovieIndexService
 import name.abhijitsarkar.moviedatabase.service.rip.MovieRipService
 import name.abhijitsarkar.moviedatabase.service.search.MovieSearchService
 import name.abhijitsarkar.moviedatabase.service.search.QueryBuilder
+import name.abhijitsarkar.moviedatabase.test.domain.MovieMock
 import org.apache.lucene.search.Query
 import org.gmock.WithGMock
 import org.junit.Before

@@ -1,10 +1,5 @@
-import static ch.qos.logback.classic.Level.DEBUG
-
-import ch.qos.logback.core.ConsoleAppender
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder
-
 /*
- * Copyright (c) ${date}, the original author or authors.
+ * Copyright (c) 2014, the original author or authors.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +13,13 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder
  * A copy of the GNU General Public License accompanies this software,
  * and is also available at http://www.gnu.org/licenses.
  */
+
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
+import ch.qos.logback.core.ConsoleAppender
+
+import static ch.qos.logback.classic.Level.INFO
+import static ch.qos.logback.classic.Level.WARN
+
 def appenderList = ['CONSOLE']
 
 appender('CONSOLE', ConsoleAppender) {
@@ -26,4 +28,6 @@ appender('CONSOLE', ConsoleAppender) {
     }
 }
 
-root(DEBUG, appenderList)
+logger('org.springframework', WARN, ['CONSOLE'], false)
+
+root(INFO, appenderList)

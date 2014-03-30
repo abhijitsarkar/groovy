@@ -1,5 +1,5 @@
 /*
- * Copyright (c) ${date}, the original author or authors.
+ * Copyright (c) 2014, the original author or authors.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
 
 package name.abhijitsarkar.moviedatabase.service.validation
 
-import name.abhijitsarkar.moviedatabase.service.facade.MovieFacadeIntegrationTest
 import name.abhijitsarkar.moviedatabase.service.rip.MovieRipService
 import org.junit.Test
 import org.springframework.core.io.ClassPathResource
