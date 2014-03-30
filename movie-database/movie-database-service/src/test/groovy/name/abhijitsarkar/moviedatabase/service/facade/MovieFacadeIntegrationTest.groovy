@@ -17,8 +17,8 @@
 package name.abhijitsarkar.moviedatabase.service.facade
 
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
+import name.abhijitsarkar.moviedatabase.service.AbstractSpringIntegrationTest
 import name.abhijitsarkar.moviedatabase.service.index.IndexField
-import name.abhijitsarkar.moviedatabase.test.integration.AbstractSpringIntegrationTest
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ClassPathResource

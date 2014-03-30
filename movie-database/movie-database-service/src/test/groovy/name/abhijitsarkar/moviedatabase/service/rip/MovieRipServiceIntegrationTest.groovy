@@ -16,7 +16,7 @@
 
 package name.abhijitsarkar.moviedatabase.service.rip
 
-import name.abhijitsarkar.moviedatabase.test.integration.AbstractSpringIntegrationTest
+import name.abhijitsarkar.moviedatabase.service.AbstractSpringIntegrationTest
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 

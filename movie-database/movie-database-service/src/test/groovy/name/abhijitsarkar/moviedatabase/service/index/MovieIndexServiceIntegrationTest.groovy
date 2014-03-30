@@ -16,7 +16,7 @@
 
 package name.abhijitsarkar.moviedatabase.service.index
 
-import name.abhijitsarkar.moviedatabase.test.integration.AbstractSpringIntegrationTest
+import name.abhijitsarkar.moviedatabase.service.AbstractSpringIntegrationTest
 import org.apache.lucene.store.RAMDirectory
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -14,17 +14,19 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-package name.abhijitsarkar.moviedatabase.test.integration
 
+
+package name.abhijitsarkar.moviedatabase.service
+
+import name.abhijitsarkar.moviedatabase.test.integration.GroovyContextConfiguration
 import org.junit.runner.RunWith
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 
 /**
  * @author Abhijit Sarkar
  */
 @RunWith(SpringJUnit4ClassRunner)
-@ContextConfiguration(locations = ['classpath:service-config.groovy', 'classpath:integ-test-config.groovy',
-        'classpath:service-config-scan.groovy'], loader = GenericGroovyContextLoader)
+@GroovyContextConfiguration(locations = ['classpath:service-config.groovy', 'classpath:integ-test-config.groovy',
+        'classpath:service-config-scan.groovy'])
 abstract class AbstractSpringIntegrationTest {
 }
