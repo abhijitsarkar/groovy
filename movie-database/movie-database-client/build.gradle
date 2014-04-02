@@ -45,8 +45,6 @@ repositories {
     maven {
         url 'http://repo.spring.io/milestone'
     }
-    mavenLocal()
-    mavenCentral()
 }
 
 dependencies {

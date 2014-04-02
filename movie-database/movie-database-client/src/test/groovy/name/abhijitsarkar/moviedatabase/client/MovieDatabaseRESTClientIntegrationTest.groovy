@@ -18,13 +18,13 @@ package name.abhijitsarkar.moviedatabase.client
 
 import name.abhijitsarkar.moviedatabase.MovieDatabaseApplication
 import name.abhijitsarkar.moviedatabase.service.index.IndexField
-import name.abhijitsarkar.moviedatabase.test.integration.PatchedSpringApplicationContextLoader
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.IntegrationTest
 import org.springframework.boot.test.RestTemplates
 import org.springframework.boot.test.SpringApplicationConfiguration
+import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -44,8 +44,9 @@ import org.springframework.web.client.RestTemplate
  */
 @RunWith(SpringJUnit4ClassRunner)
 @ContextConfiguration(value = ['classpath:client-config.groovy', 'classpath:integ-test-config.groovy'],
-        loader = PatchedSpringApplicationContextLoader)
-@SpringApplicationConfiguration(classes = MovieDatabaseApplication)
+        classes = [MovieDatabaseApplication],
+        loader = SpringApplicationContextLoader)
+//@SpringApplicationConfiguration(classes = MovieDatabaseApplication)
 @WebAppConfiguration
 @IntegrationTest
 class MovieDatabaseRESTClientIntegrationTest {
