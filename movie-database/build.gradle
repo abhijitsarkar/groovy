@@ -72,14 +72,6 @@ subprojects {
     idea {
         module {
             sourceDirs += file('src/main/config')
-//        testSourceDirs += file('src/test/config')
         }
     }
-
-//    project.sourceSets.test.runtimeClasspath += files("${rootProject.projectDir}/src/main/resources")
-
-    // Add the Logback file to classpath without having to copy it to each subproject
-//    sourceSets {
-//        compile.runtimeClasspath += files("${rootProject.projectDir}/src/main/resources")
-//    }
 }

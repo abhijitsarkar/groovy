@@ -22,7 +22,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.boot.test.IntegrationTest
-import org.springframework.boot.test.RestTemplates
+import org.springframework.boot.test.TestRestTemplate
 import org.springframework.boot.test.SpringApplicationConfiguration
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpEntity
@@ -35,7 +35,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
-import org.springframework.web.client.RestTemplate
 
 /**
  * @author Abhijit Sarkar
@@ -51,11 +50,7 @@ import org.springframework.web.client.RestTemplate
 class MovieDatabaseRESTClientIntegrationTest {
     private static final String SERVICE_URL = 'http://localhost:8080/movies'
 
-    private RestTemplate restTemplate
-
-    MovieDatabaseRESTClientIntegrationTest() {
-        restTemplate = RestTemplates.get()
-    }
+    private TestRestTemplate restTemplate = new TestRestTemplate()
 
     @Before
     void setUp() {
