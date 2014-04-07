@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2014, the original author or authors.
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ A copy of the GNU General Public License accompanies this software,
+  ~ and is also available at http://www.gnu.org/licenses.
+  -->
+
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Movie Database</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script data-main="js/config" src="js/lib/require-2.1.11.min.js"></script>
+</head>
+<body>
+    <form action="/movies">
+        <fieldset id="input">
+            <div class="urlAndGo">
+                <input type="text" id="url" class="url"/>
+                <input type="button" id="go" class="go"/>
+            </div>
+            <div id="method">
+                <input type="radio" id="get" name="method"/>
+                <label for="get">Get</label>
+                <input type="radio" id="post" name="method"/>
+                <label for="post">Post</label>
+            </div>
+        </fieldset>
+        <table id="searchResults" class="searchResults">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Genres</th>
+                    <th>Release</th>
+                </tr>
+            </thead>
+        </table>
+    </form>
+</body>
+</html>

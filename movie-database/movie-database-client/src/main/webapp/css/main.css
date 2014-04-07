@@ -1,0 +1,157 @@
+input, select {
+    background: #ffffff;
+	border: 1px solid #DDD;
+	border-radius: .5em;
+	color: #666;
+	padding: .5em 1em;
+	outline: none;
+    font-size: 1em;
+}
+
+.url {
+    width: 50%;
+}
+
+.go {
+    width: 10%;
+    cursor: pointer;
+    background: #4285f4;
+    color: white;
+}
+
+.urlAndGo {
+    margin-bottom: .5em;
+}
+
+.button:active {
+	position: relative;
+	top: .1em;
+}
+fieldset#input {
+    border: 1px solid #DDD;
+	border-radius: .5em;
+	background: #F1F1F1;
+}
+
+div#method label {
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+	padding-left: 1.25em;
+	margin-right: 1em;
+	font-size: 1em;
+}
+
+div#method input[type=radio], .searchResults {
+	display: none;
+}
+
+div#method label:before {
+	content: "";
+	display: inline-block;
+
+	width: 1em;
+	height: 1em;
+
+    border-radius: .5em;
+	margin-right: .5em;
+	position: absolute;
+	left: 0;
+	bottom: .1em;
+	background-color: #aaa;
+	box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
+}
+
+div#method input[type=radio]:checked + label:before {
+    content: "\2022";
+    color: white;
+    font-size: 1em;
+    text-align: center;
+    line-height: 1em;
+}
+
+div.dataTables_wrapper {
+    margin: 2em 0;
+}
+
+div.dataTables_length {
+    float: left;
+}
+
+div.dataTables_filter {
+    float: right;
+    margin-bottom: .25em;
+}
+
+div.dataTables_info {
+    float: left;
+}
+
+div.dataTables_paginate {
+    float: right;
+}
+
+div.dataTables_paginate a {
+    margin: .25em;
+}
+
+div.dataTables_paginate a[class*="enabled"] {
+    cursor: pointer;
+    color: #4285f4;
+    text-decoration: underline;
+}
+
+.searchResults {
+    margin: .5em 0;
+	width:100%;
+	border:1px solid #f1f1f1;
+
+	border-bottom-left-radius:12px;
+
+	border-bottom-right-radius:12px;
+
+	border-top-right-radius:12px;
+
+	border-top-left-radius:12px;
+}
+
+.searchResults table {
+    border-collapse: collapse;
+}
+
+table.searchResults th {
+    text-align: center;
+    background: #4285f4;
+    padding: .3em;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+table.searchResults th:first-child {
+    border-top-left-radius: .5em;
+}
+
+table.searchResults th:last-child {
+    border-top-right-radius: .5em;
+}
+
+.searchResults tr:last-child td:first-child {
+	border-bottom-left-radius: .5em;
+}
+
+.searchResults tr:last-child td:last-child {
+	border-bottom-right-radius: .5em;
+}
+
+.searchResults tr:nth-child(odd) {
+    background-color:#ffffff;
+}
+
+.searchResults tr:nth-child(even) {
+    background-color:#f1f1f1;
+}
+
+.searchResults td {
+	vertical-align:middle;
+	padding: .3em;
+}

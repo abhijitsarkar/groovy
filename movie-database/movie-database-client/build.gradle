@@ -38,6 +38,8 @@ configurations.all {
         eachDependency { DependencyResolveDetails details ->
             if (details.requested.group == 'org.eclipse.jetty') {
                 details.useVersion jettyVersion
+            } else if (details.requested.group == 'org.slf4j') {
+                details.useVersion slf4jVersion
             }
         }
     }
@@ -59,9 +61,13 @@ dependencies {
             project(':movie-database-service'),
             [group: 'org.springframework.boot', name: 'spring-boot-starter', version: springBootVersion, changing: true],
             [group: 'org.springframework.boot', name: 'spring-boot-starter-jetty', version: springBootVersion, changing: true],
-            [group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion, changing: true],
             [group: 'org.springframework', name: 'spring-webmvc', version: springVersion]
     )
+    compile(
+            [group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion, changing: true]
+    ) {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
     runtime(
             [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
     )

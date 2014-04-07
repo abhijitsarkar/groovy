@@ -31,6 +31,12 @@ subprojects {
                     details.useVersion springVersion
                 }
             }
+
+            force(
+                    [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
+                    [group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion],
+                    [group: 'ch.qos.logback', name: 'logback-core', version: logbackVersion]
+            )
         }
     }
 
