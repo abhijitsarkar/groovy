@@ -38,3 +38,8 @@ idea {
         testSourceDirs += file('src/test/config')
     }
 }
+
+test {
+    // Exclude individual service integration test classes, they'll be ran as suite
+    excludes = ['**/service/**/*IntegrationTest.class'] as Set
+}
