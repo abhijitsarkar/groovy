@@ -32,17 +32,17 @@ class MovieNameMatcherCategory {
      * something like Titanic (1997).mkv Each part of the regex is explained
      * further:
      *
-     * ([-',!\\[\\]\\.\\w\\s]++) -> Matches one or more occurrences of any
+     * Regex group named 'title': Matches one or more occurrences of any
      * alphabet, number or the following special characters in the movie name:
-     * dash (-), apostrophe ('), comma (,), exclamation sign (!), square braces
-     * ([]), full stop (.)
+     * dash (-), apostrophe ('), comma (,), exclamation sign (!), ampersand (&), square braces ([]), full stop (.).
+     * Dash needs to be first because otherwise it represents range in character classes.
      *
-     * (?:\\((\\d{4})\\)) -> Matches 4 digit release year within parentheses.
+     * Regex group named 'year': Matches 4 digit release year within parentheses.
      *
-     * (.++) -> Matches one or more occurrences of any character.
+     * Regex group named 'lastPart': Matches one or more occurrences of any character.
      */
     static final Pattern MOVIE_NAME_WITH_RELEASE_YEAR_REGEX =
-            ~/(?<title>[-',!\[\]\.\w\s]++)(?:\((?<year>\d{4})\))?+(?<lastPart>.++)/
+            ~/(?<title>[-',!&\[\]\.\w\s]++)(?:\((?<year>\d{4})\))?+(?<lastPart>.++)/
 
     String getTitle() {
         final String fileExtension = fileExtension(this.group())

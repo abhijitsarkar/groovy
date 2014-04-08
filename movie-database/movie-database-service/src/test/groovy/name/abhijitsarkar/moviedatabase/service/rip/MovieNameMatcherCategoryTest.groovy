@@ -47,6 +47,13 @@ class MovieNameMatcherCategoryTest {
 
         assert m.title == '2 Fast 2 Furious - part 1'
         assert m.year == 2001
+
+        m.reset()
+        m = 'Avengers Confidential Black Widow & Punisher (2014).mkv' =~ MOVIE_NAME_WITH_RELEASE_YEAR_REGEX
+        assert m.matches()
+
+        assert m.title == 'Avengers Confidential Black Widow & Punisher'
+        assert m.year == 2014
     }
 
     @Test
