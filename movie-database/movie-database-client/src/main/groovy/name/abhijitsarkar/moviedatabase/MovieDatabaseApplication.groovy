@@ -14,6 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
 package name.abhijitsarkar.moviedatabase
 
 import org.springframework.boot.SpringApplication

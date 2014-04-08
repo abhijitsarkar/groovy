@@ -14,7 +14,9 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
 package name.abhijitsarkar.moviedatabase.service.search
+
 import name.abhijitsarkar.moviedatabase.service.index.IndexField
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.core.SimpleAnalyzer

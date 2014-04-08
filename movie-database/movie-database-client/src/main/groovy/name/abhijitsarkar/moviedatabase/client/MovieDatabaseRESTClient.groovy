@@ -14,6 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
 package name.abhijitsarkar.moviedatabase.client
 
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
@@ -66,7 +67,7 @@ class MovieDatabaseRESTClient {
 
     @RequestMapping(value = '/{searchField}/{searchText}')
     Collection<MovieRip> searchByField(@PathVariable('searchField') String indexField,
-                                @PathVariable('searchText') String searchText) {
+                                       @PathVariable('searchText') String searchText) {
         String message = "No movies were found corresponding to index field: ${indexField} and search text: ${searchText}."
 
         respond(movieFacade.searchByField(searchText, indexField), message)

@@ -14,6 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
 package name.abhijitsarkar.moviedatabase.service.index.analysis
 
 import org.apache.lucene.analysis.Analyzer

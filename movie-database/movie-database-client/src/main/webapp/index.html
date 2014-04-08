@@ -23,28 +23,28 @@
     <script data-main="js/config" src="js/lib/require-2.1.11.min.js"></script>
 </head>
 <body>
-    <form action="/movies">
-        <fieldset id="input">
-            <div class="urlAndGo">
-                <input type="text" id="url" class="url"/>
-                <input type="button" id="go" class="go"/>
-            </div>
-            <div id="method">
-                <input type="radio" id="get" name="method"/>
-                <label for="get">Get</label>
-                <input type="radio" id="post" name="method"/>
-                <label for="post">Post</label>
-            </div>
-        </fieldset>
-        <table id="searchResults" class="searchResults">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Genres</th>
-                    <th>Release</th>
-                </tr>
-            </thead>
-        </table>
-    </form>
+<form action="/movies">
+    <fieldset id="input">
+        <div class="urlAndGo">
+            <input type="text" id="url" class="url"/>
+            <input type="button" id="go" class="go"/>
+        </div>
+        <div id="method">
+            <input type="radio" id="get" name="method"/>
+            <label for="get">Get</label>
+            <input type="radio" id="post" name="method"/>
+            <label for="post">Post</label>
+        </div>
+    </fieldset>
+    <table id="searchResults" class="searchResults">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genres</th>
+            <th>Release</th>
+        </tr>
+        </thead>
+    </table>
+</form>
 </body>
 </html>

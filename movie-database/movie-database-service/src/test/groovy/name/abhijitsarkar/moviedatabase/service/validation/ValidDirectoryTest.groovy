@@ -14,6 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
 package name.abhijitsarkar.moviedatabase.service.validation
 
 import name.abhijitsarkar.moviedatabase.service.rip.MovieRipService
@@ -67,7 +68,7 @@ class ValidDirectoryTest {
     @Test
     public void testValidDirectory() {
         Method getMovieRips = MovieRipService.getMethod('getMovieRips', String)
-        String movieDir = new File(new ClassPathResource('movies').URL.toURI()).absolutePath
+        String movieDir = new File(new ClassPathResource('.').URL.toURI()).absolutePath
         Object[] args = [movieDir] as String[]
 
         Set<ConstraintViolation<MovieRipService>> violations = executableValidator.validateParameters(

@@ -19,6 +19,7 @@
  */
 
 package name.abhijitsarkar.moviedatabase.domain
+
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode

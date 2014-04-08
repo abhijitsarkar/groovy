@@ -14,7 +14,9 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
+
 beans {
-    xmlns([ctx:'http://www.springframework.org/schema/context'])
-    ctx.'component-scan'('base-package':'name.abhijitsarkar.moviedatabase.service')
+    xmlns([ctx: 'http://www.springframework.org/schema/context'])
+    ctx.'component-scan'('base-package': 'name.abhijitsarkar.moviedatabase.service')
 }

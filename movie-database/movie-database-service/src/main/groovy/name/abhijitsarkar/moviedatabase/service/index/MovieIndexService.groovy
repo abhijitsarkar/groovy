@@ -14,7 +14,9 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
 package name.abhijitsarkar.moviedatabase.service.index
+
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 import org.apache.lucene.document.DateTools
 import org.apache.lucene.document.Document
@@ -27,6 +29,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+
 /**
  * @author Abhijit Sarkar
  */

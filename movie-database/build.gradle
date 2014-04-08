@@ -14,6 +14,8 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
+
 subprojects {
     apply plugin: 'groovy'
     apply plugin: 'maven'
@@ -46,13 +48,13 @@ subprojects {
         }
     }
 
-    task unitTest(type: Test) {
-        excludes = ['**/*IntegrationTest*.class'] as Set
-    }
-
-    task integrationTest(type: Test) {
-        includes = ['**/*IntegrationTestSuite.class'] as Set
-    }
+//    task unitTest(type: Test) {
+//        excludes = ['**/*IntegrationTest*.class'] as Set
+//    }
+//
+//    task integrationTest(type: Test) {
+//        includes = ['**/*IntegrationTestSuite.class'] as Set
+//    }
 
     dependencies {
         compile(
@@ -62,8 +64,7 @@ subprojects {
         )
         testCompile(
                 [group: 'org.gmock', name: 'gmock', version: gmockVersion],
-                [group: 'junit', name: 'junit', version: junitVersion],
-                [group: 'org.springframework', name: 'spring-test', version: springVersion]
+                [group: 'junit', name: 'junit', version: junitVersion]
         )
     }
 

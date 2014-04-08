@@ -40,9 +40,9 @@ class MovieRipTest {
         assert mr instanceof MovieRip
         assert 'Terminator 2 Judgment Day' == mr.title
 
-        assert mr.genres.find { it.toString() == 'Sci-Fi' } : 'Expected one of the genres to be Sci-Fi.'
+        assert mr.genres.find { it.toString() == 'Sci-Fi' }: 'Expected one of the genres to be Sci-Fi.'
 
-        assert mr.stars.find { it.name == 'Arnold Schwarzenegger' } :
+        assert mr.stars.find { it.name == 'Arnold Schwarzenegger' }:
                 'Expected one of the stars to be Arnold Schwarzenegger.'
 
         assert mr.releaseDate[Calendar.YEAR] == 1991

@@ -37,9 +37,9 @@ class MovieTest {
         assert m instanceof Movie
         assert 'Terminator 2 Judgment Day' == m.title
 
-        assert m.genres.find { it.toString() == 'Sci-Fi' } : 'Expected one of the genres to be Sci-Fi.'
+        assert m.genres.find { it.toString() == 'Sci-Fi' }: 'Expected one of the genres to be Sci-Fi.'
 
-        assert m.stars.find { it.name == 'Arnold Schwarzenegger' } :
+        assert m.stars.find { it.name == 'Arnold Schwarzenegger' }:
                 'Expected one of the stars to be Arnold Schwarzenegger.'
 
         assert m.releaseDate[Calendar.YEAR] == 1991

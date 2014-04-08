@@ -14,6 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.rolling.FixedWindowRollingPolicy

@@ -14,6 +14,8 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
+
 buildscript {
     repositories {
         mavenCentral()
@@ -26,7 +28,7 @@ buildscript {
     }
     dependencies {
         classpath(
-            [group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: springBootVersion]
+                [group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: springBootVersion]
         )
     }
 }
@@ -70,9 +72,5 @@ dependencies {
     }
     runtime(
             [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion],
-    )
-    testCompile(
-            [group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion],
-            project(':movie-database-integ-test-util')
     )
 }

@@ -14,11 +14,14 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
 package name.abhijitsarkar.moviedatabase.service.index.analysis
+
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.BaseTokenStreamTestCase
 import org.apache.lucene.util.Version
 import org.junit.Test
+
 /**
  * @author Abhijit Sarkar
  */

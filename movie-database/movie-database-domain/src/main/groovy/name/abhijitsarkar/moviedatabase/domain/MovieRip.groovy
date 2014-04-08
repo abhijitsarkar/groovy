@@ -19,6 +19,7 @@
  */
 
 package name.abhijitsarkar.moviedatabase.domain
+
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(callSuper = true, excludes = ['fileSize', 'fileExtension', 'parent'])
@@ -77,7 +78,7 @@ class MovieRip extends Movie implements Comparable {
 
     @Override
     String toString() {
-       super.toString()
+        super.toString()
     }
 
     @Override

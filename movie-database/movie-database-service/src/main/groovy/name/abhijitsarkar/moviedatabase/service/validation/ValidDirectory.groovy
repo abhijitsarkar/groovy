@@ -14,6 +14,7 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+
 package name.abhijitsarkar.moviedatabase.service.validation
 
 import javax.validation.Constraint
@@ -28,10 +29,10 @@ import java.lang.annotation.Target
  */
 @Constraint(validatedBy = [ValidDirectoryValidation])
 @Target([ElementType.METHOD,
-ElementType.FIELD,
-ElementType.ANNOTATION_TYPE,
-ElementType.CONSTRUCTOR,
-ElementType.PARAMETER])
+        ElementType.FIELD,
+        ElementType.ANNOTATION_TYPE,
+        ElementType.CONSTRUCTOR,
+        ElementType.PARAMETER])
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidDirectory {
     String message() default '{name.abhijitsarkar.moviedatabase.service.validation.ValidDirectory.message}'
