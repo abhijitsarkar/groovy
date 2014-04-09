@@ -14,7 +14,12 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+apply plugin: 'war'
 
+war {
+    baseName = "${rootProject.name}"
+    version =  "${project.version}"
+}
 
 buildscript {
     repositories {

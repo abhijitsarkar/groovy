@@ -15,25 +15,53 @@ require(["jquery", "dataTables"], function(jquery, dataTables) {
          jquery("#go").val(goVal);
     });
 
-    var displayResults = function(data) {
+    // This preserves the sort order.
+    var repopulateTable = function(table, data) {
+        jquery(table).dataTable().fnClearTable(false);
+        jquery(table).dataTable().fnAddData(data);
+        jquery(table).dataTable().fnDraw();
+    };
+
+    var createNewTable = function(data) {
+        var formatGenres = function(genres, type, full) {
+            return genres.join(",");
+        };
+
+        var formatReleaseDate = function(releaseDate, type, full) {
+            var jsDate = new Date(releaseDate);
+
+            return jsDate.getFullYear();
+        };
+
         return jquery('#searchResults').dataTable({
             "aaData": data,
             "aoColumns": [
                 { "mData": "title" },
-                { "mData": "genres[0]" },
+                { "mData": "genres" },
                 { "mData": "releaseDate" }
             ],
             "aoColumnDefs": [
                 {
+                    "aTargets": [1],
+                    "mRender": formatGenres
+                },
+                {
                     "aTargets": [2],
-                    "mRender": function (obj) {
-                        var jsDate = new Date(obj);
-                        return jsDate.getFullYear();
-                    }
+                    "mRender": formatReleaseDate
                 }
             ]
         });
-    }
+    };
+
+    var displayResults = function(data) {
+        var tables = jquery.fn.dataTable.fnTables(false);
+
+        if (tables.length > 0) {
+            repopulateTable(jquery(tables[0]), data);
+        } else {
+            return createNewTable(data);
+        }
+    };
 
     jquery(":button").click(function() {
          var getRequest = jquery("#get").is(":checked");
@@ -46,15 +74,16 @@ require(["jquery", "dataTables"], function(jquery, dataTables) {
          var dataType = "json";
 
          var success = function(data, textStatus, jqXHR) {
-            console.log(jquery.makeArray(data));
-            jquery(".searchResults").toggle();
+            jquery(".searchResults").show();
+
             displayResults(data);
          };
          var error = function(jqXHR, textStatus, errorThrown) {
-             alert(textStatus);
+            jquery(".searchResults").hide();
+            alert(textStatus);
          };
 
-         $.ajax({
+         jquery.ajax({
             contentType: contentType,
             data: data,
             dataType: dataType,
