@@ -17,6 +17,8 @@
 
 import name.abhijitsarkar.moviedatabase.service.BeanFactory
 import org.springframework.core.io.ClassPathResource
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor
 
 /* More bean builder examples here: https://github.com/dturanski/groovy-beans,
  * here: http://spring.io/blog/2014/03/03/groovy-bean-configuration-in-spring-framework-4,
@@ -42,5 +44,11 @@ beans {
     /* Static factory method. The parameter is unused, only for demo. */
     includes(BeanFactory, 'unused') { bean ->
         bean.factoryMethod = 'includes'
+    }
+
+    validator(LocalValidatorFactoryBean)
+
+    methodValidationPostProcessor(MethodValidationPostProcessor) {
+        validator = ref('validator')
     }
 }

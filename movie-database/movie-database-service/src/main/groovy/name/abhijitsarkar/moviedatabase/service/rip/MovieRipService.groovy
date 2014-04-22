@@ -25,6 +25,7 @@ import name.abhijitsarkar.moviedatabase.service.validation.ValidDirectory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.validation.annotation.Validated
 
 import javax.annotation.PostConstruct
 import javax.annotation.Resource
@@ -33,6 +34,7 @@ import static name.abhijitsarkar.moviedatabase.service.rip.MovieRipParser.fileEx
 import static name.abhijitsarkar.moviedatabase.service.rip.MovieRipParser.parseMovieRip
 
 @Service
+@Validated
 class MovieRipService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieRipService)
 

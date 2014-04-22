@@ -22,6 +22,7 @@ import name.abhijitsarkar.moviedatabase.service.index.MovieIndexService
 import name.abhijitsarkar.moviedatabase.service.rip.MovieRipService
 import name.abhijitsarkar.moviedatabase.service.search.MovieSearchService
 import name.abhijitsarkar.moviedatabase.service.search.QueryBuilder
+import name.abhijitsarkar.moviedatabase.service.validation.ValidIndexField
 import org.apache.lucene.search.Query
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

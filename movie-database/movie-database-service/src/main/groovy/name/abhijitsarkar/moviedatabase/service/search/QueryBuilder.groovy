@@ -18,6 +18,7 @@
 package name.abhijitsarkar.moviedatabase.service.search
 
 import name.abhijitsarkar.moviedatabase.service.index.IndexField
+import name.abhijitsarkar.moviedatabase.service.validation.ValidIndexField
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.analysis.core.SimpleAnalyzer
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser
@@ -28,6 +29,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import org.springframework.validation.annotation.Validated
 
 import javax.annotation.PostConstruct
 import javax.validation.constraints.NotNull
@@ -38,6 +40,7 @@ import static org.springframework.util.Assert.notNull
  * @author Abhijit Sarkar
  */
 @Component
+@Validated
 class QueryBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(QueryBuilder)
     private static final String DEFAULT_SEARCH_FIELD = IndexField.TITLE.name()
@@ -54,7 +57,7 @@ class QueryBuilder {
         queryParser = newQueryParser()
     }
 
-    Query perFieldQuery(@NotNull String searchText, @NotNull String indexField) {
+    Query perFieldQuery(@NotNull String searchText, @NotNull @ValidIndexField String indexField) {
         LOGGER.debug('Per field query - field {}, search text {}.', indexField, searchText)
 
         IndexField idxField = IndexField.valueOf(IndexField, indexField.toUpperCase())

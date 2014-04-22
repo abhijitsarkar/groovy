@@ -14,7 +14,6 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-
 package name.abhijitsarkar.moviedatabase.service.validation
 
 import name.abhijitsarkar.moviedatabase.service.rip.MovieRipService
@@ -43,9 +42,7 @@ class ValidDirectoryTest {
         Object[] args = ['whatever'] as String[]
 
         Set<ConstraintViolation<MovieRipService>> violations = executableValidator.validateParameters(
-                movieRipService,
-                getMovieRips,
-                args
+                movieRipService, getMovieRips, args
         )
 
         assertNumViolations(violations, 1)
@@ -57,9 +54,7 @@ class ValidDirectoryTest {
         Object[] args = [null] as String[]
 
         Set<ConstraintViolation<MovieRipService>> violations = executableValidator.validateParameters(
-                movieRipService,
-                getMovieRips,
-                args
+                movieRipService, getMovieRips, args
         )
 
         assertNumViolations(violations, 1)
@@ -72,9 +67,7 @@ class ValidDirectoryTest {
         Object[] args = [movieDir] as String[]
 
         Set<ConstraintViolation<MovieRipService>> violations = executableValidator.validateParameters(
-                movieRipService,
-                getMovieRips,
-                args
+                movieRipService, getMovieRips, args
         )
 
         assertNoViolations(violations)
@@ -93,8 +86,6 @@ class ValidDirectoryTest {
     }
 
     private void assertNoViolations(Set<ConstraintViolation<MovieRipService>> violations) {
-        assert violations.isEmpty()
-
         assert !violations
     }
 }

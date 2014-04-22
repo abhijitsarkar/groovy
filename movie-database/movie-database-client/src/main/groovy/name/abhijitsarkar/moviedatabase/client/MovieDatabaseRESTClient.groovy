@@ -48,7 +48,9 @@ class MovieDatabaseRESTClient {
 
     @RequestMapping(method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
     String index(@RequestParam('dir') String movieDirectory) {
-        movieFacade.index(movieDirectory)
+        final String indexDirectory = movieFacade.index(movieDirectory)
+
+        "{\"Index directory\":\"$indexDirectory\"}"
     }
 
     @RequestMapping
@@ -68,7 +70,8 @@ class MovieDatabaseRESTClient {
     @RequestMapping(value = '/{searchField}/{searchText}')
     Collection<MovieRip> searchByField(@PathVariable('searchField') String indexField,
                                        @PathVariable('searchText') String searchText) {
-        String message = "No movies were found corresponding to index field: ${indexField} and search text: ${searchText}."
+        String message = "No movies were found corresponding to index field: " +
+                "${indexField} and search text: ${searchText}."
 
         respond(movieFacade.searchByField(searchText, indexField), message)
     }

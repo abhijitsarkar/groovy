@@ -14,8 +14,6 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
-
-
 dependencies {
     compile(
             project(':movie-database-domain'),
@@ -28,7 +26,9 @@ dependencies {
     )
     runtime(
             [group: 'org.aspectj', name: 'aspectjweaver', version: aspectjVersion],
-            [group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion]
+            [group: 'org.hibernate', name: 'hibernate-validator', version: hibernateValidatorVersion],
+            [group: 'javax.el', name: 'javax.el-api', version: elVersion],
+            [group: 'org.glassfish.web', name: 'javax.el', version: glassfishElVersion]
     )
     testCompile(
             [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion],
