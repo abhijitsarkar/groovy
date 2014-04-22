@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+import javax.validation.ConstraintViolationException
+
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import static org.springframework.web.bind.annotation.RequestMethod.GET
@@ -99,5 +101,12 @@ class MovieDatabaseRESTClient {
     @ExceptionHandler(NoMoviesFoundException)
     ResponseEntity<String> handleNoMoviesFound(NoMoviesFoundException e) {
         new ResponseEntity<String>(HttpStatus.NO_CONTENT)
+    }
+
+    @ExceptionHandler(ConstraintViolationException)
+    ResponseEntity<String> handleConstraintViolation(ConstraintViolationException e) {
+        LOGGER.error("Bad request.", e)
+
+        new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST)
     }
 }

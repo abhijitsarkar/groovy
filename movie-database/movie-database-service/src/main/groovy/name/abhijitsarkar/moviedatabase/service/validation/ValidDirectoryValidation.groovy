@@ -36,8 +36,6 @@ class ValidDirectoryValidation implements ConstraintValidator<ValidDirectory, St
 
     @Override
     boolean isValid(String directory, ConstraintValidatorContext context) {
-        context.disableDefaultConstraintViolation()
-
         String message
 
         if (isNull(directory)) {
@@ -49,6 +47,9 @@ class ValidDirectoryValidation implements ConstraintValidator<ValidDirectory, St
         }
 
         if (message) {
+            LOGGER.error(message)
+
+            context.disableDefaultConstraintViolation()
             newConstraintViolation(context, message)
 
             return false

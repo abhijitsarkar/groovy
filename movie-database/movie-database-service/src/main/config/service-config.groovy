@@ -50,5 +50,8 @@ beans {
 
     methodValidationPostProcessor(MethodValidationPostProcessor) {
         validator = ref('validator')
+
+        /* https://jira.spring.io/browse/SPR-11715 */
+        proxyTargetClass = true
     }
 }

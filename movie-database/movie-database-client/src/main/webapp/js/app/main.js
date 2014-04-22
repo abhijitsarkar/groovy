@@ -68,7 +68,7 @@ require(["jquery", "dataTables"], function(jquery, dataTables) {
         };
         var error = function(jqXHR, textStatus, errorThrown) {
             jquery(".searchResults").hide();
-            alert(textStatus);
+            alert(errorThrown);
         };
 
         jquery.ajax({

@@ -16,7 +16,7 @@
 
 package name.abhijitsarkar.moviedatabase.service.validation
 
-import name.abhijitsarkar.moviedatabase.service.facade.MovieFacade
+import name.abhijitsarkar.moviedatabase.service.search.QueryBuilder
 import org.junit.Test
 
 import javax.validation.ConstraintViolation
@@ -33,15 +33,15 @@ class ValidIndexFieldTest {
     private ValidatorFactory factory = Validation.buildDefaultValidatorFactory()
     private ExecutableValidator executableValidator = factory.validator.forExecutables()
 
-    private MovieFacade movieFacade = new MovieFacade()
+    private QueryBuilder queryBuilder = new QueryBuilder()
 
     @Test
     public void testInvalidIndexField() {
-        Method searchByField = MovieFacade.getMethod('searchByField', String, String)
+        Method searchByField = QueryBuilder.getMethod('perFieldQuery', String, String)
         Object[] args = ['whatever', 'whatever'] as String[]
 
-        Set<ConstraintViolation<MovieFacade>> violations = executableValidator.validateParameters(
-                movieFacade, searchByField, args
+        Set<ConstraintViolation<QueryBuilder>> violations = executableValidator.validateParameters(
+                queryBuilder, searchByField, args
         )
 
         assertViolations(violations, 1)
@@ -49,11 +49,11 @@ class ValidIndexFieldTest {
 
     @Test
     public void testNullIndexField() {
-        Method searchByField = MovieFacade.getMethod('searchByField', String, String)
+        Method searchByField = QueryBuilder.getMethod('perFieldQuery', String, String)
         Object[] args = ['whatever', null] as String[]
 
-        Set<ConstraintViolation<MovieFacade>> violations = executableValidator.validateParameters(
-                movieFacade, searchByField, args
+        Set<ConstraintViolation<QueryBuilder>> violations = executableValidator.validateParameters(
+                queryBuilder, searchByField, args
         )
 
         assertViolations(violations, 1)
@@ -61,29 +61,29 @@ class ValidIndexFieldTest {
 
     @Test
     public void testValidIndexField() {
-        Method searchByField = MovieFacade.getMethod('searchByField', String, String)
+        Method searchByField = QueryBuilder.getMethod('perFieldQuery', String, String)
         Object[] args = ['whatever', 'title'] as String[]
 
-        Set<ConstraintViolation<MovieFacade>> violations = executableValidator.validateParameters(
-                movieFacade, searchByField, args
+        Set<ConstraintViolation<QueryBuilder>> violations = executableValidator.validateParameters(
+                queryBuilder, searchByField, args
         )
 
         assertNoViolations(violations)
     }
 
-    private void assertViolations(Set<ConstraintViolation<MovieFacade>> violations, int numViolations) {
+    private void assertViolations(Set<ConstraintViolation<QueryBuilder>> violations, int numViolations) {
         assert numViolations == violations.size()
 
         Class<? extends Annotation> constraintType = null
 
-        violations.each { ConstraintViolation<MovieFacade> aViolation ->
+        violations.each { ConstraintViolation<QueryBuilder> aViolation ->
             constraintType = aViolation.constraintDescriptor.annotation.annotationType()
 
             assert ValidIndexField == constraintType
         }
     }
 
-    private void assertNoViolations(Set<ConstraintViolation<MovieFacade>> violations) {
+    private void assertNoViolations(Set<ConstraintViolation<QueryBuilder>> violations) {
         assert !violations
     }
 }

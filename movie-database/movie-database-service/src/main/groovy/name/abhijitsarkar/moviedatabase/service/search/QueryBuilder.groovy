@@ -57,7 +57,7 @@ class QueryBuilder {
         queryParser = newQueryParser()
     }
 
-    Query perFieldQuery(@NotNull String searchText, @NotNull @ValidIndexField String indexField) {
+    Query perFieldQuery(@NotNull String searchText, @ValidIndexField String indexField) {
         LOGGER.debug('Per field query - field {}, search text {}.', indexField, searchText)
 
         IndexField idxField = IndexField.valueOf(IndexField, indexField.toUpperCase())

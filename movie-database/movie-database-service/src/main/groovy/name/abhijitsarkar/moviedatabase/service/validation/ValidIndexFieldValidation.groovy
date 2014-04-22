@@ -46,12 +46,14 @@ class ValidIndexFieldValidation implements ConstraintValidator<ValidIndexField, 
 
     @Override
     boolean isValid(final String indexField, final ConstraintValidatorContext context) {
-        context.disableDefaultConstraintViolation()
-
         if (isNotAnIndexField(indexField)) {
             final String message = "${indexField} is not a valid index field. " +
                     "Valid fields are ${indexFields.join(', ')}."
 
+            LOGGER.error(message)
+
+
+            context.disableDefaultConstraintViolation()
             newConstraintViolation(context, message)
 
             return false
