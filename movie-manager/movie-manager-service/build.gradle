@@ -16,9 +16,8 @@
 
 configurations {
     provided
-    weld {
-        extendsFrom(testRuntime)
-    }
+    weld.extendsFrom testRuntime
+
     all*.exclude group: 'org.jboss.spec.javax.annotation'
     all*.exclude group: 'org.jboss.spec.javax.interceptor'
 }
@@ -46,14 +45,19 @@ dependencies {
             [group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion],
             [group: 'org.slf4j', name: 'slf4j-log4j12', version: slf4jVersion]
     )
-    testCompile project(path: ':movie-manager-domain', configuration: 'test')
+    testCompile project(path: ':movie-manager-domain', configuration: 'testJ')
     testCompile(
             [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion],
             [group: 'org.apache.deltaspike.modules', name: 'deltaspike-test-control-module-impl', version: deltaspikeVersion]
     )
     weld(
             [group: 'org.apache.deltaspike.cdictrl', name: 'deltaspike-cdictrl-weld', version: deltaspikeVersion],
-            [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion]
+            [group: 'org.jboss.weld.se', name: 'weld-se', version: weldSEVersion],
+            [group: 'javax.servlet', name: 'javax.servlet-api', version: servletApiVersion],
+            [group: 'org.apache.myfaces.core', name: 'myfaces-impl', version: myfacesVersion],
+            [group: 'org.apache.myfaces.core', name: 'myfaces-impl-test', version: myfacesVersion],
+            [group: 'org.apache.myfaces.test', name: 'myfaces-test22', version: myfacesTestVersion],
+            [group: 'org.glassfish', name: 'javax.faces', version: facesVersion]
     )
 }
 

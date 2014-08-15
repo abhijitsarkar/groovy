@@ -14,6 +14,10 @@
  * and is also available at http://www.gnu.org/licenses.
  */
 
+configurations {
+    testJ.extendsFrom testRuntime
+}
+
 task testJar(type: Jar, dependsOn: testClasses) {
     baseName = "${project.archivesBaseName}-tests"
 
@@ -21,12 +25,6 @@ task testJar(type: Jar, dependsOn: testClasses) {
     include '**/MovieMock.class'
 }
 
-configurations {
-    test {
-        extendsFrom(testRuntime)
-    }
-}
-
 artifacts {
-    test testJar
+    testJ testJar
 }
