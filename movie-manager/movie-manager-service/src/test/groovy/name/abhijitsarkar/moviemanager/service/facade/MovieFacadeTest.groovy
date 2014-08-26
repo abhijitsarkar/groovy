@@ -38,6 +38,7 @@ class MovieFacadeTest extends AbstractCDITest {
 
     @Before
     void setUp() {
+        // assumes that the MovieRipServiceMock overrides the actual one
         movieFacade.index(null)
     }
 

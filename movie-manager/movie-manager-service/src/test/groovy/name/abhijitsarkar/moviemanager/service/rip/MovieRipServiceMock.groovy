@@ -19,13 +19,17 @@ package name.abhijitsarkar.moviemanager.service.rip
 import name.abhijitsarkar.moviemanager.domain.MovieMock
 import name.abhijitsarkar.moviemanager.domain.MovieRip
 
+import javax.annotation.Priority
 import javax.enterprise.inject.Alternative
 import javax.enterprise.inject.Specializes
+
+import static javax.interceptor.Interceptor.Priority.APPLICATION
+
 /**
  * @author Abhijit Sarkar
  */
-@Specializes
 @Alternative
+@Priority(APPLICATION)
 class MovieRipServiceMock extends MovieRipService {
     Set<MovieRip> getMovieRips(String movieDirectory) {
         // Do something with the parameter to make CodeNarc happy

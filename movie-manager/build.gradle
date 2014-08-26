@@ -18,7 +18,6 @@ buildscript {
     repositories { mavenCentral() }
     dependencies {
         classpath(
-                // https://github.com/stevesaliman/gradle-cobertura-plugin
                 [group: 'net.saliman', name: 'gradle-cobertura-plugin', version: coberturaPluginVersion]
         )
     }
@@ -33,14 +32,16 @@ allprojects {
     apply plugin: 'codenarc'
     apply plugin: 'cobertura'
 
-    configurations {
+    sourceCompatibility = projectSourceCompatibility
+    targetCompatibility = projectSourceCompatibility
+
+    configurations.all {
         // Old Jetty dependencies brought in by Cobertura
-        all*.exclude group: 'org.mortbay.jetty'
+        exclude group: 'org.mortbay.jetty'
     }
 
     codenarc {
         configFile = file("${rootProject.projectDir}/src/main/config/codenarc/codenarc.groovy")
-        toolVersion = codenarcToolVersion
         ignoreFailures = true
     }
 
@@ -62,6 +63,7 @@ allprojects {
                 [group: 'org.gmetrics', name: 'GMetrics', version: gmetricsVersion]
         )
         testCompile(
+                [group: 'org.codehaus.groovy', name: 'groovy-all', version: groovyVersion],
                 [group: 'org.gmock', name: 'gmock', version: gmockVersion],
                 [group: 'org.hamcrest', name: 'hamcrest-all', version: hamcrestVersion],
                 [group: 'junit', name: 'junit', version: junitVersion]
@@ -81,8 +83,6 @@ test {
 }
 
 cobertura {
-    coberturaVersion = project.coberturaVersion
-
     coverageSourceDirs = project.allprojects.sourceSets.collect {
         // srcDirs is a Set<File>
         it.main.groovy.srcDirs + it.main.java.srcDirs

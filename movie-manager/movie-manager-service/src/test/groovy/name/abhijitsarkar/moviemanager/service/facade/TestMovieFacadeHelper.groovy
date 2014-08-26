@@ -25,15 +25,18 @@ import org.apache.lucene.store.Directory
 import org.apache.lucene.store.FSDirectory
 import org.apache.lucene.util.Version
 
+import javax.annotation.Priority
 import javax.enterprise.inject.Alternative
 import javax.enterprise.inject.Produces
 import javax.enterprise.inject.Specializes
+
+import static javax.interceptor.Interceptor.Priority.APPLICATION
 
 /**
  * @author Abhijit Sarkar
  */
 @Alternative
-@Specializes
+@Priority(APPLICATION)
 class TestMovieFacadeHelper extends MovieFacadeHelper {
     @Override
     @Produces
