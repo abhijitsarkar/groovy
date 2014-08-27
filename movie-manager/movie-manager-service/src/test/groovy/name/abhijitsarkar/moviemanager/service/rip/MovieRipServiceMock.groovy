@@ -21,7 +21,6 @@ import name.abhijitsarkar.moviemanager.domain.MovieRip
 
 import javax.annotation.Priority
 import javax.enterprise.inject.Alternative
-import javax.enterprise.inject.Specializes
 
 import static javax.interceptor.Interceptor.Priority.APPLICATION
 
